@@ -1,10 +1,27 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/admin/inventory')({
   component: AdminInventory,
 })
 
 function AdminInventory() {
+  const { data: products, isLoading } = useQuery({
+    queryKey: ['admin', 'products'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/admin/products')
+        return res.data.data || res.data || []
+      } catch (err) {
+        return []
+      }
+    }
+  })
+
+  // Since we fetch products, we can compute total inventory across variants if available.
+  // We'll flatten variants if possible, or just show the top-level product stock.
+
   return (
     <main className="flex-1 flex flex-col min-w-0 max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-8 md:py-12">
       {/* Header Actions */}
@@ -63,98 +80,71 @@ function AdminInventory() {
             <thead>
               <tr className="border-b border-ink-deep/10 bg-neutral-light/50">
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Product</th>
-                <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">SKU</th>
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Category</th>
-                <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Stock</th>
+                <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Stock (Total)</th>
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Price</th>
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="font-body-md text-body-md divide-y divide-ink-deep/5">
-              {/* Item 1 */}
-              <tr className="hover:bg-neutral-light/50 transition-colors">
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-16 rounded bg-neutral-light overflow-hidden shrink-0">
-                      <img className="w-full h-full object-cover" data-alt="A modern, high-quality photograph of a sleek navy blue medical scrub top, flat lay on a cream background, minimalist and premium aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp5anKEeEIIA7CQmoNHmPZC70QDMgCFSu9ATK2G4MO992RDQrNTMIvH65wozdtYPDdQuJSezPk7mMG4u-iBPFI8sOpbCuIdkyji0xYSjQJSr8gC_4btIQnfRsUi4qLsx-RY-hf57xY9ox48_JeJArA_S6TUU_xPijyQyDrnjcBRqNsbhKuYewBLgtuspWz8s3-3lIdiLf_vzf3nteRQH_TfQj7fP7kOB8IpeMVnPxVE2dKMmWlpqEJLg" />
-                    </div>
-                    <div>
-                      <p className="font-headline-md font-semibold text-ink-deep text-lg">Vigo Classic Scrub Top</p>
-                      <p className="text-on-surface-variant text-sm">Navy Blue</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-on-surface-variant">VIG-TOP-NAV-M</td>
-                <td className="py-4 px-6 text-on-surface-variant">Apparel</td>
-                <td className="py-4 px-6">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-error/10 text-error font-label-sm text-label-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-error"></span>
-                    3 Left
-                  </span>
-                </td>
-                <td className="py-4 px-6 text-ink-deep font-semibold">₦58.00</td>
-                <td className="py-4 px-6 text-right">
-                  <button className="text-on-surface-variant hover:text-accent-gold transition-colors p-2">
-                    <span className="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              {/* Item 2 */}
-              <tr className="hover:bg-neutral-light/50 transition-colors">
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-16 rounded bg-neutral-light overflow-hidden shrink-0">
-                      <img className="w-full h-full object-cover" data-alt="A modern, high-quality photograph of tailored black medical scrub pants, flat lay on a neutral light background, highlighting the fabric texture and clean lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIYUrmdNr8QhQb0f1CiwMC4AcvSnplMT_hC3sy0daBJ-XTuSF0fs_iUjg08jGVS-ipqpg5pYJkyqlY-GtCYNhHUV3oD4BguKTxJzWmcjFmE6d_hOuajMhDobTqlx5_U5Fx8g6nLlSSePtE2na5TbXCTkgdy5JFnTFmyG7cAJlifKNmIOTMAL0DqqeC4mvm_UGd8f0if-i3eufBI3lDobFLxOYEt7sjd6WHNq42jyJRSkEzkf-qw41Dig" />
-                    </div>
-                    <div>
-                      <p className="font-headline-md font-semibold text-ink-deep text-lg">Tailored Cargo Pants</p>
-                      <p className="text-on-surface-variant text-sm">Onyx Black</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-on-surface-variant">VIG-PNT-BLK-L</td>
-                <td className="py-4 px-6 text-on-surface-variant">Apparel</td>
-                <td className="py-4 px-6">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-surface-tint/10 text-surface-tint font-label-sm text-label-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-surface-tint"></span>
-                    142 In Stock
-                  </span>
-                </td>
-                <td className="py-4 px-6 text-ink-deep font-semibold">₦68.00</td>
-                <td className="py-4 px-6 text-right">
-                  <button className="text-on-surface-variant hover:text-accent-gold transition-colors p-2">
-                    <span className="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
-              {/* Item 3 */}
-              <tr className="hover:bg-neutral-light/50 transition-colors">
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-16 rounded bg-neutral-light overflow-hidden shrink-0">
-                      <img className="w-full h-full object-cover" data-alt="A close-up, high-end editorial photo of a minimalist gold pendant necklace resting on a textured cream surface, soft warm lighting, luxurious feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC88ecPBumpeOCqx4f5TE4EMON367c8mJzYayNHEBKcQnFJXG36n6Grmkj6wrA6C9YKTN4UhU30O_XJYyVRpeEdECISJiWTD90kfPdY0wOWDm5IeY8K9aUsNQGxjZggZdm5VZgi1oCyLZp6t8BVnT7jVjK9CPdESo0sjCkomZPzjCYPCPj0JkHNW3Y5r3DUaHjib1kuio8sUP-eOI6beft19DGQfzIkPgQWrFyNZrWGKoBXShrhzaruyw" />
-                    </div>
-                    <div>
-                      <p className="font-headline-md font-semibold text-ink-deep text-lg">Minimalist Drop Pendant</p>
-                      <p className="text-on-surface-variant text-sm">14k Gold Fill</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-on-surface-variant">FLR-JWL-PND-G</td>
-                <td className="py-4 px-6 text-on-surface-variant">Jewelry</td>
-                <td className="py-4 px-6">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-surface-tint/10 text-surface-tint font-label-sm text-label-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-surface-tint"></span>
-                    24 In Stock
-                  </span>
-                </td>
-                <td className="py-4 px-6 text-ink-deep font-semibold">₦120.00</td>
-                <td className="py-4 px-6 text-right">
-                  <button className="text-on-surface-variant hover:text-accent-gold transition-colors p-2">
-                    <span className="material-symbols-outlined">more_vert</span>
-                  </button>
-                </td>
-              </tr>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-on-surface-variant">Loading inventory...</td>
+                </tr>
+              ) : products?.length > 0 ? (
+                products.map((product: any) => {
+                  const totalStock = product.variants?.reduce((sum: number, v: any) => sum + (v.stockQuantity || 0), 0) || 0;
+                  const isLowStock = totalStock > 0 && totalStock <= 5;
+                  const isOutOfStock = totalStock === 0;
+
+                  return (
+                    <tr key={product.id} className="hover:bg-neutral-light/50 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-16 rounded bg-neutral-light overflow-hidden shrink-0">
+                            {product.images?.[0]?.url ? (
+                              <img className="w-full h-full object-cover" src={product.images[0].url} alt={product.name} />
+                            ) : (
+                              <div className="w-full h-full bg-ink-deep/10 flex items-center justify-center">
+                                <span className="material-symbols-outlined text-on-surface-variant">image</span>
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-headline-md font-semibold text-ink-deep text-lg">{product.name}</p>
+                            <p className="text-on-surface-variant text-sm line-clamp-1 max-w-[200px]">{product.description}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-on-surface-variant">{product.category?.name || 'Uncategorized'}</td>
+                      <td className="py-4 px-6">
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full font-label-sm text-label-sm ${
+                          isOutOfStock ? 'bg-error/10 text-error' :
+                          isLowStock ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-surface-tint/10 text-surface-tint'
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            isOutOfStock ? 'bg-error' :
+                            isLowStock ? 'bg-yellow-600' :
+                            'bg-surface-tint'
+                          }`}></span>
+                          {totalStock} {totalStock === 1 ? 'Unit' : 'Units'}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-ink-deep font-semibold">₦{product.price?.toLocaleString()}</td>
+                      <td className="py-4 px-6 text-right">
+                        <button className="text-on-surface-variant hover:text-accent-gold transition-colors p-2">
+                          <span className="material-symbols-outlined">more_vert</span>
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })
+              ) : (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-on-surface-variant">No products in inventory.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

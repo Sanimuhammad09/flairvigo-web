@@ -1,10 +1,30 @@
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../../lib/api'
+
 export function GeneralSettings() {
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ['admin', 'settings'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/store-settings/admin')
+        return res.data.data || res.data || {}
+      } catch (err) {
+        return {}
+      }
+    }
+  })
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
       {/* Left Column */}
       <div className="space-y-8">
         {/* Section: Store Profile */}
-        <section className="bg-surface p-6 md:p-8 rounded-xl border border-ink-deep/10 shadow-sm">
+        <section className="bg-surface p-6 md:p-8 rounded-xl border border-ink-deep/10 shadow-sm relative">
+          {isLoading && (
+             <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                <span className="text-on-surface-variant">Loading settings...</span>
+             </div>
+          )}
           <h3 className="font-headline-md text-headline-md mb-6 flex items-center gap-2">
             <span className="material-symbols-outlined text-accent-gold">storefront</span>
             Store Profile
@@ -13,25 +33,25 @@ export function GeneralSettings() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Store Name</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue="Flair Vigo" />
+                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue={settings?.storeName || "Flair Vigo"} />
               </div>
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Legal Business Name</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue="Flair Holdings LLC" />
+                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue={settings?.legalName || "Flair Holdings LLC"} />
               </div>
             </div>
             <div>
               <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Store Description</label>
-              <textarea className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50 resize-none" rows={3} defaultValue="High-end performance apparel and minimalist accessories designed for the modern professional." />
+              <textarea className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50 resize-none" rows={3} defaultValue={settings?.description || "High-end performance apparel and minimalist accessories designed for the modern professional."} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Contact Email</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="email" defaultValue="hello@flairvigo.com" />
+                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="email" defaultValue={settings?.contactEmail || "hello@flairvigo.com"} />
               </div>
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Support Phone</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="tel" defaultValue="+1 (555) 123-4567" />
+                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="tel" defaultValue={settings?.supportPhone || "+234 800 000 0000"} />
               </div>
             </div>
           </div>

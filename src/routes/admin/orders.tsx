@@ -1,10 +1,25 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/admin/orders')({
   component: AdminOrders,
 })
 
 function AdminOrders() {
+  const { data: orders, isLoading } = useQuery({
+    queryKey: ['admin', 'orders'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/admin/orders')
+        return res.data.data || res.data || []
+      } catch (err) {
+        // Fallback to empty array if endpoint fails
+        return []
+      }
+    }
+  })
+
   return (
     <main className="flex-1 px-margin-mobile md:px-margin-desktop py-section-gap-md max-w-container-max mx-auto w-full">
       {/* Header */}
@@ -63,81 +78,44 @@ function AdminOrders() {
             </tr>
           </thead>
           <tbody className="font-body-md text-body-md divide-y divide-ink-deep/5">
-            {/* Row 1 */}
-            <tr className="hover:bg-neutral-light/30 transition-colors group">
-              <td className="py-4 px-6">
-                <input className="border-ink-deep/20 text-ink-deep focus:ring-ink-deep rounded-sm bg-transparent" type="checkbox" />
-              </td>
-              <td className="py-4 px-6 font-label-bold text-label-bold hover:text-accent-gold cursor-pointer transition-colors">#ORD-0921</td>
-              <td className="py-4 px-6 text-on-surface-variant">Oct 24, 2024</td>
-              <td className="py-4 px-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-ink-deep/5 flex items-center justify-center font-label-bold text-label-bold text-ink-deep">ES</div>
-                  <span>Elena Silva</span>
-                </div>
-              </td>
-              <td className="py-4 px-6 font-label-bold text-label-bold">₦1,245.00</td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-gold"></span> Paid
-                </span>
-              </td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span> Unfulfilled
-                </span>
-              </td>
-            </tr>
-            {/* Row 2 */}
-            <tr className="hover:bg-neutral-light/30 transition-colors group">
-              <td className="py-4 px-6">
-                <input className="border-ink-deep/20 text-ink-deep focus:ring-ink-deep rounded-sm bg-transparent" type="checkbox" />
-              </td>
-              <td className="py-4 px-6 font-label-bold text-label-bold hover:text-accent-gold cursor-pointer transition-colors">#ORD-0920</td>
-              <td className="py-4 px-6 text-on-surface-variant">Oct 24, 2024</td>
-              <td className="py-4 px-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-ink-deep/5 flex items-center justify-center font-label-bold text-label-bold text-ink-deep">MJ</div>
-                  <span>Marcus Johnson</span>
-                </div>
-              </td>
-              <td className="py-4 px-6 font-label-bold text-label-bold">₦340.50</td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-gold"></span> Paid
-                </span>
-              </td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-gold"></span> Fulfilled
-                </span>
-              </td>
-            </tr>
-            {/* Row 3 */}
-            <tr className="hover:bg-neutral-light/30 transition-colors group">
-              <td className="py-4 px-6">
-                <input className="border-ink-deep/20 text-ink-deep focus:ring-ink-deep rounded-sm bg-transparent" type="checkbox" />
-              </td>
-              <td className="py-4 px-6 font-label-bold text-label-bold hover:text-accent-gold cursor-pointer transition-colors">#ORD-0919</td>
-              <td className="py-4 px-6 text-on-surface-variant">Oct 23, 2024</td>
-              <td className="py-4 px-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-ink-deep/5 flex items-center justify-center font-label-bold text-label-bold text-ink-deep">SW</div>
-                  <span>Sarah Wei</span>
-                </div>
-              </td>
-              <td className="py-4 px-6 font-label-bold text-label-bold">₦890.00</td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-error"></span> Pending
-                </span>
-              </td>
-              <td className="py-4 px-6">
-                <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span> Unfulfilled
-                </span>
-              </td>
-            </tr>
+            {isLoading ? (
+              <tr>
+                <td colSpan={7} className="py-8 text-center text-on-surface-variant">Loading orders...</td>
+              </tr>
+            ) : orders?.length > 0 ? (
+              orders.map((order: any) => (
+                <tr key={order.id} className="hover:bg-neutral-light/30 transition-colors group">
+                  <td className="py-4 px-6">
+                    <input className="border-ink-deep/20 text-ink-deep focus:ring-ink-deep rounded-sm bg-transparent" type="checkbox" />
+                  </td>
+                  <td className="py-4 px-6 font-label-bold text-label-bold hover:text-accent-gold cursor-pointer transition-colors">#{order.orderNumber || order.id.substring(0,8).toUpperCase()}</td>
+                  <td className="py-4 px-6 text-on-surface-variant">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-ink-deep/5 flex items-center justify-center font-label-bold text-label-bold text-ink-deep">
+                        {(order.user?.firstName?.[0] || 'G') + (order.user?.lastName?.[0] || '')}
+                      </div>
+                      <span>{order.user?.firstName || 'Guest'} {order.user?.lastName || ''}</span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-6 font-label-bold text-label-bold">₦{order.totalAmount || order.total || 0}</td>
+                  <td className="py-4 px-6">
+                    <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
+                      <span className={`w-1.5 h-1.5 rounded-full ${order.paymentStatus === 'PAID' ? 'bg-accent-gold' : 'bg-error'}`}></span> {order.paymentStatus || 'Pending'}
+                    </span>
+                  </td>
+                  <td className="py-4 px-6">
+                    <span className="inline-flex items-center gap-1.5 bg-surface-container-low px-2 py-1 rounded-full text-label-sm font-label-sm border border-ink-deep/10">
+                      <span className={`w-1.5 h-1.5 rounded-full ${order.status === 'FULFILLED' || order.status === 'DELIVERED' ? 'bg-accent-gold' : 'bg-on-surface-variant'}`}></span> {order.status || 'Unfulfilled'}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={7} className="py-8 text-center text-on-surface-variant">No orders found.</td>
+              </tr>
+            )}
           </tbody>
         </table>
         {/* Pagination */}

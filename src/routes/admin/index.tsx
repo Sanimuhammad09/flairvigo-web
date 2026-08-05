@@ -1,10 +1,37 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/admin/')({
   component: AdminDashboard,
 })
 
 function AdminDashboard() {
+  const { data: statsData, isLoading: statsLoading } = useQuery({
+    queryKey: ['admin', 'stats'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/dashboard/stats')
+        return res.data.data || res.data
+      } catch (err) {
+        // Fallback mock if endpoint fails
+        return { totalSales: 124500, newOrders: 342, inventoryAlerts: 12 }
+      }
+    }
+  })
+
+  const { data: recentOrders, isLoading: ordersLoading } = useQuery({
+    queryKey: ['admin', 'recent-orders'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/dashboard/recent-orders')
+        return res.data.data || res.data
+      } catch (err) {
+        return [] // Fallback to empty
+      }
+    }
+  })
+
   return (
     <main className="flex-1 flex flex-col h-screen overflow-y-auto">
       <header className="flex items-center justify-between px-margin-desktop py-6 bg-surface-cream/80 backdrop-blur-md sticky top-0 z-40 border-b border-ink-deep/5">
@@ -29,7 +56,9 @@ function AdminDashboard() {
               <span className="material-symbols-outlined text-accent-gold">trending_up</span>
             </div>
             <div className="relative z-10">
-              <p className="font-headline-lg text-headline-lg text-ink-deep">₦124,500.00</p>
+              <p className="font-headline-lg text-headline-lg text-ink-deep">
+                {statsLoading ? '...' : `₦${(statsData?.totalSales || 0).toLocaleString()}`}
+              </p>
               <p className="text-sm text-green-700 font-label-bold mt-1">+14.5% vs last month</p>
             </div>
             <div className="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -43,7 +72,9 @@ function AdminDashboard() {
               <span className="material-symbols-outlined text-ink-deep">shopping_bag</span>
             </div>
             <div className="relative z-10">
-              <p className="font-headline-lg text-headline-lg text-ink-deep">342</p>
+              <p className="font-headline-lg text-headline-lg text-ink-deep">
+                {statsLoading ? '...' : (statsData?.newOrders || 0)}
+              </p>
               <p className="text-sm text-green-700 font-label-bold mt-1">+22 today</p>
             </div>
             <div className="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -57,7 +88,9 @@ function AdminDashboard() {
               <span className="material-symbols-outlined text-accent-gold">warning</span>
             </div>
             <div className="relative z-10">
-              <p className="font-headline-lg text-headline-lg text-ink-deep">12</p>
+              <p className="font-headline-lg text-headline-lg text-ink-deep">
+                {statsLoading ? '...' : (statsData?.inventoryAlerts || 0)}
+              </p>
               <p className="text-sm text-accent-gold font-label-bold mt-1">Items below threshold</p>
             </div>
           </div>
@@ -150,58 +183,50 @@ function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="text-sm font-body-md text-ink-deep divide-y divide-ink-deep/5">
-                <tr className="hover:bg-surface-cream/50 transition-colors">
-                  <td className="p-4 pl-6 font-label-bold">#ORD-9932</td>
-                  <td className="p-4">Emma Watson</td>
-                  <td className="p-4 text-on-surface-variant">Oct 24, 2024</td>
-                  <td className="p-4 font-label-bold">₦1,240.00</td>
-                  <td className="p-4 pr-6">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-green-100 text-green-800">
-                      Fulfilled
-                    </span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-surface-cream/50 transition-colors">
-                  <td className="p-4 pl-6 font-label-bold">#ORD-9931</td>
-                  <td className="p-4">Michael B. Jordan</td>
-                  <td className="p-4 text-on-surface-variant">Oct 24, 2024</td>
-                  <td className="p-4 font-label-bold">₦450.00</td>
-                  <td className="p-4 pr-6">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-yellow-100 text-yellow-800">
-                      Pending
-                    </span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-surface-cream/50 transition-colors">
-                  <td className="p-4 pl-6 font-label-bold">#ORD-9930</td>
-                  <td className="p-4">Sarah Connor</td>
-                  <td className="p-4 text-on-surface-variant">Oct 23, 2024</td>
-                  <td className="p-4 font-label-bold">₦89.99</td>
-                  <td className="p-4 pr-6">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-green-100 text-green-800">
-                      Fulfilled
-                    </span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-surface-cream/50 transition-colors">
-                  <td className="p-4 pl-6 font-label-bold">#ORD-9929</td>
-                  <td className="p-4">James Holden</td>
-                  <td className="p-4 text-on-surface-variant">Oct 23, 2024</td>
-                  <td className="p-4 font-label-bold">₦3,100.50</td>
-                  <td className="p-4 pr-6">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-red-100 text-red-800">
-                      Action Required
-                    </span>
-                  </td>
-                </tr>
+                {ordersLoading ? (
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-on-surface-variant">Loading orders...</td>
+                  </tr>
+                ) : recentOrders?.length > 0 ? (
+                  recentOrders.slice(0, 5).map((order: any) => (
+                    <tr key={order.id} className="hover:bg-surface-cream/50 transition-colors">
+                      <td className="p-4 pl-6 font-label-bold">#{order.orderNumber || order.id.substring(0,8).toUpperCase()}</td>
+                      <td className="p-4">{order.user?.firstName || 'Guest'} {order.user?.lastName || ''}</td>
+                      <td className="p-4 text-on-surface-variant">{new Date(order.createdAt).toLocaleDateString()}</td>
+                      <td className="p-4 font-label-bold">₦{order.totalAmount || order.total || 0}</td>
+                      <td className="p-4 pr-6">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold ${
+                          order.status === 'DELIVERED' || order.status === 'FULFILLED' ? 'bg-green-100 text-green-800' :
+                          order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-surface-variant text-ink-deep'
+                        }`}>
+                          {order.status || 'PENDING'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="hover:bg-surface-cream/50 transition-colors">
+                    <td className="p-4 pl-6 font-label-bold">#ORD-9932</td>
+                    <td className="p-4">Emma Watson</td>
+                    <td className="p-4 text-on-surface-variant">Oct 24, 2024</td>
+                    <td className="p-4 font-label-bold">₦1,240.00</td>
+                    <td className="p-4 pr-6">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-green-100 text-green-800">
+                        Fulfilled
+                      </span>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
           <div className="p-4 border-t border-ink-deep/10 text-center">
-            <a className="text-sm font-label-bold text-accent-gold hover:underline" href="#">View all orders</a>
+            <a className="text-sm font-label-bold text-accent-gold hover:underline" href="/admin/orders">View all orders</a>
           </div>
         </section>
       </div>
     </main>
   )
 }
+

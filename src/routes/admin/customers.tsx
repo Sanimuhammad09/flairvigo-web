@@ -1,10 +1,27 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/admin/customers')({
   component: AdminCustomers,
 })
 
 function AdminCustomers() {
+  const { data: users, isLoading } = useQuery({
+    queryKey: ['admin', 'users'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/users')
+        return res.data.data || res.data || []
+      } catch (err) {
+        return []
+      }
+    }
+  })
+
+  const totalCustomers = users?.length || 0;
+  const activeCustomers = users?.filter((u: any) => u.isActive)?.length || 0;
+
   return (
     <main className="flex-grow p-gutter md:p-margin-desktop max-w-container-max mx-auto w-full">
       {/* Header */}
@@ -23,15 +40,15 @@ function AdminCustomers() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-section-gap-md">
         <div className="bg-neutral-light p-gutter border border-ink-deep/5 flex flex-col justify-between h-40">
           <p className="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Total Customers</p>
-          <p className="font-display-lg text-display-lg text-ink-deep">12,450</p>
+          <p className="font-display-lg text-display-lg text-ink-deep">{isLoading ? '...' : totalCustomers.toLocaleString()}</p>
         </div>
         <div className="bg-neutral-light p-gutter border border-ink-deep/5 flex flex-col justify-between h-40">
           <p className="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Active This Month</p>
-          <p className="font-display-lg text-display-lg text-ink-deep">3,892</p>
+          <p className="font-display-lg text-display-lg text-ink-deep">{isLoading ? '...' : activeCustomers.toLocaleString()}</p>
         </div>
         <div className="bg-neutral-light p-gutter border border-ink-deep/5 flex flex-col justify-between h-40">
           <p className="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Avg. Lifetime Value</p>
-          <p className="font-display-lg text-display-lg text-accent-gold">₦1,240</p>
+          <p className="font-display-lg text-display-lg text-accent-gold">₦0</p>
         </div>
       </div>
       
@@ -41,93 +58,50 @@ function AdminCustomers() {
           <thead>
             <tr className="border-b border-ink-deep/10">
               <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Customer</th>
+              <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Role</th>
               <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Status</th>
-              <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Total Spend</th>
-              <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Last Order</th>
+              <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Joined</th>
               <th className="py-4 px-2 font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider text-right">Action</th>
             </tr>
           </thead>
           <tbody className="font-body-md text-body-md text-ink-deep divide-y divide-ink-deep/5">
-            {/* Row 1 */}
-            <tr className="hover:bg-neutral-light transition-colors group">
-              <td className="py-4 px-2 flex items-center gap-4">
-                <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">EA</div>
-                <div>
-                  <p className="font-label-bold text-label-bold">Elena Alvarez</p>
-                  <p className="text-on-surface-variant text-sm">elena.a@example.com</p>
-                </div>
-              </td>
-              <td className="py-4 px-2">
-                <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-label-bold rounded-full">Active</span>
-              </td>
-              <td className="py-4 px-2 font-body-lg text-body-lg">₦4,250.00</td>
-              <td className="py-4 px-2 text-on-surface-variant">Oct 12, 2024</td>
-              <td className="py-4 px-2 text-right">
-                <button className="text-accent-gold hover:text-ink-deep font-label-bold text-label-bold transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                  View Details <span className="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
-                </button>
-              </td>
-            </tr>
-            {/* Row 2 */}
-            <tr className="hover:bg-neutral-light transition-colors group">
-              <td className="py-4 px-2 flex items-center gap-4">
-                <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">MR</div>
-                <div>
-                  <p className="font-label-bold text-label-bold">Marcus Reed</p>
-                  <p className="text-on-surface-variant text-sm">m.reed@example.com</p>
-                </div>
-              </td>
-              <td className="py-4 px-2">
-                <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-label-bold rounded-full">VIP</span>
-              </td>
-              <td className="py-4 px-2 font-body-lg text-body-lg">₦12,890.50</td>
-              <td className="py-4 px-2 text-on-surface-variant">Oct 10, 2024</td>
-              <td className="py-4 px-2 text-right">
-                <button className="text-accent-gold hover:text-ink-deep font-label-bold text-label-bold transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                  View Details <span className="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
-                </button>
-              </td>
-            </tr>
-            {/* Row 3 */}
-            <tr className="hover:bg-neutral-light transition-colors group">
-              <td className="py-4 px-2 flex items-center gap-4">
-                <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">SJ</div>
-                <div>
-                  <p className="font-label-bold text-label-bold">Sarah Jenkins</p>
-                  <p className="text-on-surface-variant text-sm">sarahj@example.com</p>
-                </div>
-              </td>
-              <td className="py-4 px-2">
-                <span className="inline-flex items-center px-2 py-1 bg-surface-container-highest text-on-surface-variant text-xs font-label-bold rounded-full">Inactive</span>
-              </td>
-              <td className="py-4 px-2 font-body-lg text-body-lg">₦850.00</td>
-              <td className="py-4 px-2 text-on-surface-variant">Feb 22, 2024</td>
-              <td className="py-4 px-2 text-right">
-                <button className="text-accent-gold hover:text-ink-deep font-label-bold text-label-bold transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                  View Details <span className="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
-                </button>
-              </td>
-            </tr>
-            {/* Row 4 */}
-            <tr className="hover:bg-neutral-light transition-colors group">
-              <td className="py-4 px-2 flex items-center gap-4">
-                <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">TC</div>
-                <div>
-                  <p className="font-label-bold text-label-bold">Tom Chen</p>
-                  <p className="text-on-surface-variant text-sm">t.chen@example.com</p>
-                </div>
-              </td>
-              <td className="py-4 px-2">
-                <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-label-bold rounded-full">Active</span>
-              </td>
-              <td className="py-4 px-2 font-body-lg text-body-lg">₦2,100.00</td>
-              <td className="py-4 px-2 text-on-surface-variant">Sep 15, 2024</td>
-              <td className="py-4 px-2 text-right">
-                <button className="text-accent-gold hover:text-ink-deep font-label-bold text-label-bold transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                  View Details <span className="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
-                </button>
-              </td>
-            </tr>
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="py-8 text-center text-on-surface-variant">Loading customers...</td>
+              </tr>
+            ) : users?.length > 0 ? (
+              users.map((user: any) => (
+                <tr key={user.id} className="hover:bg-neutral-light transition-colors group">
+                  <td className="py-4 px-2 flex items-center gap-4">
+                    <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">
+                      {(user.firstName?.[0] || 'U') + (user.lastName?.[0] || '')}
+                    </div>
+                    <div>
+                      <p className="font-label-bold text-label-bold">{user.firstName || 'Unknown'} {user.lastName || ''}</p>
+                      <p className="text-on-surface-variant text-sm">{user.email}</p>
+                    </div>
+                  </td>
+                  <td className="py-4 px-2">
+                    <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-label-bold rounded-full">{user.role || 'USER'}</span>
+                  </td>
+                  <td className="py-4 px-2">
+                    <span className={`inline-flex items-center px-2 py-1 text-xs font-label-bold rounded-full ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-surface-container-highest text-on-surface-variant'}`}>
+                      {user.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td className="py-4 px-2 text-on-surface-variant">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td className="py-4 px-2 text-right">
+                    <button className="text-accent-gold hover:text-ink-deep font-label-bold text-label-bold transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
+                      View Details <span className="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="py-8 text-center text-on-surface-variant">No customers found.</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
