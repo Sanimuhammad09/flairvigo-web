@@ -163,32 +163,62 @@ function Index() {
         </div>
         
         {featuredLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-pulse">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-pulse">
             {[1, 2, 3, 4].map(i => (
               <div key={i} className="aspect-[3/4] bg-surface-variant rounded-lg"></div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {featuredProducts && featuredProducts.length > 0 ? (
-              featuredProducts.map((product: any) => (
-                <Link key={product.id} className="group" to={`/product/${product.slug}` as any}>
-                  <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
-                    <img 
-                      alt={product.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      src={product.images?.[0]?.url || 'https://via.placeholder.com/400x500?text=No+Image'}
-                    />
-                    {product.variants?.[0]?.inventory === 0 && (
-                      <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center">
-                        <span className="font-label-bold text-ink-deep bg-surface-cream px-4 py-2 rounded-full">Waitlist Available</span>
-                      </div>
-                    )}
-                  </div>
-                  <h4 className="font-bold tracking-widest text-sm uppercase text-ink-deep">{product.name}</h4>
-                  <p className="text-on-surface-variant">₦{product.basePrice}</p>
-                </Link>
-              ))
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {featuredProducts && Array.isArray(featuredProducts.data || featuredProducts) && (featuredProducts.data || featuredProducts).length > 0 ? (
+              (featuredProducts.data || featuredProducts).map((product: any) => {
+                const primaryImage = product.images?.find((img: any) => img.isMain)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500?text=No+Image';
+                const hoverImage = product.images?.length > 1 ? product.images[1].url : primaryImage;
+                
+                return (
+                  <Link key={product.id} className="group flex flex-col h-full" to={`/product/${product.slug}` as any}>
+                    <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
+                      <img 
+                        alt={product.name} 
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${product.images?.length > 1 ? 'group-hover:opacity-0 z-10' : 'z-10'}`} 
+                        src={primaryImage}
+                      />
+                      {product.images?.length > 1 && (
+                        <img 
+                          alt={`${product.name} alternate view`} 
+                          className="absolute inset-0 w-full h-full object-cover z-0" 
+                          src={hoverImage}
+                        />
+                      )}
+                      
+                      {product.variants?.[0]?.inventory === 0 && (
+                        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center z-20">
+                          <span className="font-label-bold text-ink-deep bg-surface-cream px-4 py-2 rounded-full shadow-md text-sm">Waitlist Available</span>
+                        </div>
+                      )}
+                      
+                      {/* Interactive Image Indicators for 'all images' feel */}
+                      {product.images?.length > 1 && (
+                         <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                           {product.images.slice(0, 4).map((_: any, idx: number) => (
+                              <div key={idx} className={`w-1.5 h-1.5 rounded-full ${idx === 0 ? 'bg-ink-deep/80' : 'bg-white/80'} shadow-sm`} />
+                           ))}
+                         </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1 flex flex-col">
+                      <h4 className="font-bold tracking-widest text-sm uppercase text-ink-deep mb-1 group-hover:text-accent-gold transition-colors">{product.name}</h4>
+                      {product.description && (
+                        <p className="text-on-surface-variant text-sm line-clamp-2 mb-2 leading-relaxed flex-1">
+                          {product.description}
+                        </p>
+                      )}
+                      <p className="text-ink-deep font-semibold mt-auto">₦{product.basePrice.toLocaleString()}</p>
+                    </div>
+                  </Link>
+                );
+              })
             ) : (
               <div className="col-span-full py-12 text-center text-on-surface-variant">
                 No featured products at this time. Check back later!
