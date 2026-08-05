@@ -31,6 +31,16 @@ function Index() {
     return () => clearInterval(timer);
   }, [slides.length]);
 
+  const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await api.get('/categories');
+      return res.data;
+    }
+  });
+
+  const categories = categoriesData?.data || categoriesData || [];
+
   return (
     <main className="flex-1 bg-surface-cream text-ink-deep">
       {/* BEGIN: Color Category Bar */}
@@ -231,51 +241,39 @@ function Index() {
       {/* BEGIN: By Category Grid */}
       <section className="px-6 py-12 max-w-[1600px] mx-auto mb-12">
         <h3 className="text-3xl font-bold mb-8 text-ink-deep">Flair Vigo By Category</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          
-          <Link className="group" to="/women">
-            <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4]">
-              <img alt="Scrub Tops" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJw6PHBK6oUf_zXDPiuMY9QHR-D-Fb1_ZkmXe6GS6V6APf8gGyZfYFGlLUS8MitvblS1b_sRnhNPS5kUrkzOZoCGXIoytRytHaaAmOUrgs0iDWXYMPO_2tp7iBSFfz-9800Fx-d2eaAf2hB2J29OBg2P8cwaMwofy3UXM9dftpBxaSILf8hffP0BF2579pAMKenrptF3VulSLg9STzvqHagTDQrr-YWhBWcFE09ubgn4lLtpmtpoRB3g"/>
-            </div>
-            <h4 className="font-bold tracking-widest text-sm uppercase">Scrub Tops</h4>
-          </Link>
-          
-          <Link className="group" to="/women">
-            <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4]">
-              <img alt="Scrub Pants" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV3N55T_wH59HmQxQAVgNyZvSddK7UC6J0WgT_hdOXnOl032Jo8_G832OI-uYECkMAE9I8I6zsr6N41nyZqhN8xsjCbPZOS06xEKx1hKLup2m7R2mFJFsHkbyEn8CCsyl3Dk8ivcehu_1iaNQKH3lhu-PcWEAvT88V_nXgkFORfeMlc47D-0CjbTNSixEdFWNk_TPwwFPKiHYnR3iG6Az03Fs3NutNo5VpRlCG7A3G09eDR9DqQ07NQw"/>
-            </div>
-            <h4 className="font-bold tracking-widest text-sm uppercase">Scrub Pants</h4>
-          </Link>
-          
-          <Link className="group" to="/women">
-            <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4]">
-              <img alt="Underscrubs" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA824JuZykkYfBLDcTdQApOhcyuvcXUxFOCm6bpKqLbXtEqg-dqJ5An8UIEZ3v1dx5z9g9tzORySLswJiiJmIFan4-Rr-KKGOC-qPlBIAInpj7WOn5ZKEvrQD6kOnZXVKL1sw8J8DNRI7IqS3CDOxViBi7HAw4wHFAQuudYpBPUhaq2gId69f-sFahFoWkCOZFM7F4dOLVPPiUVIoxReOzgd7m96li7XQQolxdICDuCE_rBHAtkbVa7xQ"/>
-            </div>
-            <h4 className="font-bold tracking-widest text-sm uppercase">Underscrubs</h4>
-          </Link>
-          
-          <Link className="group" to="/outerwear">
-            <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4]">
-              <img alt="Outerwear" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSWRH8wZAfRfr6Qcv2pXzu71fAJiWaTRFoD-oD5iIQvNpABi5EmvyIkjxcYowXv5nbTew4z9dYG9P9CDUQHmXDn1U2evJQlJlR96xZ7jWSZTKea-79_ViWpbN-W8jgdte8oD_8V9zjuY82veoj2iDTOwGsVybsJwiGOK983nUsj-qoH3DI3qHJZwiqEt8kTOaS1PP-LxVqHafURkiZEuAkmhp3XLt_OiBDCFLTBuqRBgNSHiimLyqQzQ"/>
-            </div>
-            <h4 className="font-bold tracking-widest text-sm uppercase">Outerwear</h4>
-          </Link>
-          
-          <Link className="group" to="/women">
-            <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4]">
-              <img alt="Footwear" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3BqC0fYOXfsKJSBu6WB3z5OFOHtE8WI2PaSTrGbsHyh8LZuuDaU8L7hbjKbJ6JSG4ozeguIT4gjvTBapRlF7cWoOUaVGCh_NklK1dcrbX-dzcOtev30FW64JxlRUO5S44kG2VZmEEnKxI-Z045ExENpLgpi3LXSG3CKZk3ra6ddYihfyhHMIbuz-pJRiRVJk8Y7Y9zv-xBy1YjwNyYQKzMOgQwgg-Bq9fZ-7806QYS5d7d1hlPN11ww"/>
-            </div>
-            <h4 className="font-bold tracking-widest text-sm uppercase">Footwear</h4>
-          </Link>
-          
-          <Link className="group" to="/jewelry">
-            <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4]">
-              <img alt="Accessories" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByRwwktz1xvkxZGHel2qsjNddoW9nd7pxHZAgC35xxP_zeQbgx8sJV9EnXazbrjFzQKr4SRXDuOFx9aDLrvHCFwwHRF7PWjZt2u2QN9I6bQuDOgPNaYgZ7yNolVV_yHgbmL2O_bPDGnWU3xCHimbzkxtE24ROpAnj_fxOgNxqw4XSXLR9zPlmIyhKZNLP3iup7u05dt-op9MetK7YJl0LM2vu--Bi3CzjRCjfwJ7KZdzvrWsK3xbXywA"/>
-            </div>
-            <h4 className="font-bold tracking-widest text-sm uppercase">Accessories</h4>
-          </Link>
-          
-        </div>
+        
+        {categoriesLoading ? (
+           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-pulse">
+             {[1, 2, 3, 4, 5, 6].map(i => (
+               <div key={i} className="aspect-[3/4] bg-surface-variant rounded-lg"></div>
+             ))}
+           </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.length > 0 ? categories.map((cat: any) => (
+              <Link key={cat.id} className="group" to={`/${cat.slug}` as any}>
+                <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
+                  {cat.image ? (
+                    <img 
+                      alt={cat.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      src={cat.image} 
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-surface-variant text-ink-deep group-hover:bg-ink-deep group-hover:text-surface-cream transition-colors duration-500">
+                       <span className="material-symbols-outlined text-4xl">category</span>
+                    </div>
+                  )}
+                </div>
+                <h4 className="font-bold tracking-widest text-sm uppercase">{cat.name}</h4>
+              </Link>
+            )) : (
+              <div className="col-span-full text-center text-on-surface-variant">
+                No categories available.
+              </div>
+            )}
+          </div>
+        )}
       </section>
     </main>
   )
