@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flair Vigo - Best Sellers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#ffdad7",
+                      "tertiary-fixed": "#e8e3cd",
+                      "on-secondary-container": "#784f21",
+                      "on-secondary-fixed": "#2c1600",
+                      "on-error-container": "#93000a",
+                      "on-secondary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "accent-gold": "#AD7D4B",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#1e1c0f",
+                      "surface-cream": "#FFF9E3",
+                      "tertiary-fixed-dim": "#ccc7b2",
+                      "surface": "#fcf9f8",
+                      "on-primary-container": "#b5726e",
+                      "ink-deep": "#340A0A",
+                      "surface-container-highest": "#e4e2e1",
+                      "tertiary": "#000000",
+                      "background": "#fcf9f8",
+                      "surface-dim": "#dcd9d9",
+                      "secondary": "#7f5527",
+                      "on-primary": "#ffffff",
+                      "inverse-on-surface": "#f3f0ef",
+                      "surface-container-lowest": "#ffffff",
+                      "on-background": "#1b1c1c",
+                      "surface-variant": "#e4e2e1",
+                      "on-primary-fixed-variant": "#6d3734",
+                      "secondary-fixed-dim": "#f4bc84",
+                      "surface-container-high": "#eae7e7",
+                      "on-tertiary-fixed": "#1e1c0f",
+                      "surface-container-low": "#f6f3f2",
+                      "on-surface": "#1b1c1c",
+                      "primary": "#000000",
+                      "on-primary-fixed": "#370d0c",
+                      "on-secondary-fixed-variant": "#643e12",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#ffb3ae",
+                      "inverse-surface": "#303030",
+                      "outline-variant": "#d7c2c0",
+                      "on-tertiary-container": "#888472",
+                      "secondary-container": "#fdc48c",
+                      "neutral-light": "#F4F4F4",
+                      "surface-bright": "#fcf9f8",
+                      "outline": "#857371",
+                      "secondary-fixed": "#ffdcbd",
+                      "surface-tint": "#8a4e4a",
+                      "primary-container": "#370d0c",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#ffb3ae",
+                      "surface-container": "#f0eded",
+                      "on-surface-variant": "#524342",
+                      "on-tertiary-fixed-variant": "#4a4737"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "section-gap-lg": "120px",
+                      "section-gap-md": "80px",
+                      "margin-desktop": "64px",
+                      "margin-mobile": "20px",
+                      "container-max": "1440px",
+                      "gutter": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-sm": [
+                              "Hanken Grotesk"
+                      ],
+                      "display-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ],
+                      "label-bold": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.03em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .product-card:hover .quick-add {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-surface-cream text-ink-deep font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface-cream dark:bg-surface-container-lowest text-ink-deep dark:text-on-primary-fixed w-full top-0 sticky z-50 border-b border-ink-deep/10">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20 max-md:px-margin-mobile">
+<!-- Brand -->
+<a class="font-headline-lg text-headline-lg font-bold tracking-tighter text-ink-deep dark:text-primary-fixed-dim max-md:font-headline-lg-mobile max-md:text-headline-lg-mobile" href="#">
+                Flair Vigo
+            </a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-on-surface-variant font-label-bold hover:text-ink-deep transition-colors" href="#">Women</a>
+<a class="text-on-surface-variant font-label-bold hover:text-ink-deep transition-colors" href="#">Men</a>
+<a class="text-on-surface-variant font-label-bold hover:text-ink-deep transition-colors" href="#">Jewelry</a>
+<a class="text-on-surface-variant font-label-bold hover:text-ink-deep transition-colors" href="#">About</a>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center space-x-6">
+<button class="hover:opacity-80 transition-opacity" data-icon="search">
+<span class="material-symbols-outlined font-light" style="font-variation-settings: 'wght' 200;">search</span>
+</button>
+<button class="hover:opacity-80 transition-opacity" data-icon="person">
+<span class="material-symbols-outlined font-light" style="font-variation-settings: 'wght' 200;">person</span>
+</button>
+<button class="hover:opacity-80 transition-opacity relative" data-icon="shopping_bag">
+<span class="material-symbols-outlined font-light" style="font-variation-settings: 'wght' 200;">shopping_bag</span>
+<span class="absolute -top-1 -right-1 bg-accent-gold text-surface-cream text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow">
+<!-- Hero Section -->
+<header class="pt-section-gap-md pb-section-gap-md px-margin-desktop max-md:px-margin-mobile max-w-container-max mx-auto text-center">
+<h1 class="font-display-lg text-display-lg text-ink-deep mb-4 max-md:text-5xl">Best Sellers</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                The community's absolute favorites. High-performance, meticulously crafted medical apparel that professionals rely on day in and day out.
+            </p>
+</header>
+<!-- Product Grid Section -->
+<section class="px-margin-desktop max-md:px-margin-mobile max-w-container-max mx-auto pb-section-gap-lg">
+<!-- Filters & Sort (Minimal) -->
+<div class="flex justify-between items-center mb-8 pb-4 border-b border-ink-deep/10">
+<div class="flex space-x-6">
+<button class="font-label-bold text-label-bold text-ink-deep border-b-2 border-ink-deep pb-1">All</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant hover:text-ink-deep transition-colors pb-1">Women's</button>
+<button class="font-label-bold text-label-bold text-on-surface-variant hover:text-ink-deep transition-colors pb-1">Men's</button>
+</div>
+<div>
+<button class="flex items-center space-x-2 text-on-surface-variant hover:text-ink-deep transition-colors font-label-bold text-label-bold">
+<span>Sort By</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Product 1 -->
+<article class="product-card group cursor-pointer flex flex-col relative">
+<div class="absolute top-4 left-4 z-10 bg-surface-cream px-3 py-1 text-xs font-bold uppercase tracking-widest text-ink-deep border border-ink-deep/10 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                        Community Favorite
+                    </div>
+<div class="relative bg-neutral-light aspect-[3/4] overflow-hidden">
+<img class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A clean, highly detailed e-commerce shot of a premium burgundy medical scrub top for women. The model stands confidently in a bright, minimalist studio setting with high-key lighting. The style is modern, technical luxury, aligning with the Flair Vigo brand aesthetic of deep blacks, pristine whites, and warm cream surfaces." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0USvj4Wziq65uVnqqDe6J4TgUEejVGnGCDUNdHwfm35UKdZ962vL8w7U0uijBLKyRshw4wq3wj7OzzSW3OH0GWXioL9aniRqheGzyKJ5RsOsl2NRULrG0kEojGQuNjApCC9zIb6bStIws2LDAK2Ko88AvjmrQfHUyk6nSNezt28W9x1138diZB79V6wuQUIbbsy63bNZpaaeNXSpnYR6T2UEOLBAQW2-fo2XdnUVwOVxG1zt9xoa68g"/>
+<!-- Quick Add -->
+<div class="quick-add absolute bottom-0 left-0 right-0 p-4 transform translate-y-full opacity-0 transition-all duration-300 ease-out bg-gradient-to-t from-black/20 to-transparent">
+<button class="w-full bg-ink-deep text-surface-cream py-3 font-label-bold text-label-bold hover:bg-ink-deep/90 transition-colors">
+                                Quick Add +
+                            </button>
+</div>
+</div>
+<div class="mt-4 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-ink-deep text-lg">The Vigo Core Scrub Top</h3>
+<span class="font-body-md text-body-md text-ink-deep font-medium">$48</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-3">Women's Classic Fit</p>
+<!-- Colors -->
+<div class="flex space-x-2 mb-4 mt-auto">
+<button aria-label="Deep Burgundy" class="w-5 h-5 rounded-full bg-ink-deep border border-ink-deep/20 ring-1 ring-offset-2 ring-ink-deep"></button>
+<button aria-label="Black" class="w-5 h-5 rounded-full bg-[#1A1A1A] border border-ink-deep/20 hover:ring-1 hover:ring-offset-2 hover:ring-ink-deep/50 transition-all"></button>
+<button aria-label="Hunter Green" class="w-5 h-5 rounded-full bg-[#4A5D4E] border border-ink-deep/20 hover:ring-1 hover:ring-offset-2 hover:ring-ink-deep/50 transition-all"></button>
+</div>
+<!-- Review Snippet -->
+<div class="pt-3 border-t border-ink-deep/10 mt-auto">
+<div class="flex items-center space-x-1 mb-1">
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs text-on-surface-variant ml-2">(4.9)</span>
+</div>
+<p class="text-xs text-on-surface-variant italic line-clamp-2">"The most comfortable scrubs I've ever worn. The fabric feels premium and moves with you during long shifts."</p>
+</div>
+</div>
+</article>
+<!-- Product 2 -->
+<article class="product-card group cursor-pointer flex flex-col relative">
+<div class="absolute top-4 left-4 z-10 bg-surface-cream px-3 py-1 text-xs font-bold uppercase tracking-widest text-ink-deep border border-ink-deep/10 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                        Community Favorite
+                    </div>
+<div class="relative bg-neutral-light aspect-[3/4] overflow-hidden">
+<img class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A detailed full-body shot of a male model wearing fitted black medical scrub pants. The setting is a minimalist, modern white studio with soft, diffused lighting. The image emphasizes the high-performance tailoring and sleek technical luxury aesthetic of the Flair Vigo brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7oOAqI5SYQM5cEwO-t9VT9NiDo8vZeQoEc8bEFQXaaYkvaMHuNwIy3iMmeDi1Yl2Cm_2om0FApWmTMcE-lzhK4ggUtmw7EBumAAl1iAf139nRQw-8sF4dhmPoPpc_NEXfr6PNlByqy7iaaLdwpOnELpFggjxnyiha8AajbbL-68nvGxVjhxB25ka5mwu9LY480z4wFO65lNesKpZRpYW9U8GsPeSlnD4K90yelwHJ3iCpKmbcdkhBvw"/>
+<div class="quick-add absolute bottom-0 left-0 right-0 p-4 transform translate-y-full opacity-0 transition-all duration-300 ease-out bg-gradient-to-t from-black/20 to-transparent">
+<button class="w-full bg-ink-deep text-surface-cream py-3 font-label-bold text-label-bold hover:bg-ink-deep/90 transition-colors">
+                                Quick Add +
+                            </button>
+</div>
+</div>
+<div class="mt-4 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-ink-deep text-lg">Shift Jogger Pants</h3>
+<span class="font-body-md text-body-md text-ink-deep font-medium">$62</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-3">Men's Tailored Fit</p>
+<div class="flex space-x-2 mb-4 mt-auto">
+<button aria-label="Black" class="w-5 h-5 rounded-full bg-[#1A1A1A] border border-ink-deep/20 ring-1 ring-offset-2 ring-ink-deep"></button>
+<button aria-label="Navy" class="w-5 h-5 rounded-full bg-[#2B3A4A] border border-ink-deep/20 hover:ring-1 hover:ring-offset-2 hover:ring-ink-deep/50 transition-all"></button>
+</div>
+<div class="pt-3 border-t border-ink-deep/10 mt-auto">
+<div class="flex items-center space-x-1 mb-1">
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 0;">star_half</span>
+<span class="text-xs text-on-surface-variant ml-2">(4.8)</span>
+</div>
+<p class="text-xs text-on-surface-variant italic line-clamp-2">"Perfect fit and tons of pockets. These joggers look professional but feel like athletic wear."</p>
+</div>
+</div>
+</article>
+<!-- Product 3 -->
+<article class="product-card group cursor-pointer flex flex-col relative">
+<div class="absolute top-4 left-4 z-10 bg-surface-cream px-3 py-1 text-xs font-bold uppercase tracking-widest text-ink-deep border border-ink-deep/10 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+                        Trending Now
+                    </div>
+<div class="relative bg-neutral-light aspect-[3/4] overflow-hidden">
+<img class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A clean, minimalist product shot of a warm, golden-brown medical under-scrub long sleeve tee on a diverse female model. Bright, high-key studio lighting with expansive whitespace highlights the premium, technical luxury feel of the garment, aligning with the Flair Vigo color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOovClQhdwRJ5ujAoc-BHiIir5VvYhtX_IX9nWs_kQOwuybN3DM5CVzc6npd7TPKyg6Q5HtRwZXyS9aVoDJjsGC14RdhoQaPM1TaoOSdtIclRLUSHtO0ehWd6YidZWlTogOZ5tMd2fvHbAAjK5qrymNX7Ff5ts3f-u9bCXK2rs9VRb70nRk74GEic9oqJKIuybJwDF5Umvrac0wJeQW31SfZa1HISHH51Cunms13XUWTkDc70NVJCtgQ"/>
+<div class="quick-add absolute bottom-0 left-0 right-0 p-4 transform translate-y-full opacity-0 transition-all duration-300 ease-out bg-gradient-to-t from-black/20 to-transparent">
+<button class="w-full bg-ink-deep text-surface-cream py-3 font-label-bold text-label-bold hover:bg-ink-deep/90 transition-colors">
+                                Quick Add +
+                            </button>
+</div>
+</div>
+<div class="mt-4 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-ink-deep text-lg">Thermal Base Layer</h3>
+<span class="font-body-md text-body-md text-ink-deep font-medium">$38</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-3">Unisex Essential</p>
+<div class="flex space-x-2 mb-4 mt-auto">
+<button aria-label="Golden Brown" class="w-5 h-5 rounded-full bg-accent-gold border border-ink-deep/20 ring-1 ring-offset-2 ring-ink-deep"></button>
+<button aria-label="Cream" class="w-5 h-5 rounded-full bg-surface-cream border border-ink-deep/20 hover:ring-1 hover:ring-offset-2 hover:ring-ink-deep/50 transition-all"></button>
+</div>
+<div class="pt-3 border-t border-ink-deep/10 mt-auto">
+<div class="flex items-center space-x-1 mb-1">
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs text-on-surface-variant ml-2">(4.9)</span>
+</div>
+<p class="text-xs text-on-surface-variant italic line-clamp-2">"A lifesaver for freezing hospitals. Thin enough to layer without adding bulk, but super warm."</p>
+</div>
+</div>
+</article>
+<!-- Product 4 -->
+<article class="product-card group cursor-pointer flex flex-col relative">
+<div class="absolute top-4 left-4 z-10 bg-surface-cream px-3 py-1 text-xs font-bold uppercase tracking-widest text-ink-deep border border-ink-deep/10 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                        Community Favorite
+                    </div>
+<div class="relative bg-neutral-light aspect-[3/4] overflow-hidden">
+<img class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105" data-alt="A sophisticated close-up product shot of a premium medical compression sock featuring a subtle geometric pattern in deep burgundy and cream. The styling is highly editorial and technical, emphasizing the high-performance fabric quality against a clean, minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFOuB-TAO6FVO0YmIAXarSp_D2bCnC1k_z3nX6_ZzJEnJE8RDBTifUmW2SR9fW80ovt6_7MxeOGwWFJ80swAdxXxC7C4Md7wacWOZsrDbInYzMipbctIKQq9cziZu8e8rHJXBfbhOE0wO2eAwF53jthhP_D_93Ix8zYbM4E9GK_Ulb2kWpLta4-zKTzUlMnSd6AzZkVHOykBfIs4F3ED8Q5nJ7BOrwiW_EylberwFgDfYSBnZCqJ8Q8w"/>
+<div class="quick-add absolute bottom-0 left-0 right-0 p-4 transform translate-y-full opacity-0 transition-all duration-300 ease-out bg-gradient-to-t from-black/20 to-transparent">
+<button class="w-full bg-ink-deep text-surface-cream py-3 font-label-bold text-label-bold hover:bg-ink-deep/90 transition-colors">
+                                Quick Add +
+                            </button>
+</div>
+</div>
+<div class="mt-4 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline-md text-headline-md text-ink-deep text-lg">Pro Compression Socks</h3>
+<span class="font-body-md text-body-md text-ink-deep font-medium">$24</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-3">Unisex Accessories</p>
+<div class="flex space-x-2 mb-4 mt-auto">
+<button aria-label="Burgundy Pattern" class="w-5 h-5 rounded-full bg-ink-deep border border-ink-deep/20 ring-1 ring-offset-2 ring-ink-deep"></button>
+</div>
+<div class="pt-3 border-t border-ink-deep/10 mt-auto">
+<div class="flex items-center space-x-1 mb-1">
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-accent-gold" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs text-on-surface-variant ml-2">(5.0)</span>
+</div>
+<p class="text-xs text-on-surface-variant italic line-clamp-2">"My legs feel completely different after a 12-hour shift. Absolute game changer for nurses."</p>
+</div>
+</div>
+</article>
+</div>
+<!-- Load More -->
+<div class="flex justify-center mt-12">
+<button class="border border-ink-deep text-ink-deep hover:bg-ink-deep hover:text-surface-cream transition-colors duration-300 font-label-bold px-8 py-4 w-full md:w-auto min-w-[240px]">
+                    Load More Essentials
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-cream dark:bg-surface-container-lowest text-ink-deep dark:text-on-primary-fixed border-t border-ink-deep/10 w-full mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-section-gap-md max-w-container-max mx-auto max-md:px-margin-mobile">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-1 flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-ink-deep mb-4">Flair Vigo</span>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Technical luxury for the modern medical professional.</p>
+</div>
+<!-- Links Columns -->
+<div class="col-span-1 md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-8">
+<div class="flex flex-col space-y-4">
+<h4 class="font-label-bold text-label-bold mb-2 uppercase tracking-widest text-on-surface-variant text-xs">Shop</h4>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">Shop All</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">Size Guide</a>
+</div>
+<div class="flex flex-col space-y-4">
+<h4 class="font-label-bold text-label-bold mb-2 uppercase tracking-widest text-on-surface-variant text-xs">Company</h4>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">About Us</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">Sustainability</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">Bulk Orders</a>
+</div>
+<div class="flex flex-col space-y-4 col-span-2 md:col-span-1">
+<h4 class="font-label-bold text-label-bold mb-2 uppercase tracking-widest text-on-surface-variant text-xs">Support</h4>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">Contact Us</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-accent-gold transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+<!-- Copyright -->
+<div class="border-t border-ink-deep/10 px-margin-desktop py-6 max-w-container-max mx-auto max-md:px-margin-mobile flex justify-between items-center flex-col md:flex-row gap-4">
+<p class="font-body-md text-sm text-on-surface-variant">© 2024 Flair Vigo Medical Apparel. All rights reserved.</p>
+<div class="flex space-x-4">
+<!-- Social placeholders -->
+<div class="w-6 h-6 rounded-full bg-ink-deep/10 hover:bg-ink-deep/20 transition-colors"></div>
+<div class="w-6 h-6 rounded-full bg-ink-deep/10 hover:bg-ink-deep/20 transition-colors"></div>
+<div class="w-6 h-6 rounded-full bg-ink-deep/10 hover:bg-ink-deep/20 transition-colors"></div>
+</div>
+</div>
+</footer>
+</body></html>

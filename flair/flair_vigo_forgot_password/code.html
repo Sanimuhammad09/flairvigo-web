@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forgot Password - Flair Vigo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-secondary-fixed": "#2c1600",
+                        "surface-container-high": "#eae7e7",
+                        "surface-dim": "#dcd9d9",
+                        "surface-tint": "#8a4e4a",
+                        "ink-deep": "#340A0A",
+                        "on-surface-variant": "#524342",
+                        "secondary-fixed": "#ffdcbd",
+                        "on-primary-fixed": "#370d0c",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#000000",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#ffdad7",
+                        "on-tertiary-fixed-variant": "#4a4737",
+                        "background": "#fcf9f8",
+                        "secondary-fixed-dim": "#f4bc84",
+                        "on-primary-fixed-variant": "#6d3734",
+                        "on-background": "#1b1c1c",
+                        "neutral-light": "#F4F4F4",
+                        "inverse-primary": "#ffb3ae",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#643e12",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-container": "#fdc48c",
+                        "secondary": "#7f5527",
+                        "surface-cream": "#FFF9E3",
+                        "primary-container": "#370d0c",
+                        "surface-container-highest": "#e4e2e1",
+                        "inverse-surface": "#303030",
+                        "on-tertiary-fixed": "#1e1c0f",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#b5726e",
+                        "on-secondary-container": "#784f21",
+                        "on-surface": "#1b1c1c",
+                        "outline-variant": "#d7c2c0",
+                        "on-tertiary-container": "#888472",
+                        "outline": "#857371",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#ffb3ae",
+                        "surface": "#fcf9f8",
+                        "tertiary-fixed": "#e8e3cd",
+                        "tertiary-container": "#1e1c0f",
+                        "primary": "#000000",
+                        "accent-gold": "#AD7D4B",
+                        "surface-variant": "#e4e2e1",
+                        "tertiary-fixed-dim": "#ccc7b2",
+                        "surface-container": "#f0eded"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "section-gap-md": "80px",
+                        "section-gap-lg": "120px",
+                        "gutter": "24px",
+                        "margin-desktop": "64px",
+                        "container-max": "1440px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "label-sm": ["Hanken Grotesk"],
+                        "body-md": ["Manrope"],
+                        "label-bold": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #FFF9E3; }
+    </style>
+</head>
+<body class="bg-surface-cream min-h-screen flex items-center justify-center font-body-md text-ink-deep p-margin-mobile md:p-margin-desktop antialiased">
+<div class="w-full max-w-md mx-auto flex flex-col items-center">
+<!-- Logo -->
+<a class="mb-12 text-center group" href="#">
+<span class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-ink-deep tracking-tight group-hover:opacity-80 transition-opacity">Flair Vigo</span>
+</a>
+<!-- Form Container -->
+<div class="w-full bg-surface-container-lowest p-8 md:p-12 shadow-sm rounded-lg border border-outline-variant/20">
+<div class="mb-8 text-center">
+<h1 class="font-headline-md text-headline-md text-ink-deep mb-3">Reset your password</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Enter the email address associated with your account and we'll send you a link to reset your password.
+                </p>
+</div>
+<form action="#" class="space-y-6" method="POST">
+<div>
+<label class="block font-label-bold text-label-bold text-ink-deep mb-2" for="email">Email Address</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 0;">mail</span>
+</span>
+<input class="block w-full pl-10 pr-3 py-3 bg-neutral-light border-b-2 border-transparent focus:border-accent-gold focus:ring-0 focus:outline-none transition-colors font-body-md text-body-md text-ink-deep placeholder:text-outline-variant rounded-t-sm" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+</div>
+<button class="w-full bg-ink-deep text-surface-cream py-4 px-8 font-label-bold text-label-bold flex items-center justify-center space-x-2 hover:bg-ink-deep/90 hover:scale-[1.01] transition-all duration-200" type="submit">
+<span>Send Reset Link</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</form>
+<div class="mt-8 text-center">
+<a class="inline-flex items-center space-x-2 font-label-bold text-label-bold text-accent-gold hover:text-ink-deep transition-colors group" href="#">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+<span>Back to Sign In</span>
+</a>
+</div>
+</div>
+<!-- Support Link -->
+<div class="mt-12 text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Having trouble? <a class="text-ink-deep font-label-bold text-label-bold underline underline-offset-4 hover:text-accent-gold transition-colors" href="#">Contact Support</a>
+</p>
+</div>
+</div>
+</body></html>

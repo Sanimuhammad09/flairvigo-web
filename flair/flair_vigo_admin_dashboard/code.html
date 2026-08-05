@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flair Vigo Admin Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#fcf9f8",
+                        "on-secondary-fixed": "#2c1600",
+                        "secondary-fixed": "#ffdcbd",
+                        "surface-container": "#f0eded",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#ffb3ae",
+                        "background": "#fcf9f8",
+                        "inverse-primary": "#ffb3ae",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#e8e3cd",
+                        "on-tertiary-fixed": "#1e1c0f",
+                        "on-secondary-container": "#784f21",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#eae7e7",
+                        "on-primary-fixed-variant": "#6d3734",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#370d0c",
+                        "tertiary-fixed-dim": "#ccc7b2",
+                        "on-tertiary-container": "#888472",
+                        "inverse-surface": "#303030",
+                        "primary-container": "#370d0c",
+                        "surface-cream": "#FFF9E3",
+                        "primary": "#000000",
+                        "primary-fixed": "#ffdad7",
+                        "on-secondary-fixed-variant": "#643e12",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#524342",
+                        "inverse-on-surface": "#f3f0ef",
+                        "secondary-container": "#fdc48c",
+                        "surface-container-highest": "#e4e2e1",
+                        "tertiary-container": "#1e1c0f",
+                        "outline-variant": "#d7c2c0",
+                        "secondary-fixed-dim": "#f4bc84",
+                        "on-primary-container": "#b5726e",
+                        "neutral-light": "#F4F4F4",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#4a4737",
+                        "accent-gold": "#AD7D4B",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1b1c1c",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary": "#000000",
+                        "surface-variant": "#e4e2e1",
+                        "ink-deep": "#340A0A",
+                        "surface-tint": "#8a4e4a",
+                        "secondary": "#7f5527",
+                        "on-surface": "#1b1c1c",
+                        "surface-bright": "#fcf9f8",
+                        "outline": "#857371"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "unit": "8px",
+                        "section-gap-lg": "120px",
+                        "margin-desktop": "64px",
+                        "container-max": "1440px",
+                        "section-gap-md": "80px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-md": ["Hanken Grotesk", "sans-serif"],
+                        "display-lg": ["Hanken Grotesk", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "label-sm": ["Hanken Grotesk", "sans-serif"],
+                        "headline-lg-mobile": ["Hanken Grotesk", "sans-serif"],
+                        "label-bold": ["Hanken Grotesk", "sans-serif"],
+                        "headline-lg": ["Hanken Grotesk", "sans-serif"]
+                    },
+                    fontSize: {
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "display-lg": ["64px", { lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.03em", fontWeight: "500" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "40px", fontWeight: "600" }],
+                        "label-bold": ["14px", { lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "700" }],
+                        "headline-lg": ["40px", { lineHeight: "48px", letterSpacing: "-0.01em", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-cream text-ink-deep font-body-md min-h-screen flex selection:bg-accent-gold selection:text-surface-cream">
+<!-- JSON Component: SideNavBar -->
+<aside class="hidden lg:flex flex-col h-screen sticky top-0 p-gutter docked left-0 w-64 bg-neutral-light border-r border-ink-deep/5 flat no shadows">
+<!-- Brand / Header -->
+<div class="mb-12 flex flex-col items-center">
+<img alt="Flair Vigo Logo" class="h-16 w-auto mb-6 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuyf_YLPJ-uAika6zi0ciCVAS-uISkteIM2ux371p2IMF6mb5MG4DIBPJpanL7NsSwbMP3B61T5txuiJVr2b9upM_X5aaeCLK2EY73taf6I2mr3V2ze8U1S8oUNvl7KW6tobocmENZfuuVRXsZqb8w4Z67wwNGFErnjvSL6SrP8dk42dcM2Tv6BB8O8TGpWzEGVzcCzDiB-K9iyb3VB1MjIMiC-MqvRZGGVEhM0rJdFsV89822ykyGLHxw51m2jFWUI9M"/>
+<h2 class="font-headline-md text-headline-md text-ink-deep">Flair Admin</h2>
+<p class="text-on-surface-variant font-body-md text-sm mt-1">Store Manager</p>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 space-y-2">
+<!-- Active Tab: Analytics -->
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-cream text-accent-gold font-bold rounded-lg translate-x-1 transition-transform group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insert_chart</span>
+<span class="font-label-bold">Analytics</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-label-bold group-hover:text-accent-gold transition-colors">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-bold group-hover:text-accent-gold transition-colors">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-bold group-hover:text-accent-gold transition-colors">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-bold group-hover:text-accent-gold transition-colors">Settings</span>
+</a>
+</nav>
+<!-- Profile & CTA -->
+<div class="mt-auto border-t border-ink-deep/10 pt-6">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-ink-deep/20">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of an elegant store manager in a well-lit modern boutique office, warm lighting, high fashion context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSAOAtrZeNQTCX-cCjttw2b7DcMe717K7nnlXoOj43uxG_ZGyIBKs9UxELLCxOPq_gHLd26fejs-rp7HVU4SEQ2VNYZGH15ysrXm-LHlbrlSEkdFcA1ZYavmY-epCJ5ESvttNHIPDkUnVGdeQO2o799EZNxlFqHwNekY6YYlk1FpdvYYCftqSp3wKuKOlAqJQUsIMDzccPakthOOFM7nl4XjZfOJfO_too1MqPceBiz1nFBYR9DLxiZg"/>
+</div>
+<div>
+<p class="font-label-bold text-ink-deep text-sm">Admin Profile</p>
+<button class="text-accent-gold text-xs font-label-bold uppercase hover:underline">Sign Out</button>
+</div>
+</div>
+<button class="w-full bg-ink-deep text-surface-cream font-label-bold py-3 rounded-lg hover:bg-ink-deep/90 transition-colors">
+                Export Reports
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-screen overflow-y-auto">
+<!-- Top Admin Header -->
+<header class="flex items-center justify-between px-margin-desktop py-6 bg-surface-cream/80 backdrop-blur-md sticky top-0 z-40 border-b border-ink-deep/5">
+<h1 class="font-headline-lg text-headline-lg text-ink-deep">Overview</h1>
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-neutral-light border-b border-ink-deep/10 focus:border-accent-gold focus:ring-0 focus:outline-none w-64 text-sm font-body-md transition-colors rounded-t-sm bg-opacity-50" placeholder="Search orders, products..." type="text"/>
+</div>
+<!-- Notifications -->
+<button class="relative text-ink-deep hover:text-accent-gold transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-accent-gold rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-margin-desktop flex-1 space-y-gutter max-w-container-max mx-auto w-full">
+<!-- Metrics Row -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Metric 1 -->
+<div class="bg-neutral-light p-6 rounded-xl border border-ink-deep/5 hover:scale-[1.01] transition-transform flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="flex justify-between items-start relative z-10">
+<p class="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">Total Sales</p>
+<span class="material-symbols-outlined text-accent-gold">trending_up</span>
+</div>
+<div class="relative z-10">
+<p class="font-headline-lg text-headline-lg text-ink-deep">$124,500.00</p>
+<p class="text-sm text-green-700 font-label-bold mt-1">+14.5% vs last month</p>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl">payments</span>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="bg-neutral-light p-6 rounded-xl border border-ink-deep/5 hover:scale-[1.01] transition-transform flex flex-col justify-between h-32 relative overflow-hidden group">
+<div class="flex justify-between items-start relative z-10">
+<p class="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">New Orders</p>
+<span class="material-symbols-outlined text-ink-deep">shopping_bag</span>
+</div>
+<div class="relative z-10">
+<p class="font-headline-lg text-headline-lg text-ink-deep">342</p>
+<p class="text-sm text-green-700 font-label-bold mt-1">+22 today</p>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl">shopping_bag</span>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="bg-neutral-light p-6 rounded-xl border border-ink-deep/5 hover:scale-[1.01] transition-transform flex flex-col justify-between h-32 relative overflow-hidden group border-l-4 border-l-accent-gold">
+<div class="flex justify-between items-start relative z-10">
+<p class="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">Inventory Alerts</p>
+<span class="material-symbols-outlined text-accent-gold">warning</span>
+</div>
+<div class="relative z-10">
+<p class="font-headline-lg text-headline-lg text-ink-deep">12</p>
+<p class="text-sm text-accent-gold font-label-bold mt-1">Items below threshold</p>
+</div>
+</div>
+</section>
+<!-- Chart & Actions Row -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Large Sales Chart -->
+<div class="lg:col-span-2 bg-neutral-light border border-ink-deep/5 rounded-xl p-6 h-96 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-ink-deep">Revenue Overview</h3>
+<select class="bg-surface-cream border-ink-deep/10 text-sm font-label-bold text-ink-deep rounded-md focus:ring-accent-gold focus:border-accent-gold py-1 pl-3 pr-8">
+<option>Last 30 Days</option>
+<option>This Quarter</option>
+<option>This Year</option>
+</select>
+</div>
+<!-- Chart Placeholder (Stylized using CSS gradients/SVG shapes) -->
+<div class="flex-1 relative w-full border-b border-l border-ink-deep/10 flex items-end">
+<!-- Y Axis labels -->
+<div class="absolute -left-10 top-0 bottom-0 flex flex-col justify-between text-xs text-on-surface-variant font-label-bold py-2">
+<span>$150k</span>
+<span>$100k</span>
+<span>$50k</span>
+<span>$0</span>
+</div>
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="border-t border-ink-deep/5 w-full h-0 mt-[10%]"></div>
+<div class="border-t border-ink-deep/5 w-full h-0 mt-[20%]"></div>
+<div class="border-t border-ink-deep/5 w-full h-0 mt-[20%]"></div>
+</div>
+<!-- Bar placeholders for aesthetics -->
+<div class="w-full flex justify-between items-end px-4 h-[90%] gap-2 z-10">
+<div class="w-full bg-ink-deep/20 hover:bg-accent-gold transition-colors rounded-t-sm h-[30%]"></div>
+<div class="w-full bg-ink-deep/20 hover:bg-accent-gold transition-colors rounded-t-sm h-[50%]"></div>
+<div class="w-full bg-ink-deep/20 hover:bg-accent-gold transition-colors rounded-t-sm h-[40%]"></div>
+<div class="w-full bg-ink-deep/40 hover:bg-accent-gold transition-colors rounded-t-sm h-[70%]"></div>
+<div class="w-full bg-ink-deep/20 hover:bg-accent-gold transition-colors rounded-t-sm h-[60%]"></div>
+<div class="w-full bg-ink-deep/60 hover:bg-accent-gold transition-colors rounded-t-sm h-[85%]"></div>
+<div class="w-full bg-accent-gold rounded-t-sm h-[100%] shadow-[0_0_15px_rgba(173,125,75,0.3)]"></div>
+</div>
+</div>
+<!-- X Axis Labels -->
+<div class="flex justify-between text-xs text-on-surface-variant font-label-bold mt-3 px-4">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+<!-- Quick Actions & Top Products -->
+<div class="flex flex-col gap-gutter">
+<!-- Quick Actions -->
+<div class="bg-neutral-light border border-ink-deep/5 rounded-xl p-6">
+<h3 class="font-headline-md text-headline-md text-ink-deep mb-4 text-lg">Quick Actions</h3>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-center gap-2 bg-ink-deep text-surface-cream py-3 rounded-lg font-label-bold hover:bg-ink-deep/90 transition-colors">
+<span class="material-symbols-outlined text-sm">add</span> Add Product
+                            </button>
+<button class="w-full flex items-center justify-center gap-2 border border-ink-deep text-ink-deep py-3 rounded-lg font-label-bold hover:bg-ink-deep/5 transition-colors">
+<span class="material-symbols-outlined text-sm">download</span> Export Data
+                            </button>
+</div>
+</div>
+<!-- Top Product Miniature -->
+<div class="bg-neutral-light border border-ink-deep/5 rounded-xl p-6 flex-1">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-headline-md text-ink-deep text-lg">Trending Item</h3>
+<a class="text-xs font-label-bold text-accent-gold hover:underline" href="#">View all</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-surface-cream rounded-md overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up of a premium gold minimal necklace draped over a cream pedestal, luxury retail photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8SVrm3UQXiEW8TrJLdKmuPndNaBBoccm7grDbisuBjJhiCDJBh64-FqDW0LI6JVAPJjnGfNA1wHXST3HY1j1vDUExiJQC7eilQ_5BC6h1EvbYtwQUMWd9dxXh0EiBD55VBkpdLSosUUJI4_N1ipOpbaVO1-fL0O2uwUapU8d_CdMWpZKg9cwtlLPEbLy-hJh_KvsxB4xi4QMJm031V87-k25EC6sNdHSDhuBFoZrbAmqIYGisoPjqUQ"/>
+</div>
+<div>
+<h4 class="font-label-bold text-ink-deep">Aura Gold Pendant</h4>
+<p class="text-sm text-on-surface-variant">42 sold today</p>
+<p class="font-label-bold text-accent-gold mt-1">$295.00</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Orders Table -->
+<section class="bg-neutral-light border border-ink-deep/5 rounded-xl overflow-hidden mb-section-gap-md">
+<div class="p-6 border-b border-ink-deep/10 flex justify-between items-center bg-white/40">
+<h3 class="font-headline-md text-headline-md text-ink-deep">Recent Orders</h3>
+<button class="text-sm font-label-bold text-ink-deep hover:text-accent-gold transition-colors flex items-center gap-1">
+                        Filter <span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant text-xs uppercase tracking-wider font-label-bold">
+<th class="p-4 pl-6 font-medium">Order ID</th>
+<th class="p-4 font-medium">Customer</th>
+<th class="p-4 font-medium">Date</th>
+<th class="p-4 font-medium">Amount</th>
+<th class="p-4 pr-6 font-medium">Status</th>
+</tr>
+</thead>
+<tbody class="text-sm font-body-md text-ink-deep divide-y divide-ink-deep/5">
+<tr class="hover:bg-surface-cream/50 transition-colors">
+<td class="p-4 pl-6 font-label-bold">#ORD-9932</td>
+<td class="p-4">Emma Watson</td>
+<td class="p-4 text-on-surface-variant">Oct 24, 2024</td>
+<td class="p-4 font-label-bold">$1,240.00</td>
+<td class="p-4 pr-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-green-100 text-green-800">
+                                        Fulfilled
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-cream/50 transition-colors">
+<td class="p-4 pl-6 font-label-bold">#ORD-9931</td>
+<td class="p-4">Michael B. Jordan</td>
+<td class="p-4 text-on-surface-variant">Oct 24, 2024</td>
+<td class="p-4 font-label-bold">$450.00</td>
+<td class="p-4 pr-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-cream/50 transition-colors">
+<td class="p-4 pl-6 font-label-bold">#ORD-9930</td>
+<td class="p-4">Sarah Connor</td>
+<td class="p-4 text-on-surface-variant">Oct 23, 2024</td>
+<td class="p-4 font-label-bold">$89.99</td>
+<td class="p-4 pr-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-green-100 text-green-800">
+                                        Fulfilled
+                                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-cream/50 transition-colors">
+<td class="p-4 pl-6 font-label-bold">#ORD-9929</td>
+<td class="p-4">James Holden</td>
+<td class="p-4 text-on-surface-variant">Oct 23, 2024</td>
+<td class="p-4 font-label-bold">$3,100.50</td>
+<td class="p-4 pr-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-red-100 text-red-800">
+                                        Action Required
+                                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-ink-deep/10 text-center">
+<a class="text-sm font-label-bold text-accent-gold hover:underline" href="#">View all orders</a>
+</div>
+</section>
+</div>
+</main>
+</body></html>
