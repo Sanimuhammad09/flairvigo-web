@@ -84,7 +84,7 @@ function Checkout() {
       }
       
       const res = await api.post('/checkout/initialize', payload)
-      return res.data
+      return res.data.data || res.data
     },
     onSuccess: (data) => {
       // Clear Cart since order is created
