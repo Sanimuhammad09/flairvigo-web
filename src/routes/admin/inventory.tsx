@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin/inventory')({
   component: AdminInventory,
@@ -18,10 +18,10 @@ function AdminInventory() {
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
             <input className="w-full pl-10 pr-4 py-3 bg-transparent border-b border-ink-deep/10 focus:border-accent-gold focus:outline-none font-body-md text-body-md transition-colors placeholder:text-on-surface-variant" placeholder="Search products, SKUs..." type="text" />
           </div>
-          <button className="bg-ink-deep text-surface-cream px-8 py-3 font-label-bold text-label-bold rounded hover:bg-ink-deep/90 transition-colors whitespace-nowrap flex items-center gap-2">
+          <Link to="/admin/products/new" className="bg-ink-deep text-surface-cream px-8 py-3 font-label-bold text-label-bold rounded hover:bg-ink-deep/90 transition-colors whitespace-nowrap flex items-center gap-2">
             <span className="material-symbols-outlined">add</span>
             Add New Product
-          </button>
+          </Link>
         </div>
       </header>
 
