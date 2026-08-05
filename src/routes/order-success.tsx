@@ -1,10 +1,25 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/order-success')({
   component: OrderSuccess,
 })
 
 function OrderSuccess() {
+  const [params, setParams] = useState<any>({})
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    setParams({
+      orderId: searchParams.get('orderId'),
+      amount: searchParams.get('amount'),
+      method: searchParams.get('method'),
+      bankName: searchParams.get('bankName'),
+      accountName: searchParams.get('accountName'),
+      accountNumber: searchParams.get('accountNumber')
+    })
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col font-body-md antialiased bg-surface-cream text-ink-deep">
       <header className="w-full border-b border-primary/10 bg-surface-cream px-margin-mobile md:px-margin-desktop h-20 flex justify-between items-center max-w-container-max mx-auto shrink-0 sticky top-0 z-50">
@@ -18,78 +33,61 @@ function OrderSuccess() {
       </header>
 
       <main className="flex-grow w-full max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24 text-center">
-        <div className="mb-8">
+        <div className="mb-12">
           <span className="material-symbols-outlined text-[64px] text-accent-gold mb-4">check_circle</span>
           <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep font-bold mb-4">Order Confirmed</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg mx-auto">
-            Thank you for your purchase. We've received your order and will email you with tracking details as soon as it ships.
+            Thank you for your purchase! We've received your order {params.orderId ? `(#${params.orderId.substring(0, 8).toUpperCase()})` : ''} and will email you with tracking details as soon as it ships.
           </p>
         </div>
 
-        <div className="bg-neutral-light border border-primary/10 rounded-lg p-8 text-left mb-12">
-          <h2 className="font-headline-md text-headline-md text-ink-deep mb-6 pb-4 border-b border-primary/10">Order Details</h2>
-          
-          <div className="space-y-6">
-            <div className="flex gap-4 items-center">
-              <div className="relative w-16 h-20 shrink-0 bg-surface-variant rounded overflow-hidden">
-                <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZb2cMpJ3GBFKoNfZS-4ng1t_KtEDZiHyuLuPiW-pJqh9VvIRZnnRY8Eso4kA0WmS1TQ_6MwPSwlqsXKUWYfLbFMu-y9R7lI6XZrp_RXRauv5emIOJsFclooVIuXr885kRankBT2i9S0-1gKJZNWZ8bbpBCyhvy9dBC-78ZmmkezondoVogf9Qv1xZfWf_MH0dMjoXjeJO5coY0d-G35m6msSayIsgvrf6qcJft0-OFqMx-xJx6JOjeA" />
-                <span className="absolute -top-2 -right-2 bg-ink-deep text-surface-cream w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-label-sm">1</span>
+        {params.method === 'BANK_TRANSFER' && (
+          <div className="bg-surface-cream border-2 border-accent-gold/40 rounded-xl p-8 text-left mb-12 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-2 h-full bg-accent-gold"></div>
+            <h2 className="font-headline-md text-2xl text-ink-deep mb-4 flex items-center gap-3">
+              <span className="material-symbols-outlined text-accent-gold">account_balance</span>
+              Bank Transfer Instructions
+            </h2>
+            <p className="font-body-md text-on-surface-variant mb-6">
+              Please transfer the total amount of <strong>₦{Number(params.amount).toLocaleString()}</strong> to the following bank account to complete your order. Your order will remain pending until funds are confirmed.
+            </p>
+            
+            <div className="bg-neutral-light/50 p-6 rounded-lg space-y-4 font-body-md">
+              <div className="flex justify-between items-center border-b border-ink-deep/5 pb-4">
+                <span className="text-on-surface-variant">Bank Name</span>
+                <span className="font-label-bold text-ink-deep">{params.bankName || 'Guaranty Trust Bank'}</span>
               </div>
-              <div className="flex-grow">
-                <h3 className="font-label-bold text-body-md text-ink-deep">The Vigo Top</h3>
-                <p className="font-body-md text-label-sm text-outline mt-1">Deep Burgundy / Medium</p>
+              <div className="flex justify-between items-center border-b border-ink-deep/5 pb-4">
+                <span className="text-on-surface-variant">Account Name</span>
+                <span className="font-label-bold text-ink-deep">{params.accountName || 'Flair Vigo'}</span>
               </div>
-              <span className="font-label-bold text-body-md text-ink-deep">₦48.00</span>
-            </div>
-
-            <div className="flex gap-4 items-center pb-6 border-b border-primary/10">
-              <div className="relative w-16 h-20 shrink-0 bg-surface-variant rounded overflow-hidden">
-                <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrHAiOk6OZUWgO2iO_fofiOENpEdkQpoYHIq6zeRLmzfkWYFrm6A2W9qcWphzqVjYhXPmPnnbiNOEuib_G6FeNRr-XSKhjA3Y3PJtad4sIfqP7n3K9nLIYXHB_ved1lmFkoXVFItsqjwuo6MzfwQRcKa_uX0DFZo3CoKD2xwyXBLj60ZHwaOqRx4eUVDmz1jp9xt-uP6n8TeMuhuciXlPdFfuKe2oB2HAE9cJsCsAHO3nCmLbYd_zkpA" />
-                <span className="absolute -top-2 -right-2 bg-ink-deep text-surface-cream w-6 h-6 rounded-full flex items-center justify-center font-label-sm text-label-sm">1</span>
+              <div className="flex justify-between items-center border-b border-ink-deep/5 pb-4">
+                <span className="text-on-surface-variant">Account Number</span>
+                <span className="font-label-bold text-ink-deep text-lg tracking-widest">{params.accountNumber || '0123456789'}</span>
               </div>
-              <div className="flex-grow">
-                <h3 className="font-label-bold text-body-md text-ink-deep">The Essence Pant</h3>
-                <p className="font-body-md text-label-sm text-outline mt-1">Deep Burgundy / Medium</p>
+              <div className="flex justify-between items-center pt-2">
+                <span className="text-on-surface-variant">Amount to Transfer</span>
+                <span className="font-headline-md text-accent-gold text-2xl">₦{Number(params.amount).toLocaleString()}</span>
               </div>
-              <span className="font-label-bold text-body-md text-ink-deep">₦56.00</span>
             </div>
             
-            <div className="space-y-3 pt-2">
-              <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
-                <span>Subtotal</span>
-                <span>₦104.00</span>
-              </div>
-              <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
-                <span>Shipping</span>
-                <span>Free</span>
-              </div>
-              <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
-                <span>Taxes</span>
-                <span>₦8.32</span>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-end mt-4 pt-6 border-t border-primary/20">
-              <span className="font-headline-md text-body-lg text-ink-deep">Total</span>
-              <div className="text-right">
-                <span className="font-label-sm text-outline mr-2 text-xs">NGN</span>
-                <span className="font-headline-lg text-headline-lg-mobile text-ink-deep">₦112.32</span>
-              </div>
-            </div>
+            <p className="text-xs text-on-surface-variant mt-6 italic text-center">
+              * Please use your Order ID (#{params.orderId?.substring(0, 8).toUpperCase()}) as the payment reference.
+            </p>
           </div>
-        </div>
+        )}
 
-        <Link to="/" className="inline-block bg-ink-deep text-surface-cream font-label-bold text-body-md py-4 px-12 tracking-wider hover:bg-primary transition-colors">
+        <Link to="/" className="inline-block bg-ink-deep text-surface-cream font-label-bold text-body-md py-4 px-12 tracking-wider hover:bg-ink-deep/90 transition-colors shadow-md rounded">
           RETURN TO HOME
         </Link>
       </main>
 
-      <footer className="bg-ink-deep dark:bg-surface-container-highest w-full relative grid grid-cols-2 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap-md max-w-container-max mx-auto mt-auto">
+      <footer className="bg-ink-deep w-full relative grid grid-cols-2 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap-md max-w-container-max mx-auto mt-auto text-surface-cream">
         <div className="col-span-2 md:col-span-4 mb-8">
-          <span className="font-display-lg text-headline-md text-surface-cream">Flair Vigo</span>
+          <span className="font-display-lg text-headline-md">Flair Vigo</span>
         </div>
         <div className="col-span-2 md:col-span-4 pt-8 border-t border-surface-cream/10">
-          <p className="font-body-md text-body-md text-surface-cream dark:text-on-surface opacity-70 text-sm">
+          <p className="font-body-md text-sm opacity-70">
             © 2024 Flair Vigo. Premium Medical Apparel. All rights reserved.
           </p>
         </div>
