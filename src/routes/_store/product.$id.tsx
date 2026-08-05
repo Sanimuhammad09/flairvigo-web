@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '../../lib/api'
+import { useCartStore } from '../../store/cart'
 
 export const Route = createFileRoute('/_store/product/$id')({
   component: ProductPage,
@@ -9,9 +10,13 @@ export const Route = createFileRoute('/_store/product/$id')({
 
 function ProductPage() {
   const { id } = Route.useParams()
+  const addItem = useCartStore((state) => state.addItem)
+  
   const [activeImage, setActiveImage] = useState("")
+  const [selectedColor, setSelectedColor] = useState("")
   const [selectedSize, setSelectedSize] = useState("")
   const [waitlistEmail, setWaitlistEmail] = useState("")
+  const [openAccordion, setOpenAccordion] = useState<string | null>('description')
 
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', id],
@@ -20,6 +25,19 @@ function ProductPage() {
       return res.data.data || res.data // handle potential nesting
     }
   })
+
+  // Initialize selected color and active image once product is loaded
+  useEffect(() => {
+    if (product) {
+      if (product.images?.length > 0 && !activeImage) {
+        setActiveImage(product.images[0].url)
+      }
+      if (product.variants?.length > 0 && !selectedColor) {
+        const uniqueColors = Array.from(new Set(product.variants.map((v: any) => v.color)))
+        setSelectedColor(uniqueColors[0] as string)
+      }
+    }
+  }, [product, activeImage, selectedColor])
 
   const waitlistMutation = useMutation({
     mutationFn: async (email: string) => {
@@ -39,13 +57,64 @@ function ProductPage() {
     return <div className="min-h-screen flex items-center justify-center">Product not found.</div>
   }
 
-  // Set initial active image once loaded
-  if (product.images?.length > 0 && !activeImage) {
-    setActiveImage(product.images[0].url)
+  // Derive variants for color/size selectors
+  const allVariants = product.variants || []
+  
+  // Extract unique colors based on variants
+  const uniqueColorsMap = new Map()
+  allVariants.forEach((v: any) => {
+    if (!uniqueColorsMap.has(v.color)) {
+      uniqueColorsMap.set(v.color, v.colorHex || '#111111')
+    }
+  })
+  const colors = Array.from(uniqueColorsMap.entries()).map(([color, hex]) => ({ name: color, hex }))
+
+  // Extract unique sizes for the currently selected color
+  const variantsForColor = allVariants.filter((v: any) => v.color === selectedColor)
+  
+  // Default to first available size if current one is not valid for this color
+  if (variantsForColor.length > 0 && !variantsForColor.find((v: any) => v.size === selectedSize)) {
+    // try to find first in stock
+    const inStock = variantsForColor.find((v: any) => v.inventory > 0)
+    setSelectedSize((inStock || variantsForColor[0]).size)
   }
+  
+  // Get the specifically selected variant
+  const selectedVariant = variantsForColor.find((v: any) => v.size === selectedSize) || variantsForColor[0]
+  
+  // Override price if variant has price offset
+  const currentPrice = product.basePrice + (selectedVariant?.priceOffset || 0)
 
   // Determine if out of stock
-  const isOutOfStock = product.variants?.every((v: any) => v.inventory === 0)
+  const isOutOfStock = selectedVariant ? selectedVariant.inventory === 0 : true
+
+  const handleAddToCart = () => {
+    if (!selectedVariant || isOutOfStock) return
+    
+    addItem({
+      id: selectedVariant.id || selectedVariant.sku,
+      productId: product.id,
+      variantId: selectedVariant.id || selectedVariant.sku,
+      name: product.name,
+      slug: product.slug,
+      price: currentPrice,
+      quantity: 1,
+      color: selectedVariant.color,
+      size: selectedVariant.size,
+      image: product.images?.[0]?.url,
+      maxInventory: selectedVariant.inventory
+    })
+  }
+
+  const toggleAccordion = (accordionId: string) => {
+    setOpenAccordion(prev => prev === accordionId ? null : accordionId)
+  }
+
+  // List of possible sizes to order them correctly
+  const sizeOrder = ['XXS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']
+  const availableSizes = variantsForColor.sort((a: any, b: any) => {
+    return sizeOrder.indexOf(a.size) - sizeOrder.indexOf(b.size)
+  })
 
   return (
     <div className="bg-surface text-ink-deep font-body-md selection:bg-accent-gold/20">
@@ -100,7 +169,7 @@ function ProductPage() {
               </div>
             </div>
             <div className="font-headline-md text-headline-md text-ink-deep">
-              ₦{product.basePrice}
+              ₦{currentPrice.toLocaleString()}
             </div>
           </div>
           
@@ -125,18 +194,23 @@ function ProductPage() {
           {/* Color Selector */}
           <div className="mb-8">
             <div className="flex justify-between items-baseline mb-3">
-              <h3 className="font-label-bold text-label-bold uppercase tracking-widest text-ink-deep">Shop Core Colors</h3>
-              <span className="font-label-sm italic text-surface-variant">Burgundy</span>
+              <h3 className="font-label-bold text-label-bold uppercase tracking-widest text-ink-deep">Select Color</h3>
+              <span className="font-label-sm italic text-surface-variant">{selectedColor}</span>
             </div>
-            <p className="font-body-md text-sm text-surface-variant mb-4">Build your ultimate uniform with these Core colors—on call 24/7, 365.</p>
             <div className="flex flex-wrap gap-3">
-              <button aria-label="Burgundy" className="w-10 h-10 rounded-full bg-[#340A0A] border-2 border-surface-cream ring-2 ring-ink-deep flex items-center justify-center relative shadow-sm">
-                <span className="material-symbols-outlined text-surface-cream text-sm">check</span>
-              </button>
-              <button aria-label="Navy" className="w-10 h-10 rounded-full bg-[#0F172A] border-2 border-transparent hover:ring-2 ring-ink-deep/30 transition-all shadow-sm"></button>
-              <button aria-label="Black" className="w-10 h-10 rounded-full bg-[#111111] border-2 border-transparent hover:ring-2 ring-ink-deep/30 transition-all shadow-sm"></button>
-              <button aria-label="Moss" className="w-10 h-10 rounded-full bg-[#4A5D4E] border-2 border-transparent hover:ring-2 ring-ink-deep/30 transition-all shadow-sm"></button>
-              <button aria-label="Charcoal" className="w-10 h-10 rounded-full bg-[#4B4B4B] border-2 border-transparent hover:ring-2 ring-ink-deep/30 transition-all shadow-sm"></button>
+              {colors.map((color) => (
+                <button 
+                  key={color.name}
+                  onClick={() => setSelectedColor(color.name)}
+                  aria-label={color.name} 
+                  style={{ backgroundColor: color.hex }}
+                  className={`w-10 h-10 rounded-full border-2 ${selectedColor === color.name ? 'border-surface-cream ring-2 ring-ink-deep relative' : 'border-transparent hover:ring-2 ring-ink-deep/30'} transition-all shadow-sm flex items-center justify-center`}
+                >
+                  {selectedColor === color.name && (
+                    <span className="material-symbols-outlined text-surface-cream text-sm mix-blend-difference">check</span>
+                  )}
+                </button>
+              ))}
             </div>
           </div>
           
@@ -147,14 +221,22 @@ function ProductPage() {
               <a className="font-label-sm text-accent-gold underline hover:text-ink-deep transition-colors" href="#">Size Guide</a>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors">XXS</button>
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors text-surface-variant line-through bg-neutral-light cursor-not-allowed">XS</button>
-              <button className="py-3 border border-ink-deep bg-ink-deep text-surface-cream text-center font-label-sm uppercase shadow-md">S</button>
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors">M</button>
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors">L</button>
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors">XL</button>
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors">2XL</button>
-              <button className="py-3 border border-primary/20 text-center font-label-sm uppercase hover:border-ink-deep transition-colors">3XL</button>
+              {availableSizes.map((variant: any) => (
+                <button 
+                  key={variant.size}
+                  onClick={() => setSelectedSize(variant.size)}
+                  disabled={variant.inventory === 0}
+                  className={`py-3 border text-center font-label-sm uppercase transition-colors 
+                    ${selectedSize === variant.size 
+                      ? 'border-ink-deep bg-ink-deep text-surface-cream shadow-md' 
+                      : variant.inventory === 0 
+                        ? 'border-primary/20 text-surface-variant line-through bg-neutral-light cursor-not-allowed'
+                        : 'border-primary/20 hover:border-ink-deep'
+                    }`}
+                >
+                  {variant.size}
+                </button>
+              ))}
             </div>
           </div>
           
@@ -187,36 +269,62 @@ function ProductPage() {
               </form>
             </div>
           ) : (
-            <button className="w-full bg-ink-deep text-surface-cream py-4 font-label-bold text-label-bold tracking-widest uppercase hover:bg-ink-deep/90 transition-colors mb-4 flex justify-center items-center gap-2">
-              Add to Bag — ₦{product.basePrice}
+            <button 
+              onClick={handleAddToCart}
+              className="w-full bg-ink-deep text-surface-cream py-4 font-label-bold text-label-bold tracking-widest uppercase hover:bg-ink-deep/90 transition-colors mb-4 flex justify-center items-center gap-2"
+            >
+              Add to Bag — ₦{currentPrice.toLocaleString()}
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </button>
           )}
           
-          <p className="text-center font-label-sm text-[11px] text-surface-variant uppercase tracking-widest mb-8">Free shipping &amp; returns on all orders over ₦50</p>
+          <p className="text-center font-label-sm text-[11px] text-surface-variant uppercase tracking-widest mb-8">Free shipping &amp; returns on all orders over ₦50,000</p>
           
           {/* Accordion Details */}
           <div className="border-t border-primary/10">
+            {/* Description */}
             <div className="border-b border-primary/10">
-              <button className="w-full py-4 flex justify-between items-center group">
+              <button onClick={() => toggleAccordion('description')} className="w-full py-4 flex justify-between items-center group">
                 <span className="font-label-bold text-label-bold tracking-widest uppercase text-ink-deep group-hover:text-accent-gold transition-colors">Description</span>
-                <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">remove</span>
+                <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">
+                  {openAccordion === 'description' ? 'remove' : 'add'}
+                </span>
               </button>
-              <div className="pb-4 text-surface-variant font-body-md text-sm leading-relaxed">
-                {product.description || "The Vigo Classic Scrub Top is engineered for modern medical professionals. Featuring a tailored fit, strategic pocket placement, and crafted with our proprietary FIONx™ technology, it delivers unmatched comfort and a polished aesthetic for the longest shifts."}
+              <div className={`overflow-hidden transition-all duration-300 ${openAccordion === 'description' ? 'max-h-96 pb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <p className="text-surface-variant font-body-md text-sm leading-relaxed">
+                  {product.description || "Premium medical apparel engineered for modern healthcare professionals. Designed for comfort, durability, and a polished aesthetic."}
+                </p>
               </div>
             </div>
+            
+            {/* Fit & Features */}
             <div className="border-b border-primary/10">
-              <button className="w-full py-4 flex justify-between items-center group">
+              <button onClick={() => toggleAccordion('fit')} className="w-full py-4 flex justify-between items-center group">
                 <span className="font-label-bold text-label-bold tracking-widest uppercase text-ink-deep group-hover:text-accent-gold transition-colors">Fit &amp; Features</span>
-                <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">add</span>
+                <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">
+                  {openAccordion === 'fit' ? 'remove' : 'add'}
+                </span>
               </button>
+              <div className={`overflow-hidden transition-all duration-300 ${openAccordion === 'fit' ? 'max-h-96 pb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <p className="text-surface-variant font-body-md text-sm leading-relaxed">
+                  {product.fabricDetails || "Tailored fit with strategic pocket placement. Engineered with four-way stretch, moisture-wicking technology, and anti-wrinkle properties."}
+                </p>
+              </div>
             </div>
+            
+            {/* Fabric & Care */}
             <div className="border-b border-primary/10">
-              <button className="w-full py-4 flex justify-between items-center group">
+              <button onClick={() => toggleAccordion('care')} className="w-full py-4 flex justify-between items-center group">
                 <span className="font-label-bold text-label-bold tracking-widest uppercase text-ink-deep group-hover:text-accent-gold transition-colors">Fabric &amp; Care</span>
-                <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">add</span>
+                <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">
+                  {openAccordion === 'care' ? 'remove' : 'add'}
+                </span>
               </button>
+              <div className={`overflow-hidden transition-all duration-300 ${openAccordion === 'care' ? 'max-h-96 pb-4 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <p className="text-surface-variant font-body-md text-sm leading-relaxed">
+                  {product.careInstructions || "Machine wash cold with like colors. Tumble dry low. Do not bleach. Cool iron if needed."}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -237,69 +345,6 @@ function ProductPage() {
               <span>Explore FIONx™ Fabric</span>
               <span className="material-symbols-outlined text-sm">east</span>
             </a>
-          </div>
-        </div>
-      </section>
-      
-      {/* Complete The Set / Cross Sell (Bento Grid Style) */}
-      <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap-md">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep mb-2">Complete The Set</h2>
-            <p className="font-body-md text-surface-variant">Pair your top with our perfectly matched bottoms.</p>
-          </div>
-          <a className="hidden md:block font-label-bold uppercase tracking-widest text-ink-deep hover:text-accent-gold underline underline-offset-4" href="#">Shop All Pants</a>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Product Card 1 */}
-          <Link to="/product/$id" params={{ id: '1' }} className="group cursor-pointer block">
-            <div className="relative aspect-[3/4] bg-neutral-light mb-4 overflow-hidden">
-              <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Pant 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW83G9pYfrK-UTKDaZsXIuq7KT8GrCFeNTj00h6FznDO7NugM2HPXQ8arSNEDLdAAVYEwYDZ9jaLpX8lLx395HXORcIc52DecoyZymMoJYmP3CfMkZOh_jBKT55CWgJ7Wvqb4Z7W9qx77c5qfqfQlBBpwTHlQaFhyBL9H9y_MHbvojCGHCsc1VAMMDqxnyoSg91BBZQCd8ARb74C4sgYI-SPctGhF0rvtXTEQt6xiUotq52oaaZ6Qg3Q" />
-              <button className="absolute top-4 right-4 text-ink-deep hover:text-accent-gold bg-surface-cream/80 rounded-full p-2 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined">favorite</span>
-              </button>
-              {/* Quick Add Slide Up */}
-              <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <button className="w-full bg-surface-cream text-ink-deep py-3 font-label-bold text-[12px] tracking-widest uppercase hover:bg-accent-gold hover:text-surface-cream transition-colors shadow-lg">Quick Add</button>
-              </div>
-            </div>
-            <div className="flex justify-between items-start">
-              <div>
-                <h4 className="font-label-bold text-ink-deep">Vigo Straight-Leg Pant</h4>
-                <p className="text-surface-variant font-label-sm mt-1">Burgundy</p>
-              </div>
-              <span className="font-label-bold text-ink-deep">₦52.00</span>
-            </div>
-          </Link>
-          
-          {/* Product Card 2 */}
-          <Link to="/product/$id" params={{ id: '1' }} className="group cursor-pointer block">
-            <div className="relative aspect-[3/4] bg-neutral-light mb-4 overflow-hidden">
-              <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Pant 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeS84bk6B2tYunjDnkBIOkUM_QW5Qi-UkjEmfT5PDtgNabnnLs3KE2EGuVtXD5rSkHt2I1kA_MaTTCCpqRiLDDonFBHWiVZCg9mhvsUqTFQvFCl0WAAe_cGhDGsGC4Bo_iHy4i5sqGJEg6PiwZQ5lEC9J2-_2N748CMTQmbUBJNPA7lNWqNb2mfs3GCDADcMtQPOy3bhZ7xP7y6GrBFlDVZLrOUkTJE2Nv7yIfdMwApZEmGHnVVeInaw" />
-              <button className="absolute top-4 right-4 text-ink-deep hover:text-accent-gold bg-surface-cream/80 rounded-full p-2 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="material-symbols-outlined">favorite</span>
-              </button>
-              <div className="absolute bottom-0 left-0 w-full p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <button className="w-full bg-surface-cream text-ink-deep py-3 font-label-bold text-[12px] tracking-widest uppercase hover:bg-accent-gold hover:text-surface-cream transition-colors shadow-lg">Quick Add</button>
-              </div>
-            </div>
-            <div className="flex justify-between items-start">
-              <div>
-                <h4 className="font-label-bold text-ink-deep">Vigo Jogger Scrub Pant</h4>
-                <p className="text-surface-variant font-label-sm mt-1">Burgundy</p>
-              </div>
-              <span className="font-label-bold text-ink-deep">₦56.00</span>
-            </div>
-          </Link>
-          
-          {/* Informational Bento Box */}
-          <div className="bg-surface-cream border border-primary/10 p-8 flex flex-col justify-center items-center text-center">
-            <span className="material-symbols-outlined text-4xl text-accent-gold mb-4">diamond</span>
-            <h3 className="font-headline-md text-ink-deep mb-2">The Perfect Match</h3>
-            <p className="font-body-md text-sm text-surface-variant mb-6">Our dyes are precision-matched to ensure your tops and bottoms align flawlessly, wash after wash.</p>
-            <button className="bg-transparent border border-ink-deep text-ink-deep py-3 px-6 font-label-bold text-label-bold tracking-widest uppercase hover:bg-ink-deep hover:text-surface-cream transition-colors">
-              Build a Set
-            </button>
           </div>
         </div>
       </section>

@@ -1,11 +1,14 @@
 import { Link } from '@tanstack/react-router'
+import { useCartStore } from '../store/cart'
 
 export function Header() {
+  const { items, isOpen, toggleCart, setIsOpen, removeItem, updateQuantity, getCartTotal, getCartCount } = useCartStore()
+
   return (
     <>
       {/* Top Notification Bar */}
       <div className="bg-[#222] text-white text-xs font-semibold tracking-widest uppercase text-center py-2.5 relative z-50">
-        <p>Free shipping for ₦50+ orders and free returns</p>
+        <p>Free shipping for ₦50,000+ orders and free returns</p>
         <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -78,7 +81,7 @@ export function Header() {
                   </ul>
                 </div>
                 <div>
-                  <img alt="Men's Collection" className="rounded-lg object-cover w-[300px] h-[200px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQqV3D2D37nB2sKjQ1uL8X5l2ZqB0eH6o6_YwA3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5g" />
+                  <img alt="Men's Collection" className="rounded-lg object-cover w-[300px] h-[200px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQqV3D2D37nB2sKjQ1uL8X5l2ZqB0eH6o6_YwA3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5g" />
                   <p className="mt-2 font-bold text-sm">Shop Men's Collection</p>
                 </div>
               </div>
@@ -117,11 +120,16 @@ export function Header() {
             </Link>
             
             {/* Bag Icon */}
-            <Link to="/checkout" className="hover:text-brand">
+            <button onClick={toggleCart} className="hover:text-brand relative">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
               </svg>
-            </Link>
+              {getCartCount() > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-ink-deep text-surface-cream text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {getCartCount()}
+                </span>
+              )}
+            </button>
             
             {/* Menu Icon */}
             <button className="hover:text-brand">
@@ -132,6 +140,96 @@ export function Header() {
           </div>
         </div>
       </header>
+
+      {/* Cart Slide-out Panel */}
+      {isOpen && (
+        <>
+          {/* Overlay */}
+          <div className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm transition-opacity" onClick={() => setIsOpen(false)} />
+          
+          {/* Panel */}
+          <div className="fixed top-0 right-0 h-full w-full max-w-md bg-surface-cream shadow-2xl z-[70] flex flex-col transform transition-transform duration-300 ease-in-out border-l border-brand-border">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-brand-border">
+              <h2 className="font-headline-md text-ink-deep tracking-widest uppercase text-xl">Your Bag ({getCartCount()})</h2>
+              <button onClick={() => setIsOpen(false)} className="text-surface-variant hover:text-ink-deep p-2">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            
+            {/* Items */}
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 hide-scrollbar">
+              {items.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-surface-variant text-center space-y-4">
+                  <span className="material-symbols-outlined text-5xl opacity-50">shopping_bag</span>
+                  <p className="font-body-md">Your bag is currently empty.</p>
+                  <button onClick={() => setIsOpen(false)} className="border-b border-ink-deep text-ink-deep font-label-bold pb-1 uppercase tracking-widest mt-4">Continue Shopping</button>
+                </div>
+              ) : (
+                items.map((item) => (
+                  <div key={item.id} className="flex gap-4 group">
+                    {/* Image */}
+                    <Link to={`/product/${item.slug}` as any} onClick={() => setIsOpen(false)} className="w-24 aspect-[3/4] bg-neutral-light rounded overflow-hidden shrink-0">
+                      <img src={item.image || 'https://via.placeholder.com/150'} alt={item.name} className="w-full h-full object-cover" />
+                    </Link>
+                    
+                    {/* Details */}
+                    <div className="flex-1 flex flex-col">
+                      <div className="flex justify-between items-start mb-1">
+                        <Link to={`/product/${item.slug}` as any} onClick={() => setIsOpen(false)} className="font-label-bold text-ink-deep uppercase tracking-widest text-sm hover:text-accent-gold transition-colors line-clamp-1 pr-2">
+                          {item.name}
+                        </Link>
+                        <button onClick={() => removeItem(item.id)} className="text-surface-variant hover:text-red-500">
+                          <span className="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                      </div>
+                      
+                      <p className="text-surface-variant font-label-sm text-xs mb-3">{item.color} / {item.size}</p>
+                      
+                      <div className="flex items-center justify-between mt-auto">
+                        {/* Quantity Selector */}
+                        <div className="flex items-center border border-brand-border rounded">
+                          <button 
+                            disabled={item.quantity <= 1}
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="px-2 py-1 text-ink-deep hover:bg-neutral-light disabled:opacity-30"
+                          >-</button>
+                          <span className="px-3 py-1 font-label-bold text-sm min-w-[2rem] text-center">{item.quantity}</span>
+                          <button 
+                            disabled={item.quantity >= item.maxInventory}
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="px-2 py-1 text-ink-deep hover:bg-neutral-light disabled:opacity-30"
+                          >+</button>
+                        </div>
+                        
+                        <p className="font-label-bold text-ink-deep">₦{(item.price * item.quantity).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            
+            {/* Footer */}
+            {items.length > 0 && (
+              <div className="p-6 border-t border-brand-border bg-white mt-auto space-y-4">
+                <div className="flex justify-between items-center text-ink-deep font-headline-sm">
+                  <span>Subtotal</span>
+                  <span>₦{getCartTotal().toLocaleString()}</span>
+                </div>
+                <p className="text-surface-variant text-xs font-label-sm">Shipping & taxes calculated at checkout</p>
+                <Link 
+                  to="/checkout" 
+                  onClick={() => setIsOpen(false)}
+                  className="w-full block text-center bg-ink-deep text-surface-cream py-4 font-label-bold tracking-widest uppercase hover:bg-ink-deep/90 transition-colors shadow-lg"
+                >
+                  Proceed to Checkout
+                </Link>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }
