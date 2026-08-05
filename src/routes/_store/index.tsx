@@ -181,7 +181,10 @@ function Index() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {featuredProducts && Array.isArray(featuredProducts.data || featuredProducts) && (featuredProducts.data || featuredProducts).length > 0 ? (
-              (featuredProducts.data || featuredProducts).map((product: any) => {
+              (featuredProducts.data || featuredProducts)
+                .filter((product: any) => !product.name.toLowerCase().includes('perfume'))
+                .slice(0, 4)
+                .map((product: any) => {
                 const primaryImage = product.images?.find((img: any) => img.isMain)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500?text=No+Image';
                 const hoverImage = product.images?.length > 1 ? product.images[1].url : primaryImage;
                 
