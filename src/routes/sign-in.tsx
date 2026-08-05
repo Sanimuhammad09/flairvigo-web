@@ -1,10 +1,50 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '../lib/api'
+import { useAuthStore } from '../store/auth'
 
 export const Route = createFileRoute('/sign-in')({
   component: SignIn,
 })
 
 function SignIn() {
+  const navigate = useNavigate()
+  const { login } = useAuthStore()
+  
+  const [formData, setFormData] = useState({
+    email: 'admin@flairvigo.com.ng',
+    password: 'admin@123',
+  })
+
+  const loginMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      const response = await api.post('/auth/login', data)
+      return response.data
+    },
+    onSuccess: (data) => {
+      // Assuming response contains { user, accessToken }
+      login(data.user, data.accessToken)
+      
+      // Redirect based on role
+      const isAdmin = data.user?.roles?.includes('admin') || data.user?.roles?.includes('ADMIN')
+      if (isAdmin) {
+        navigate({ to: '/admin' })
+      } else {
+        navigate({ to: '/' })
+      }
+    },
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    loginMutation.mutate(formData)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
   return (
     <main className="flex w-full min-h-screen">
       {/* Left Side: Image Canvas (Hidden on mobile) */}
@@ -37,16 +77,22 @@ function SignIn() {
             <p className="font-body-md text-body-md text-on-surface-variant">Please enter your details to sign in.</p>
           </div>
           
-          <form className="space-y-6">
+          {loginMutation.isError && (
+            <div className="p-4 bg-red-50 text-red-700 border border-red-200 rounded text-sm">
+              Sign in failed. Please check your credentials.
+            </div>
+          )}
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div className="relative group">
-                <input className="peer w-full bg-transparent border-0 border-b border-ink-deep/20 pt-6 pb-2 px-0 text-ink-deep font-body-md focus:ring-0 focus:border-accent-gold transition-colors duration-300 placeholder-transparent" id="email" name="email" placeholder="Email address" required type="email" />
+                <input className="peer w-full bg-transparent border-0 border-b border-ink-deep/20 pt-6 pb-2 px-0 text-ink-deep font-body-md focus:ring-0 focus:border-accent-gold transition-colors duration-300 placeholder-transparent" id="email" name="email" placeholder="Email address" required type="email" value={formData.email} onChange={handleChange} />
                 <label className="absolute left-0 top-6 text-on-surface-variant font-body-md transition-all duration-300 peer-focus:-top-2 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-accent-gold peer-valid:-top-2 peer-valid:text-label-sm peer-valid:font-label-sm" htmlFor="email">
                   Email address
                 </label>
               </div>
               <div className="relative group">
-                <input className="peer w-full bg-transparent border-0 border-b border-ink-deep/20 pt-6 pb-2 px-0 text-ink-deep font-body-md focus:ring-0 focus:border-accent-gold transition-colors duration-300 placeholder-transparent" id="password" name="password" placeholder="Password" required type="password" />
+                <input className="peer w-full bg-transparent border-0 border-b border-ink-deep/20 pt-6 pb-2 px-0 text-ink-deep font-body-md focus:ring-0 focus:border-accent-gold transition-colors duration-300 placeholder-transparent" id="password" name="password" placeholder="Password" required type="password" value={formData.password} onChange={handleChange} />
                 <label className="absolute left-0 top-6 text-on-surface-variant font-body-md transition-all duration-300 peer-focus:-top-2 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-accent-gold peer-valid:-top-2 peer-valid:text-label-sm peer-valid:font-label-sm" htmlFor="password">
                   Password
                 </label>
@@ -67,9 +113,9 @@ function SignIn() {
               <Link to="/forgot-password" className="font-label-bold text-label-bold text-ink-deep hover:text-accent-gold transition-colors underline underline-offset-4 decoration-1 decoration-ink-deep/30 hover:decoration-accent-gold">Forgot Password?</Link>
             </div>
             
-            <button className="w-full bg-ink-deep text-surface-cream font-label-bold text-label-bold py-4 px-8 mt-8 hover:bg-ink-deep/90 active:scale-[0.99] transition-all duration-200 flex justify-center items-center gap-2 group" type="submit">
-              Sign In
-              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <button className="w-full bg-ink-deep text-surface-cream font-label-bold text-label-bold py-4 px-8 mt-8 hover:bg-ink-deep/90 active:scale-[0.99] transition-all duration-200 flex justify-center items-center gap-2 group disabled:opacity-50" type="submit" disabled={loginMutation.isPending}>
+              {loginMutation.isPending ? 'Signing In...' : 'Sign In'}
+              {!loginMutation.isPending && <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>}
             </button>
           </form>
           

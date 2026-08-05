@@ -1,10 +1,39 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '../lib/api'
 
 export const Route = createFileRoute('/sign-up')({
   component: SignUp,
 })
 
 function SignUp() {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  })
+
+  const registerMutation = useMutation({
+    mutationFn: (data: typeof formData) => {
+      return api.post('/auth/register', data)
+    },
+    onSuccess: () => {
+      navigate({ to: '/sign-in' })
+    },
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    registerMutation.mutate(formData)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
   return (
     <main className="flex w-full min-h-screen">
       <div className="w-full flex flex-col md:flex-row min-h-screen">
@@ -21,27 +50,33 @@ function SignUp() {
               <p className="font-body-lg text-body-lg text-on-surface-variant">Sign up to access exclusive updates, curated collections, and a refined shopping experience.</p>
             </div>
             
-            <form className="space-y-6">
+            {registerMutation.isError && (
+              <div className="mb-6 p-4 bg-red-50 text-red-700 border border-red-200 rounded text-sm">
+                Registration failed. Please try again or use a different email.
+              </div>
+            )}
+
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="font-label-bold text-label-bold text-ink-deep" htmlFor="firstName">First Name</label>
-                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="firstName" name="firstName" placeholder="Jane" type="text" />
+                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="firstName" name="firstName" placeholder="Jane" type="text" required value={formData.firstName} onChange={handleChange} />
                 </div>
                 <div className="space-y-2">
                   <label className="font-label-bold text-label-bold text-ink-deep" htmlFor="lastName">Last Name</label>
-                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="lastName" name="lastName" placeholder="Doe" type="text" />
+                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="lastName" name="lastName" placeholder="Doe" type="text" required value={formData.lastName} onChange={handleChange} />
                 </div>
               </div>
               
               <div className="space-y-2">
                 <label className="font-label-bold text-label-bold text-ink-deep" htmlFor="email">Email Address</label>
-                <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="email" name="email" placeholder="jane@example.com" type="email" />
+                <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="email" name="email" placeholder="jane@example.com" type="email" required value={formData.email} onChange={handleChange} />
               </div>
               
               <div className="space-y-2">
                 <label className="font-label-bold text-label-bold text-ink-deep" htmlFor="password">Password</label>
                 <div className="relative">
-                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 pr-8 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="password" name="password" placeholder="••••••••" type="password" />
+                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 pr-8 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="password" name="password" placeholder="••••••••" type="password" required value={formData.password} onChange={handleChange} />
                   <button className="absolute right-0 top-1/2 -translate-y-1/2 text-ink-deep/50 hover:text-accent-gold transition-colors" type="button">
                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>visibility</span>
                   </button>
@@ -49,9 +84,9 @@ function SignUp() {
               </div>
               
               <div className="pt-4">
-                <button className="w-full bg-ink-deep text-surface-cream py-4 px-8 font-label-bold text-label-bold hover:bg-ink-deep/90 transition-all duration-300 flex justify-center items-center group" type="submit">
-                  Create Account
-                  <span className="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_forward</span>
+                <button className="w-full bg-ink-deep text-surface-cream py-4 px-8 font-label-bold text-label-bold hover:bg-ink-deep/90 transition-all duration-300 flex justify-center items-center group disabled:opacity-50" type="submit" disabled={registerMutation.isPending}>
+                  {registerMutation.isPending ? 'Creating Account...' : 'Create Account'}
+                  {!registerMutation.isPending && <span className="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_forward</span>}
                 </button>
               </div>
             </form>

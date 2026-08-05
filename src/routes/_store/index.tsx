@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/_store/')({
   component: Index,
@@ -13,6 +15,14 @@ function Index() {
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAStrbSer9oNhiZZzuxKGYjBithu_dNDi_NCnCxd2KMOL4DEe-8X90-UA542uEmnql3KoNWt_HXpwU5SdhVDIJKZC4uarOPt6zQa8LM2_LXpnK4jd6VbCNbdNG8F_Ab9s0JnEUtW7u-0u4UrVns9gtA89ZCBWgRdHX91zK3Pv7xSQxRaNbP6qZBfi_An1zNUh3Ng5s8yG8HdL9mB1z5q5U_vxa4mYaA4renqqrAqZTMqeD59_q1t4mYgg",
     "https://lh3.googleusercontent.com/aida-public/AB6AXuA2DTedsm49h-It39weMXg1xA6gBziAYtZkFMhhKzRQDfPuJPGolSXeM7DlsjlHe8HGh3PFitGSnljP011I4Nv4kWnsotDo2tMd9CCHlwqHtB4X7u-ZrCBxjzG2z0r1qAO8UdGyxevAssHDoNK81ZUCeWRC7tCra3CpXg81f4h18g0-3xPhJ59s_gsrTqjDlBJJwMjOJIVJnj7VRHd2uScRoCp7HhD82CavBBQwUoF7bKill2ZDLKECdA"
   ];
+
+  const { data: featuredProducts, isLoading: featuredLoading } = useQuery({
+    queryKey: ['products', 'featured'],
+    queryFn: async () => {
+      const res = await api.get('/products/featured?limit=4');
+      return res.data; // assuming array of products
+    }
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -143,6 +153,49 @@ function Index() {
           </p>
           <Link className="inline-block bg-ink-deep text-surface-cream font-bold py-4 px-12 rounded-full hover:bg-opacity-90 transition-opacity" to="/jewelry">SHOP JEWELRY</Link>
         </div>
+      </section>
+
+      {/* BEGIN: Featured Products from API */}
+      <section className="px-6 py-12 max-w-[1600px] mx-auto mb-12">
+        <div className="flex justify-between items-end mb-8">
+          <h3 className="text-3xl font-bold text-ink-deep">Featured Drops</h3>
+          <Link to="/new-arrivals" className="font-label-bold text-ink-deep border-b border-ink-deep hover:text-accent-gold hover:border-accent-gold transition-colors">Shop All New Arrivals</Link>
+        </div>
+        
+        {featuredLoading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-pulse">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="aspect-[3/4] bg-surface-variant rounded-lg"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {featuredProducts && featuredProducts.length > 0 ? (
+              featuredProducts.map((product: any) => (
+                <Link key={product.id} className="group" to={`/product/${product.slug}`}>
+                  <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
+                    <img 
+                      alt={product.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      src={product.images?.[0]?.url || 'https://via.placeholder.com/400x500?text=No+Image'}
+                    />
+                    {product.variants?.[0]?.inventory === 0 && (
+                      <div className="absolute inset-0 bg-white/50 backdrop-blur-sm flex items-center justify-center">
+                        <span className="font-label-bold text-ink-deep bg-surface-cream px-4 py-2 rounded-full">Waitlist Available</span>
+                      </div>
+                    )}
+                  </div>
+                  <h4 className="font-bold tracking-widest text-sm uppercase text-ink-deep">{product.name}</h4>
+                  <p className="text-on-surface-variant">₦{product.basePrice}</p>
+                </Link>
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center text-on-surface-variant">
+                No featured products at this time. Check back later!
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* BEGIN: By Category Grid */}
