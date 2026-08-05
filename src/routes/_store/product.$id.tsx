@@ -1,13 +1,51 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/_store/product/$id')({
   component: ProductPage,
 })
 
 function ProductPage() {
-  // Minimal state for the main product image switching
-  const [activeImage, setActiveImage] = useState("https://lh3.googleusercontent.com/aida-public/AB6AXuCqm07PJQiqbvoz6SFzYVtm-iYd0KXl-2RH5PfmBo6e2HL2B5hCVFr1C1ya-9RsXQzpyWCNp4kLDRfYXWGOgMFKgRSey3gGAhZxLwjTfnZkHmg1c3DXhOurBx8jAUwPqKNCIA4ZnTb31FtnXJboFhf5gg8aMoJb8I5WQzUNiy8lIu68v_VCQhOr4sXsmyt9Rm36HHbfM1xknOJ_ymFbfO61URvd8-MvjogLXgMVUZGJaFlSCv0lo3lDcg")
+  const { id } = Route.useParams()
+  const [activeImage, setActiveImage] = useState("")
+  const [selectedSize, setSelectedSize] = useState("")
+  const [waitlistEmail, setWaitlistEmail] = useState("")
+
+  const { data: product, isLoading, isError } = useQuery({
+    queryKey: ['product', id],
+    queryFn: async () => {
+      const res = await api.get(`/products/${id}`)
+      return res.data.data || res.data // handle potential nesting
+    }
+  })
+
+  const waitlistMutation = useMutation({
+    mutationFn: async (email: string) => {
+      await api.post('/waitlist/join', { productId: product?.id, email })
+    },
+    onSuccess: () => {
+      alert("You've been added to the waitlist!")
+      setWaitlistEmail("")
+    }
+  })
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading product...</div>
+  }
+
+  if (isError || !product) {
+    return <div className="min-h-screen flex items-center justify-center">Product not found.</div>
+  }
+
+  // Set initial active image once loaded
+  if (product.images?.length > 0 && !activeImage) {
+    setActiveImage(product.images[0].url)
+  }
+
+  // Determine if out of stock
+  const isOutOfStock = product.variants?.every((v: any) => v.inventory === 0)
 
   return (
     <div className="bg-surface text-ink-deep font-body-md selection:bg-accent-gold/20">
@@ -17,31 +55,23 @@ function ProductPage() {
         <div className="lg:col-span-7 flex flex-col md:flex-row gap-4 h-[60vh] md:h-[80vh]">
           {/* Thumbnails (Desktop) */}
           <div className="hidden md:flex flex-col gap-4 w-24 overflow-y-auto hide-scrollbar">
-            <button 
-              onClick={() => setActiveImage("https://lh3.googleusercontent.com/aida-public/AB6AXuBQJp8Ll8Gc-03doGUmuaip0u70Z54gWylB3dUUmAyV0K-WiRPsAjAJuNNjYzBz0XhuVHC3szUOrStCda94wNWiakIsvB0WWr_F-71WyLVMwjOyW4NPfBeaSNqySocyw0NQ0JIpkVCerFatquo3xwQzMxmPBna8jZvCSjx8Znlpt1lIp_YVEIRBp3gSLoJmZA1_fCuYNGlA--jjMDrbW_wBKaj4PweX3sn8Xk5kRYgrabnyv2UcP_Dt-Q")}
-              className={`w-full aspect-[3/4] border transition-opacity ${activeImage.includes('BQJp8Ll8') ? 'border-accent-gold opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-              <img className="w-full h-full object-cover" alt="Thumb 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQJp8Ll8Gc-03doGUmuaip0u70Z54gWylB3dUUmAyV0K-WiRPsAjAJuNNjYzBz0XhuVHC3szUOrStCda94wNWiakIsvB0WWr_F-71WyLVMwjOyW4NPfBeaSNqySocyw0NQ0JIpkVCerFatquo3xwQzMxmPBna8jZvCSjx8Znlpt1lIp_YVEIRBp3gSLoJmZA1_fCuYNGlA--jjMDrbW_wBKaj4PweX3sn8Xk5kRYgrabnyv2UcP_Dt-Q" />
-            </button>
-            <button 
-              onClick={() => setActiveImage("https://lh3.googleusercontent.com/aida-public/AB6AXuBycILxdFnnU8WYEwBc3DyIB2v1FtpS29Tafqkm6hkn6duCyo6QllpAK0OWzJ_bKgJZcnSM_cdyGMinYFMm6WnuWFEjLlTbLGD8YQWDj7Ry7kok6tqgtN8uCjw_57Yv1BJ8MmvMuzFx3PUFlLvDZg6htWX3y6cZvPt9IbPS63bs-Fswv67FzWj0fv55Rcvb27eWzwt7zGhf1Vi6zY9PoeGmAzu05zF1e1EuGC6MefkkVum2Q-4FUyTYLQ")}
-              className={`w-full aspect-[3/4] border transition-opacity ${activeImage.includes('BycILxdF') ? 'border-accent-gold opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-              <img className="w-full h-full object-cover" alt="Thumb 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBycILxdFnnU8WYEwBc3DyIB2v1FtpS29Tafqkm6hkn6duCyo6QllpAK0OWzJ_bKgJZcnSM_cdyGMinYFMm6WnuWFEjLlTbLGD8YQWDj7Ry7kok6tqgtN8uCjw_57Yv1BJ8MmvMuzFx3PUFlLvDZg6htWX3y6cZvPt9IbPS63bs-Fswv67FzWj0fv55Rcvb27eWzwt7zGhf1Vi6zY9PoeGmAzu05zF1e1EuGC6MefkkVum2Q-4FUyTYLQ" />
-            </button>
-            <button 
-              onClick={() => setActiveImage("https://lh3.googleusercontent.com/aida-public/AB6AXuBOusE8QEAAFMvk0BhCfEURtHVmLrSI8nfcvTzqSMagwoV0Y0H_hPAzwUMKUdEC-Sybn9La2I6jpfvwkF5TtsHQikhdfKnxf66gf9ngiC3urugv9KfZfq-DBeDRrtKM9ZdsApK3RzUdzd6vpmpFYsrqq-9BX-t2MHv2MHSwPMEdUWYxdjZDbXHJzM-P8PcBuGPVIrFZV9hUbaMwxKu309E6XjCWPC06ZEoxmgPCYXm7fv97EA4abNta7w")}
-              className={`w-full aspect-[3/4] border transition-opacity ${activeImage.includes('BOusE8QE') ? 'border-accent-gold opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-              <img className="w-full h-full object-cover" alt="Thumb 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOusE8QEAAFMvk0BhCfEURtHVmLrSI8nfcvTzqSMagwoV0Y0H_hPAzwUMKUdEC-Sybn9La2I6jpfvwkF5TtsHQikhdfKnxf66gf9ngiC3urugv9KfZfq-DBeDRrtKM9ZdsApK3RzUdzd6vpmpFYsrqq-9BX-t2MHv2MHSwPMEdUWYxdjZDbXHJzM-P8PcBuGPVIrFZV9hUbaMwxKu309E6XjCWPC06ZEoxmgPCYXm7fv97EA4abNta7w" />
-            </button>
+            {product.images?.map((img: any, idx: number) => (
+              <button 
+                key={idx}
+                onClick={() => setActiveImage(img.url)}
+                className={`w-full aspect-[3/4] border transition-opacity ${activeImage === img.url ? 'border-accent-gold opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}>
+                <img className="w-full h-full object-cover" alt={`Thumb ${idx}`} src={img.url} />
+              </button>
+            ))}
           </div>
           {/* Main Image */}
           <div className="flex-1 relative bg-neutral-light h-full">
-            <img className="w-full h-full object-cover object-center" alt="Main Product Image" src={activeImage} />
-            {/* Mobile dots */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 md:hidden">
-              <div className="w-2 h-2 rounded-full bg-ink-deep"></div>
-              <div className="w-2 h-2 rounded-full bg-ink-deep/30"></div>
-              <div className="w-2 h-2 rounded-full bg-ink-deep/30"></div>
-            </div>
+            <img className="w-full h-full object-cover object-center" alt={product.name} src={activeImage || 'https://via.placeholder.com/800x1000'} />
+            {isOutOfStock && (
+              <div className="absolute top-4 left-4 bg-red-100 text-red-800 font-label-bold px-3 py-1 text-sm rounded">
+                Out of Stock
+              </div>
+            )}
           </div>
         </div>
         
@@ -49,15 +79,15 @@ function ProductPage() {
         <div className="lg:col-span-5 flex flex-col pt-4 md:pt-0 lg:pl-8">
           {/* Breadcrumb */}
           <nav className="flex text-label-sm text-surface-variant font-label-sm uppercase tracking-widest mb-4">
-            <Link className="hover:text-ink-deep" to="/women">Women</Link>
+            <Link className="hover:text-ink-deep" to="/">Store</Link>
             <span className="mx-2">/</span>
-            <Link className="hover:text-ink-deep" to="/women">Scrub Tops</Link>
+            <span className="text-ink-deep">{product.name}</span>
           </nav>
           
           {/* Title & Price */}
           <div className="mb-6 flex justify-between items-start">
             <div>
-              <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep mb-2">Vigo Classic Scrub Top</h1>
+              <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep mb-2">{product.name}</h1>
               <div className="flex items-center space-x-2">
                 <div className="flex text-accent-gold text-sm">
                   <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
@@ -70,7 +100,7 @@ function ProductPage() {
               </div>
             </div>
             <div className="font-headline-md text-headline-md text-ink-deep">
-              ₦58.00
+              ₦{product.basePrice}
             </div>
           </div>
           
@@ -128,11 +158,41 @@ function ProductPage() {
             </div>
           </div>
           
-          {/* Add to Bag CTA */}
-          <button className="w-full bg-ink-deep text-surface-cream py-4 font-label-bold text-label-bold tracking-widest uppercase hover:bg-ink-deep/90 transition-colors mb-4 flex justify-center items-center gap-2">
-            Add to Bag — ₦58.00
-            <span className="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
+          {/* Waitlist or Add to Bag CTA */}
+          {isOutOfStock ? (
+            <div className="mb-4">
+              <p className="font-label-bold text-ink-deep mb-2">This product is currently out of stock.</p>
+              <form 
+                className="flex gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  waitlistMutation.mutate(waitlistEmail);
+                }}
+              >
+                <input 
+                  type="email" 
+                  placeholder="Enter your email to join waitlist" 
+                  required
+                  value={waitlistEmail}
+                  onChange={(e) => setWaitlistEmail(e.target.value)}
+                  className="flex-1 border border-ink-deep/20 py-3 px-4 focus:outline-none focus:border-accent-gold"
+                />
+                <button 
+                  type="submit" 
+                  disabled={waitlistMutation.isPending}
+                  className="bg-accent-gold text-surface-cream py-3 px-6 font-label-bold hover:bg-accent-gold/90 transition-colors disabled:opacity-50"
+                >
+                  {waitlistMutation.isPending ? 'Joining...' : 'Join Waitlist'}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <button className="w-full bg-ink-deep text-surface-cream py-4 font-label-bold text-label-bold tracking-widest uppercase hover:bg-ink-deep/90 transition-colors mb-4 flex justify-center items-center gap-2">
+              Add to Bag — ₦{product.basePrice}
+              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          )}
+          
           <p className="text-center font-label-sm text-[11px] text-surface-variant uppercase tracking-widest mb-8">Free shipping &amp; returns on all orders over ₦50</p>
           
           {/* Accordion Details */}
@@ -143,7 +203,7 @@ function ProductPage() {
                 <span className="material-symbols-outlined text-ink-deep group-hover:text-accent-gold transition-colors">remove</span>
               </button>
               <div className="pb-4 text-surface-variant font-body-md text-sm leading-relaxed">
-                The Vigo Classic Scrub Top is engineered for modern medical professionals. Featuring a tailored fit, strategic pocket placement, and crafted with our proprietary FIONx™ technology, it delivers unmatched comfort and a polished aesthetic for the longest shifts.
+                {product.description || "The Vigo Classic Scrub Top is engineered for modern medical professionals. Featuring a tailored fit, strategic pocket placement, and crafted with our proprietary FIONx™ technology, it delivers unmatched comfort and a polished aesthetic for the longest shifts."}
               </div>
             </div>
             <div className="border-b border-primary/10">

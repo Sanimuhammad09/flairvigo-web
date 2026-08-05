@@ -172,7 +172,7 @@ function Index() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {featuredProducts && featuredProducts.length > 0 ? (
               featuredProducts.map((product: any) => (
-                <Link key={product.id} className="group" to={`/product/${product.slug}`}>
+                <Link key={product.id} className="group" to={`/product/${product.slug}` as any}>
                   <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
                     <img 
                       alt={product.name} 
