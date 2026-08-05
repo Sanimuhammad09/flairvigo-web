@@ -1,12 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../lib/api'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/admin/customers')({
   component: AdminCustomers,
 })
 
 function AdminCustomers() {
+  const queryClient = useQueryClient()
   const { data: users, isLoading } = useQuery({
     queryKey: ['admin', 'users'],
     queryFn: async () => {
@@ -19,11 +21,59 @@ function AdminCustomers() {
     }
   })
 
+  // State for Modals
+  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [editForm, setEditForm] = useState({ firstName: '', lastName: '', email: '', isActive: true })
+
+  // Mutations
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/users/admin/${id}`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
+      setIsDeleteModalOpen(false)
+      setSelectedUser(null)
+    },
+    onError: (err: any) => {
+      alert(err.response?.data?.message || 'Failed to delete customer.')
+    }
+  })
+
+  const editMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string, data: any }) => {
+      await api.put(`/users/admin/${id}`, data)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
+      setIsEditModalOpen(false)
+      setSelectedUser(null)
+    }
+  })
+
+  const handleEditClick = (user: any) => {
+    setSelectedUser(user)
+    setEditForm({
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email || '',
+      isActive: user.isActive ?? true
+    })
+    setIsEditModalOpen(true)
+  }
+
+  const handleDeleteClick = (user: any) => {
+    setSelectedUser(user)
+    setIsDeleteModalOpen(true)
+  }
+
   const totalCustomers = users?.length || 0;
   const activeCustomers = users?.filter((u: any) => u.isActive)?.length || 0;
 
   return (
-    <main className="flex-grow p-gutter md:p-margin-desktop max-w-container-max mx-auto w-full">
+    <main className="flex-grow p-gutter md:p-margin-desktop max-w-container-max mx-auto w-full relative">
       {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-section-gap-md gap-4">
         <div>
@@ -53,7 +103,7 @@ function AdminCustomers() {
       </div>
       
       {/* Customer List Table */}
-      <div className="w-full overflow-x-auto pb-8">
+      <div className="w-full overflow-x-auto pb-8 min-h-[400px]">
         <table className="w-full text-left border-collapse min-w-[800px]">
           <thead>
             <tr className="border-b border-ink-deep/10">
@@ -91,9 +141,14 @@ function AdminCustomers() {
                   </td>
                   <td className="py-4 px-2 text-on-surface-variant">{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td className="py-4 px-2 text-right">
-                    <button className="text-accent-gold hover:text-ink-deep font-label-bold text-label-bold transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 focus:opacity-100">
-                      View Details <span className="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
-                    </button>
+                    <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <button onClick={() => handleEditClick(user)} className="text-ink-deep hover:text-accent-gold transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-ink-deep hover:border-accent-gold">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteClick(user)} className="text-error hover:text-red-700 transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-error hover:border-red-700">
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -118,6 +173,93 @@ function AdminCustomers() {
           <span className="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
         </button>
       </div>
+
+      {/* Edit Customer Modal */}
+      {isEditModalOpen && selectedUser && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+          <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-lg w-full">
+            <h3 className="font-headline-lg text-2xl text-ink-deep mb-6">Edit Customer</h3>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              editMutation.mutate({ id: selectedUser.id, data: editForm })
+            }} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-label-bold text-sm text-ink-deep mb-2">First Name</label>
+                  <input 
+                    type="text" 
+                    value={editForm.firstName}
+                    onChange={e => setEditForm({...editForm, firstName: e.target.value})}
+                    className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block font-label-bold text-sm text-ink-deep mb-2">Last Name</label>
+                  <input 
+                    type="text" 
+                    value={editForm.lastName}
+                    onChange={e => setEditForm({...editForm, lastName: e.target.value})}
+                    className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block font-label-bold text-sm text-ink-deep mb-2">Email Address</label>
+                <input 
+                  type="email" 
+                  value={editForm.email}
+                  onChange={e => setEditForm({...editForm, email: e.target.value})}
+                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
+                  required
+                />
+              </div>
+              <div className="flex items-center gap-3 pt-2">
+                <input 
+                  type="checkbox" 
+                  id="isActive"
+                  checked={editForm.isActive}
+                  onChange={e => setEditForm({...editForm, isActive: e.target.checked})}
+                  className="w-5 h-5 accent-ink-deep cursor-pointer"
+                />
+                <label htmlFor="isActive" className="font-label-bold text-sm text-ink-deep cursor-pointer">Active Account</label>
+              </div>
+              <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-ink-deep/10">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="px-6 py-2 border border-ink-deep/20 rounded font-label-bold text-ink-deep hover:bg-neutral-light transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" disabled={editMutation.isPending} className="px-6 py-2 bg-ink-deep text-surface-cream rounded font-label-bold hover:bg-ink-deep/90 transition-colors">
+                  {editMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Customer Modal */}
+      {isDeleteModalOpen && selectedUser && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+          <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-md w-full text-center">
+            <span className="material-symbols-outlined text-6xl text-error mb-4">warning</span>
+            <h3 className="font-headline-lg text-2xl text-ink-deep mb-2">Delete Customer?</h3>
+            <p className="font-body-md text-on-surface-variant mb-8">
+              Are you sure you want to delete <strong>{selectedUser.firstName} {selectedUser.lastName}</strong>? This action will permanently remove their account.
+              <br/><br/>
+              <span className="text-xs italic text-error">Note: You cannot delete a customer if they have existing orders.</span>
+            </p>
+            <div className="flex justify-center gap-4">
+              <button onClick={() => setIsDeleteModalOpen(false)} className="px-6 py-3 border border-ink-deep/20 rounded font-label-bold text-ink-deep hover:bg-neutral-light transition-colors">
+                Cancel
+              </button>
+              <button onClick={() => deleteMutation.mutate(selectedUser.id)} disabled={deleteMutation.isPending} className="px-6 py-3 bg-error text-surface-cream rounded font-label-bold hover:bg-red-700 transition-colors shadow-lg">
+                {deleteMutation.isPending ? 'Deleting...' : 'Yes, Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

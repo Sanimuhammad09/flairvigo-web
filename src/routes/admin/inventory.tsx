@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../lib/api'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/admin/inventory')({
   component: AdminInventory,
 })
 
 function AdminInventory() {
+  const queryClient = useQueryClient()
   const { data: products, isLoading } = useQuery({
     queryKey: ['admin', 'products'],
     queryFn: async () => {
@@ -19,11 +21,55 @@ function AdminInventory() {
     }
   })
 
-  // Since we fetch products, we can compute total inventory across variants if available.
-  // We'll flatten variants if possible, or just show the top-level product stock.
+  // State for Modals
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [editForm, setEditForm] = useState({ name: '', description: '', basePrice: 0 })
+
+  // Mutations
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/admin/products/${id}`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
+      setIsDeleteModalOpen(false)
+      setSelectedProduct(null)
+    },
+    onError: (err: any) => {
+      alert(err.response?.data?.message || 'Failed to delete product. It may have existing orders.')
+    }
+  })
+
+  const editMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string, data: any }) => {
+      await api.put(`/admin/products/${id}`, data)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
+      setIsEditModalOpen(false)
+      setSelectedProduct(null)
+    }
+  })
+
+  const handleEditClick = (product: any) => {
+    setSelectedProduct(product)
+    setEditForm({
+      name: product.name,
+      description: product.description || '',
+      basePrice: product.basePrice || 0
+    })
+    setIsEditModalOpen(true)
+  }
+
+  const handleDeleteClick = (product: any) => {
+    setSelectedProduct(product)
+    setIsDeleteModalOpen(true)
+  }
 
   return (
-    <main className="flex-1 flex flex-col min-w-0 max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-8 md:py-12">
+    <main className="flex-1 flex flex-col min-w-0 max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-8 md:py-12 relative">
       {/* Header Actions */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div>
@@ -42,40 +88,9 @@ function AdminInventory() {
         </div>
       </header>
 
-      {/* Alerts Section */}
-      <section className="mb-10 flex gap-4 overflow-x-auto pb-4 snap-x">
-        <div className="bg-white/70 backdrop-blur-md border border-ink-deep/10 p-6 min-w-[300px] flex-1 rounded-lg border-l-4 border-l-error snap-start">
-          <div className="flex justify-between items-start mb-2">
-            <span className="material-symbols-outlined text-error">warning</span>
-            <span className="font-label-sm text-label-sm text-error bg-error/10 px-2 py-1 rounded">Low Stock</span>
-          </div>
-          <h3 className="font-headline-md text-headline-md text-ink-deep mb-1">Vigo Scrub Top</h3>
-          <p className="font-body-md text-body-md text-on-surface-variant mb-4">Only 3 units left in Medium / Navy.</p>
-          <a className="font-label-bold text-label-bold text-accent-gold hover:underline" href="#">Reorder Now</a>
-        </div>
-        <div className="bg-white/70 backdrop-blur-md border border-ink-deep/10 p-6 min-w-[300px] flex-1 rounded-lg border-l-4 border-l-accent-gold snap-start">
-          <div className="flex justify-between items-start mb-2">
-            <span className="material-symbols-outlined text-accent-gold">trending_up</span>
-            <span className="font-label-sm text-label-sm text-accent-gold bg-accent-gold/10 px-2 py-1 rounded">Trending</span>
-          </div>
-          <h3 className="font-headline-md text-headline-md text-ink-deep mb-1">Gold Link Necklace</h3>
-          <p className="font-body-md text-body-md text-on-surface-variant mb-4">Sales up 24% this week. Consider promoting.</p>
-          <a className="font-label-bold text-label-bold text-ink-deep hover:underline" href="#">View Insights</a>
-        </div>
-        <div className="bg-white/70 backdrop-blur-md border border-ink-deep/10 p-6 min-w-[300px] flex-1 rounded-lg border-l-4 border-l-surface-tint snap-start">
-          <div className="flex justify-between items-start mb-2">
-            <span className="material-symbols-outlined text-surface-tint">local_shipping</span>
-            <span className="font-label-sm text-label-sm text-surface-tint bg-surface-tint/10 px-2 py-1 rounded">Shipment Arriving</span>
-          </div>
-          <h3 className="font-headline-md text-headline-md text-ink-deep mb-1">Tailored Scrub Pants</h3>
-          <p className="font-body-md text-body-md text-on-surface-variant mb-4">Restock of 150 units arriving tomorrow.</p>
-          <a className="font-label-bold text-label-bold text-ink-deep hover:underline" href="#">Track Order</a>
-        </div>
-      </section>
-
       {/* Product Table */}
       <section className="bg-white/70 backdrop-blur-md border border-ink-deep/10 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto min-h-[400px]">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-ink-deep/10 bg-neutral-light/50">
@@ -93,7 +108,7 @@ function AdminInventory() {
                 </tr>
               ) : products?.length > 0 ? (
                 products.map((product: any) => {
-                  const totalStock = product.variants?.reduce((sum: number, v: any) => sum + (v.stockQuantity || 0), 0) || 0;
+                  const totalStock = product.variants?.reduce((sum: number, v: any) => sum + (v.stockQuantity || v.inventory || 0), 0) || 0;
                   const isLowStock = totalStock > 0 && totalStock <= 5;
                   const isOutOfStock = totalStock === 0;
 
@@ -131,11 +146,16 @@ function AdminInventory() {
                           {totalStock} {totalStock === 1 ? 'Unit' : 'Units'}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-ink-deep font-semibold">₦{product.price?.toLocaleString()}</td>
+                      <td className="py-4 px-6 text-ink-deep font-semibold">₦{(product.basePrice || product.price || 0).toLocaleString()}</td>
                       <td className="py-4 px-6 text-right">
-                        <button className="text-on-surface-variant hover:text-accent-gold transition-colors p-2">
-                          <span className="material-symbols-outlined">more_vert</span>
-                        </button>
+                        <div className="flex items-center justify-end gap-3">
+                          <button onClick={() => handleEditClick(product)} className="text-ink-deep hover:text-accent-gold transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-ink-deep hover:border-accent-gold">
+                            Edit
+                          </button>
+                          <button onClick={() => handleDeleteClick(product)} className="text-error hover:text-red-700 transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-error hover:border-red-700">
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )
@@ -148,21 +168,80 @@ function AdminInventory() {
             </tbody>
           </table>
         </div>
-        {/* Pagination */}
-        <div className="px-6 py-4 border-t border-ink-deep/10 flex items-center justify-between">
-          <p className="font-body-md text-sm text-on-surface-variant">Showing 1 to 3 of 45 entries</p>
-          <div className="flex gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-ink-deep/10 text-on-surface-variant hover:border-accent-gold hover:text-accent-gold transition-colors disabled:opacity-50" disabled>
-              <span className="material-symbols-outlined text-sm">chevron_left</span>
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded bg-ink-deep text-surface-cream font-label-bold text-sm">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-ink-deep/10 text-on-surface-variant hover:border-accent-gold hover:text-accent-gold transition-colors font-label-bold text-sm">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded border border-ink-deep/10 text-on-surface-variant hover:border-accent-gold hover:text-accent-gold transition-colors">
-              <span className="material-symbols-outlined text-sm">chevron_right</span>
-            </button>
+      </section>
+
+      {/* Edit Modal */}
+      {isEditModalOpen && selectedProduct && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+          <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-lg w-full">
+            <h3 className="font-headline-lg text-2xl text-ink-deep mb-6">Edit Product</h3>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              editMutation.mutate({ id: selectedProduct.id, data: editForm })
+            }} className="space-y-4">
+              <div>
+                <label className="block font-label-bold text-sm text-ink-deep mb-2">Name</label>
+                <input 
+                  type="text" 
+                  value={editForm.name}
+                  onChange={e => setEditForm({...editForm, name: e.target.value})}
+                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-label-bold text-sm text-ink-deep mb-2">Description</label>
+                <textarea 
+                  value={editForm.description}
+                  onChange={e => setEditForm({...editForm, description: e.target.value})}
+                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold h-24" 
+                />
+              </div>
+              <div>
+                <label className="block font-label-bold text-sm text-ink-deep mb-2">Base Price (₦)</label>
+                <input 
+                  type="number" 
+                  value={editForm.basePrice}
+                  onChange={e => setEditForm({...editForm, basePrice: Number(e.target.value)})}
+                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
+                  required
+                />
+              </div>
+              <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-ink-deep/10">
+                <button type="button" onClick={() => setIsEditModalOpen(false)} className="px-6 py-2 border border-ink-deep/20 rounded font-label-bold text-ink-deep hover:bg-neutral-light transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" disabled={editMutation.isPending} className="px-6 py-2 bg-ink-deep text-surface-cream rounded font-label-bold hover:bg-ink-deep/90 transition-colors">
+                  {editMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </section>
+      )}
+
+      {/* Delete Modal */}
+      {isDeleteModalOpen && selectedProduct && (
+        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
+          <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-md w-full text-center">
+            <span className="material-symbols-outlined text-6xl text-error mb-4">warning</span>
+            <h3 className="font-headline-lg text-2xl text-ink-deep mb-2">Delete Product?</h3>
+            <p className="font-body-md text-on-surface-variant mb-8">
+              Are you sure you want to delete <strong>{selectedProduct.name}</strong>? This action cannot be undone. 
+              <br/><br/>
+              <span className="text-xs italic text-error">Note: You cannot delete products that have existing orders associated with them.</span>
+            </p>
+            <div className="flex justify-center gap-4">
+              <button onClick={() => setIsDeleteModalOpen(false)} className="px-6 py-3 border border-ink-deep/20 rounded font-label-bold text-ink-deep hover:bg-neutral-light transition-colors">
+                Cancel
+              </button>
+              <button onClick={() => deleteMutation.mutate(selectedProduct.id)} disabled={deleteMutation.isPending} className="px-6 py-3 bg-error text-surface-cream rounded font-label-bold hover:bg-red-700 transition-colors shadow-lg">
+                {deleteMutation.isPending ? 'Deleting...' : 'Yes, Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
