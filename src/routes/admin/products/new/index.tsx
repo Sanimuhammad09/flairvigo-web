@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useProductFormStore } from '../../../../../store/productFormStore'
+import { useProductFormStore } from '../../../../store/productFormStore'
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../../../../lib/api'
+import { api } from '../../../../lib/api'
 import { z } from 'zod'
 
 const productSearchSchema = z.object({
