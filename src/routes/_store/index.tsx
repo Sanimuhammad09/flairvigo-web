@@ -10,10 +10,10 @@ export const Route = createFileRoute('/_store/')({
 function Index() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBRSrySpEaDsP711FokFuX5tnGitkzsU5B_9M851n7MDYjwiOEdMvIa9Rsn-i9Vk3I2RuuOI4ddlRE1WGaWE7i_EuDdT3x4V0nh3YXhVpk-_8pJ5rtLjmJ19tULU1V16bsHOnOmWQ678Ui0JEuUJn8Y8ZQigG2nYNd9boxHgvehOFj-tdV2dmMxGNfVgoH_ZRWoJC5Qd_zT_6qtcC7-IOralmlc-RpRhXoT4nGDBl_SYhvJ3hMGWi-Kuw",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuByRwwktz1xvkxZGHel2qsjNddoW9nd7pxHZAgC35xxP_zeQbgx8sJV9EnXazbrjFzQKr4SRXDuOFx9aDLrvHCFwwHRF7PWjZt2u2QN9I6bQuDOgPNaYgZ7yNolVV_yHgbmL2O_bPDGnWU3xCHimbzkxtE24ROpAnj_fxOgNxqw4XSXLR9zPlmIyhKZNLP3iup7u05dt-op9MetK7YJl0LM2vu--Bi3CzjRCjfwJ7KZdzvrWsK3xbXywA",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuAStrbSer9oNhiZZzuxKGYjBithu_dNDi_NCnCxd2KMOL4DEe-8X90-UA542uEmnql3KoNWt_HXpwU5SdhVDIJKZC4uarOPt6zQa8LM2_LXpnK4jd6VbCNbdNG8F_Ab9s0JnEUtW7u-0u4UrVns9gtA89ZCBWgRdHX91zK3Pv7xSQxRaNbP6qZBfi_An1zNUh3Ng5s8yG8HdL9mB1z5q5U_vxa4mYaA4renqqrAqZTMqeD59_q1t4mYgg",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuA2DTedsm49h-It39weMXg1xA6gBziAYtZkFMhhKzRQDfPuJPGolSXeM7DlsjlHe8HGh3PFitGSnljP011I4Nv4kWnsotDo2tMd9CCHlwqHtB4X7u-ZrCBxjzG2z0r1qAO8UdGyxevAssHDoNK81ZUCeWRC7tCra3CpXg81f4h18g0-3xPhJ59s_gsrTqjDlBJJwMjOJIVJnj7VRHd2uScRoCp7HhD82CavBBQwUoF7bKill2ZDLKECdA"
+    "/images/slide1.png",
+    "/images/slide2.png",
+    "/images/slide3.png",
+    "/images/slide4.png"
   ];
 
   const { data: featuredProducts, isLoading: featuredLoading } = useQuery({
@@ -50,7 +50,7 @@ function Index() {
           {/* Color Item: Black */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Black" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAROVgdkXZBMrBr5d6Ohp23iP-FBwJsxtlznaDIzzEf9ArynZv7oB4m2Ge8W8Czns7j37q0IqGObM74f3Qx5uc8f6nnt5NWRrbMo_cgqsaL89Hpr-WF1oMCYkjMkmWoGOhfiMiFRWkZV7oCllEfrYUC4g8VXTsw4ZdGxZqEIfOJQMzbqIm6HRHziMnlbgWr3rTWY7r8SNI7sgnqux6Nh4HtSkSgdLUgiXwnwwyFyWU4yGepJ65Z251SnA"/>
+              <img alt="Black" className="w-full h-full object-cover" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Black</span>
           </Link>
@@ -58,7 +58,7 @@ function Index() {
           {/* Color Item: Navy */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Navy" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAPL3k8Ji06P2yhbD4OddCls2HA0sWt2y8YjsxZYLsTfPtGIUyx4zAkJMcNdxIA8rbMzm4b2tVChr1iAfvHD0JTY5R5ba2AGeWIscorLg8Mt5vxNgWOhHv60721Oltex8TO54ZXK9iG1RS8IQQpjUXTv8YYECRnDzEp4M2oQbDtsBqg-NFRxlRGzpOXbovnyMcQR8ohTMrrR6U8-rCnwvcJYzLPYWkYpVuLqMGp_vk7I0Vo2k5PRuAfQ"/>
+              <img alt="Navy" className="w-full h-full object-cover" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Navy</span>
           </Link>
@@ -66,7 +66,7 @@ function Index() {
           {/* Color Item: Moss */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Moss" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2DTedsm49h-It39weMXg1xA6gBziAYtZkFMhhKzRQDfPuJPGolSXeM7DlsjlHe8HGh3PFitGSnljP011I4Nv4kWnsotDo2tMd9CCHlwqHtB4X7u-ZrCBxjzG2z0r1qAO8UdGyxevAssHDoNK81ZUCeWRC7tCra3CpXg81f4h18g0-3xPhJ59s_gsrTqjDlBJJwMjOJIVJnj7VRHd2uScRoCp7HhD82CavBBQwUoF7bKill2ZDLKECdA"/>
+              <img alt="Moss" className="w-full h-full object-cover" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Moss</span>
           </Link>
@@ -74,7 +74,7 @@ function Index() {
           {/* Color Item: Royal Blue */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Royal Blue" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI92xxTY3Ppwaez8emJBPsJAInyEOn4KsC-_gVgyZHTp2RCfOakCG_Q_q5tp9ok_RRbD0yiL6Pw3VnJxymEEhAMXiN5ku8ejm2Ess2O1BNFQe6M64A1y77Z9YuXu9yN-cOKgtzGoudMKIg32-iGSmbKIHbrEv5_djzHwb0Sf6SquASq5w13bSqc32Tf2qdkizfZb1HVJQbkKlbbILyBxxuO53Xa4RqOKZeq9faeyIhWi635eUtwbd9pQ"/>
+              <img alt="Royal Blue" className="w-full h-full object-cover" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Royal Blue</span>
           </Link>
@@ -82,7 +82,7 @@ function Index() {
           {/* Color Item: Burgundy */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Burgundy" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqIayL7rzCpeyMUhK4_qKY5rOMmmwt7uBRSm8fwc71saiIsFFcmzYIRvq_7KgA-nR0BUZWEPS3_hLZf4XWzzZenz4KpD9G5u1fzeztZwpCqxLBACe7_A9elybHdtdrSgPrAE47kY7ocvoMRQ-HQ5qzJlDqGYL14nMB2FLVkiLollYqKnVQKpYxJFSysozdrxFhHMW23uicxg6s8Jc2HW9WRAYavp5Ca9G0qfBYHjMUDh8dyLsCrCAJjQ"/>
+              <img alt="Burgundy" className="w-full h-full object-cover" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Burgundy</span>
           </Link>
@@ -90,7 +90,7 @@ function Index() {
           {/* Color Item: Charcoal */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Charcoal" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC60ToK_Fc9XhtKL9JGZjuGWKTYvzXjSSmFZBc5lUV0uoKbJovu-4WvQyGxbsv8n4JJmCbL8zDKDvfkaMcGz7GYY0563NCwUwWtuiUzq-pq6aFLYtHEhTa9UPeKaal319N0SFPuVQGKbyPQKGjCtPy2QBbcAfh0XxiumPRncbh54y2stYJ53ulZssMQb-q8oqnPRcO1oaoVzdqmEMBvyrSHuWnBMdM-bwJAUxHxled79dgiKBDRmtwXHg"/>
+              <img alt="Charcoal" className="w-full h-full object-cover" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Charcoal</span>
           </Link>
@@ -98,7 +98,7 @@ function Index() {
           {/* Color Item: Dark Harbor */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Dark Harbor" className="w-full h-full object-cover filter brightness-75" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC60ToK_Fc9XhtKL9JGZjuGWKTYvzXjSSmFZBc5lUV0uoKbJovu-4WvQyGxbsv8n4JJmCbL8zDKDvfkaMcGz7GYY0563NCwUwWtuiUzq-pq6aFLYtHEhTa9UPeKaal319N0SFPuVQGKbyPQKGjCtPy2QBbcAfh0XxiumPRncbh54y2stYJ53ulZssMQb-q8oqnPRcO1oaoVzdqmEMBvyrSHuWnBMdM-bwJAUxHxled79dgiKBDRmtwXHg"/>
+              <img alt="Dark Harbor" className="w-full h-full object-cover filter brightness-75" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Dark Harbor</span>
           </Link>
@@ -106,7 +106,7 @@ function Index() {
           {/* Color Item: Ceil Blue */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Ceil Blue" className="w-full h-full object-cover filter hue-rotate-[190deg]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI92xxTY3Ppwaez8emJBPsJAInyEOn4KsC-_gVgyZHTp2RCfOakCG_Q_q5tp9ok_RRbD0yiL6Pw3VnJxymEEhAMXiN5ku8ejm2Ess2O1BNFQe6M64A1y77Z9YuXu9yN-cOKgtzGoudMKIg32-iGSmbKIHbrEv5_djzHwb0Sf6SquASq5w13bSqc32Tf2qdkizfZb1HVJQbkKlbbILyBxxuO53Xa4RqOKZeq9faeyIhWi635eUtwbd9pQ"/>
+              <img alt="Ceil Blue" className="w-full h-full object-cover filter hue-rotate-[190deg]" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Ceil Blue</span>
           </Link>
@@ -114,7 +114,7 @@ function Index() {
           {/* Color Item: Deep Purple */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Deep Purple" className="w-full h-full object-cover filter hue-rotate-[-30deg]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI92xxTY3Ppwaez8emJBPsJAInyEOn4KsC-_gVgyZHTp2RCfOakCG_Q_q5tp9ok_RRbD0yiL6Pw3VnJxymEEhAMXiN5ku8ejm2Ess2O1BNFQe6M64A1y77Z9YuXu9yN-cOKgtzGoudMKIg32-iGSmbKIHbrEv5_djzHwb0Sf6SquASq5w13bSqc32Tf2qdkizfZb1HVJQbkKlbbILyBxxuO53Xa4RqOKZeq9faeyIhWi635eUtwbd9pQ"/>
+              <img alt="Deep Purple" className="w-full h-full object-cover filter hue-rotate-[-30deg]" src="/images/slide4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Deep Purple</span>
           </Link>
