@@ -49,7 +49,17 @@ export function AdminSidebar() {
           </div>
           <div>
             <p className="font-label-bold text-ink-deep text-sm">Admin Profile</p>
-            <button className="text-accent-gold text-xs font-label-bold uppercase hover:underline">Sign Out</button>
+            <button 
+              onClick={() => {
+                import('../store/auth').then(({ useAuthStore }) => {
+                  useAuthStore.getState().logout()
+                  window.location.href = '/sign-in'
+                })
+              }} 
+              className="text-accent-gold text-xs font-label-bold uppercase hover:underline"
+            >
+              Sign Out
+            </button>
           </div>
         </div>
         <button className="w-full bg-ink-deep text-surface-cream font-label-bold py-3 rounded-lg hover:bg-ink-deep/90 transition-colors">

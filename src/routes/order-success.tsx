@@ -77,9 +77,21 @@ function OrderSuccess() {
           </div>
         )}
 
-        <Link to="/" className="inline-block bg-ink-deep text-surface-cream font-label-bold text-body-md py-4 px-12 tracking-wider hover:bg-ink-deep/90 transition-colors shadow-md rounded">
-          RETURN TO HOME
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link to="/" className="w-full sm:w-auto inline-block bg-ink-deep text-surface-cream font-label-bold text-body-md py-4 px-8 tracking-wider hover:bg-ink-deep/90 transition-colors shadow-md rounded flex items-center justify-center gap-2">
+            <span className="material-symbols-outlined">shopping_bag</span>
+            CONTINUE SHOPPING
+          </Link>
+          <button onClick={() => {
+            import('../store/auth').then(({ useAuthStore }) => {
+              useAuthStore.getState().logout()
+              window.location.href = '/'
+            })
+          }} className="w-full sm:w-auto inline-block bg-surface-cream border-2 border-ink-deep text-ink-deep font-label-bold text-body-md py-4 px-8 tracking-wider hover:bg-neutral-light transition-colors shadow-sm rounded flex items-center justify-center gap-2">
+            <span className="material-symbols-outlined">logout</span>
+            LEAVE & SIGN OUT
+          </button>
+        </div>
       </main>
 
       <footer className="bg-ink-deep w-full relative grid grid-cols-2 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-section-gap-md max-w-container-max mx-auto mt-auto text-surface-cream">
