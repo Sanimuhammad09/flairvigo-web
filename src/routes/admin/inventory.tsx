@@ -152,8 +152,6 @@ function AdminInventory() {
         </div>
       </section>
 
-      </section>
-
       {/* Delete Modal */}
       {isDeleteModalOpen && selectedProduct && (
         <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
