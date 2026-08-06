@@ -12,7 +12,7 @@ export function AdminSidebar() {
       </div>
       
       <nav className="flex-1 space-y-2">
-        <Link to="/admin" exact className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group activeProps={{ className: 'bg-surface-cream text-accent-gold font-bold translate-x-1' }}">
+        <Link to="/admin" activeOptions={{ exact: true }} className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group activeProps={{ className: 'bg-surface-cream text-accent-gold font-bold translate-x-1' }}">
           <span className="material-symbols-outlined icon-fill group-hover:text-accent-gold transition-colors">dashboard</span>
           <span className="font-label-bold group-hover:text-accent-gold transition-colors">Dashboard</span>
         </Link>
