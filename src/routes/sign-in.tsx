@@ -13,8 +13,8 @@ function SignIn() {
   const { login } = useAuthStore()
   
   const [formData, setFormData] = useState({
-    email: 'admin@flairvigo.com.ng',
-    password: 'admin@123',
+    email: '',
+    password: '',
   })
 
   const loginMutation = useMutation({
