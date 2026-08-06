@@ -110,7 +110,7 @@ export function Header() {
             {useAuthStore().user ? (
               <div className="relative group">
                 <Link 
-                  to={(useAuthStore().user?.role === 'ADMIN' || useAuthStore().user?.role === 'STAFF') ? '/admin' : '#'} 
+                  to="/account" 
                   className="hover:text-brand flex items-center gap-1 cursor-pointer py-2"
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -119,10 +119,10 @@ export function Header() {
                 </Link>
                 <div className="absolute right-0 top-full pt-1 w-48 hidden group-hover:block z-50">
                   <div className="bg-white shadow-xl border border-brand-border rounded-md overflow-hidden">
-                    <div className="p-4 border-b border-brand-border bg-neutral-light/50">
+                    <Link to="/account" className="block p-4 border-b border-brand-border bg-neutral-light/50 hover:bg-neutral-light transition-colors">
                       <p className="text-sm font-label-bold text-ink-deep truncate">Hi, {useAuthStore().user?.firstName || 'User'}</p>
                       <p className="text-xs text-on-surface-variant truncate">{useAuthStore().user?.email}</p>
-                    </div>
+                    </Link>
                     {(useAuthStore().user?.role === 'ADMIN' || useAuthStore().user?.role === 'STAFF') && (
                       <Link to="/admin" className="w-full text-left px-4 py-3 text-sm font-label-bold text-ink-deep hover:bg-neutral-light transition-colors flex items-center gap-2 border-b border-brand-border">
                         <span className="material-symbols-outlined text-[16px]">dashboard</span>
