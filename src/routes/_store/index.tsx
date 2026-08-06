@@ -50,7 +50,7 @@ function Index() {
           {/* Color Item: Black */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Black" className="w-full h-full object-cover" src="/images/slide4.png"/>
+              <img alt="Black" className="w-full h-full object-cover" src="/images/cat1.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Black</span>
           </Link>
@@ -58,7 +58,7 @@ function Index() {
           {/* Color Item: Navy */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Navy" className="w-full h-full object-cover" src="/images/slide4.png"/>
+              <img alt="Navy" className="w-full h-full object-cover" src="/images/slide2.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Navy</span>
           </Link>
@@ -66,7 +66,7 @@ function Index() {
           {/* Color Item: Moss */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Moss" className="w-full h-full object-cover" src="/images/slide4.png"/>
+              <img alt="Moss" className="w-full h-full object-cover" src="/images/cat4.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Moss</span>
           </Link>
@@ -74,7 +74,7 @@ function Index() {
           {/* Color Item: Royal Blue */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Royal Blue" className="w-full h-full object-cover" src="/images/slide4.png"/>
+              <img alt="Royal Blue" className="w-full h-full object-cover" src="/images/cat3.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Royal Blue</span>
           </Link>
@@ -82,7 +82,7 @@ function Index() {
           {/* Color Item: Burgundy */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Burgundy" className="w-full h-full object-cover" src="/images/slide4.png"/>
+              <img alt="Burgundy" className="w-full h-full object-cover" src="/images/cat2.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Burgundy</span>
           </Link>
@@ -90,7 +90,7 @@ function Index() {
           {/* Color Item: Charcoal */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Charcoal" className="w-full h-full object-cover" src="/images/slide4.png"/>
+              <img alt="Charcoal" className="w-full h-full object-cover" src="/images/cat5.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Charcoal</span>
           </Link>
@@ -98,7 +98,7 @@ function Index() {
           {/* Color Item: Dark Harbor */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Dark Harbor" className="w-full h-full object-cover filter brightness-75" src="/images/slide4.png"/>
+              <img alt="Dark Harbor" className="w-full h-full object-cover" src="/images/slide1.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Dark Harbor</span>
           </Link>
@@ -106,7 +106,7 @@ function Index() {
           {/* Color Item: Ceil Blue */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Ceil Blue" className="w-full h-full object-cover filter hue-rotate-[190deg]" src="/images/slide4.png"/>
+              <img alt="Ceil Blue" className="w-full h-full object-cover" src="/images/slide3.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Ceil Blue</span>
           </Link>
@@ -114,7 +114,7 @@ function Index() {
           {/* Color Item: Deep Purple */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Deep Purple" className="w-full h-full object-cover filter hue-rotate-[-30deg]" src="/images/slide4.png"/>
+              <img alt="Deep Purple" className="w-full h-full object-cover" src="/images/cat6.png"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Deep Purple</span>
           </Link>
@@ -195,12 +195,14 @@ function Index() {
                         alt={product.name} 
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${product.images?.length > 1 ? 'group-hover:opacity-0 z-10' : 'z-10'}`} 
                         src={primaryImage}
+                        onError={(e) => { e.currentTarget.src = "/images/cat6.png" }}
                       />
                       {product.images?.length > 1 && (
                         <img 
                           alt={`${product.name} alternate view`} 
                           className="absolute inset-0 w-full h-full object-cover z-0" 
                           src={hoverImage}
+                          onError={(e) => { e.currentTarget.src = "/images/cat6.png" }}
                         />
                       )}
                       
@@ -262,6 +264,7 @@ function Index() {
                     alt={cat.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     src={cat.image || fallbackImage} 
+                    onError={(e) => { e.currentTarget.src = fallbackImage }}
                   />
                 </div>
                 <h4 className="font-bold tracking-widest text-sm uppercase">{cat.name}</h4>
