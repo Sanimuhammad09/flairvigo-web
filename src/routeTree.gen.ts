@@ -18,6 +18,7 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as StoreIndexRouteImport } from './routes/_store/index'
 import { Route as StoreAboutRouteImport } from './routes/_store/about'
+import { Route as StoreAccountRouteImport } from './routes/_store/account'
 import { Route as StoreBestSellersRouteImport } from './routes/_store/best-sellers'
 import { Route as StoreJewelryRouteImport } from './routes/_store/jewelry'
 import { Route as StoreMenRouteImport } from './routes/_store/men'
@@ -79,6 +80,11 @@ const StoreIndexRoute = StoreIndexRouteImport.update({
 const StoreAboutRoute = StoreAboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreAccountRoute = StoreAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => StoreRoute,
 } as any)
 const StoreBestSellersRoute = StoreBestSellersRouteImport.update({
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/about': typeof StoreAboutRoute
+  '/account': typeof StoreAccountRoute
   '/best-sellers': typeof StoreBestSellersRoute
   '/jewelry': typeof StoreJewelryRoute
   '/men': typeof StoreMenRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/about': typeof StoreAboutRoute
+  '/account': typeof StoreAccountRoute
   '/best-sellers': typeof StoreBestSellersRoute
   '/jewelry': typeof StoreJewelryRoute
   '/men': typeof StoreMenRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/_store/about': typeof StoreAboutRoute
+  '/_store/account': typeof StoreAccountRoute
   '/_store/best-sellers': typeof StoreBestSellersRoute
   '/_store/jewelry': typeof StoreJewelryRoute
   '/_store/men': typeof StoreMenRoute
@@ -269,6 +278,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/about'
+    | '/account'
     | '/best-sellers'
     | '/jewelry'
     | '/men'
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/about'
+    | '/account'
     | '/best-sellers'
     | '/jewelry'
     | '/men'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/_store/about'
+    | '/_store/account'
     | '/_store/best-sellers'
     | '/_store/jewelry'
     | '/_store/men'
@@ -418,6 +430,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof StoreAboutRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/_store/account': {
+      id: '/_store/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof StoreAccountRouteImport
       parentRoute: typeof StoreRoute
     }
     '/_store/best-sellers': {
@@ -551,6 +570,7 @@ declare module '@tanstack/react-router' {
 
 interface StoreRouteChildren {
   StoreAboutRoute: typeof StoreAboutRoute
+  StoreAccountRoute: typeof StoreAccountRoute
   StoreBestSellersRoute: typeof StoreBestSellersRoute
   StoreJewelryRoute: typeof StoreJewelryRoute
   StoreMenRoute: typeof StoreMenRoute
@@ -564,6 +584,7 @@ interface StoreRouteChildren {
 
 const StoreRouteChildren: StoreRouteChildren = {
   StoreAboutRoute: StoreAboutRoute,
+  StoreAccountRoute: StoreAccountRoute,
   StoreBestSellersRoute: StoreBestSellersRoute,
   StoreJewelryRoute: StoreJewelryRoute,
   StoreMenRoute: StoreMenRoute,
