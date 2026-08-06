@@ -13,7 +13,7 @@ function AdminCustomers() {
     queryKey: ['admin', 'users'],
     queryFn: async () => {
       try {
-        const res = await api.get('/users')
+        const res = await api.get('/admin/customers')
         return res.data.data || res.data || []
       } catch (err) {
         return []
@@ -30,7 +30,7 @@ function AdminCustomers() {
   // Mutations
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/users/admin/${id}`)
+      await api.delete(`/admin/customers/${id}`)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
@@ -44,7 +44,7 @@ function AdminCustomers() {
 
   const editMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string, data: any }) => {
-      await api.put(`/users/admin/${id}`, data)
+      await api.put(`/admin/customers/${id}`, data)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })

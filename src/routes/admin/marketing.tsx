@@ -11,7 +11,7 @@ function AdminMarketing() {
     queryKey: ['admin', 'coupons'],
     queryFn: async () => {
       try {
-        const res = await api.get('/coupons')
+        const res = await api.get('/admin/marketing/coupons')
         return res.data.data || res.data || []
       } catch (err) {
         return []

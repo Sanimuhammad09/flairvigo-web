@@ -11,25 +11,26 @@ function AdminDashboard() {
     queryKey: ['admin', 'stats'],
     queryFn: async () => {
       try {
-        const res = await api.get('/dashboard/stats')
+        const res = await api.get('/admin/analytics/overview')
         return res.data.data || res.data
       } catch (err) {
-        // Fallback mock if endpoint fails
-        return { totalSales: 124500, newOrders: 342, inventoryAlerts: 12 }
+        return null
       }
-    }
+    },
+    refetchInterval: 30000
   })
 
   const { data: recentOrders, isLoading: ordersLoading } = useQuery({
-    queryKey: ['admin', 'recent-orders'],
+    queryKey: ['admin', 'orders'],
     queryFn: async () => {
       try {
-        const res = await api.get('/dashboard/recent-orders')
+        const res = await api.get('/admin/orders')
         return res.data.data || res.data
       } catch (err) {
-        return [] // Fallback to empty
+        return [] 
       }
-    }
+    },
+    refetchInterval: 30000
   })
 
   return (
@@ -57,7 +58,7 @@ function AdminDashboard() {
             </div>
             <div className="relative z-10">
               <p className="font-headline-lg text-headline-lg text-ink-deep">
-                {statsLoading ? '...' : `₦${(statsData?.totalSales || 0).toLocaleString()}`}
+                {statsLoading ? '...' : `₦${(statsData?.totalRevenue || 0).toLocaleString()}`}
               </p>
               <p className="text-sm text-green-700 font-label-bold mt-1">+14.5% vs last month</p>
             </div>
@@ -68,12 +69,12 @@ function AdminDashboard() {
 
           <div className="bg-neutral-light p-6 rounded-xl border border-ink-deep/5 hover:scale-[1.01] transition-transform flex flex-col justify-between h-32 relative overflow-hidden group">
             <div className="flex justify-between items-start relative z-10">
-              <p className="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">New Orders</p>
+              <p className="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">Total Orders</p>
               <span className="material-symbols-outlined text-ink-deep">shopping_bag</span>
             </div>
             <div className="relative z-10">
               <p className="font-headline-lg text-headline-lg text-ink-deep">
-                {statsLoading ? '...' : (statsData?.newOrders || 0)}
+                {statsLoading ? '...' : (statsData?.totalOrders || 0)}
               </p>
               <p className="text-sm text-green-700 font-label-bold mt-1">+22 today</p>
             </div>
@@ -84,14 +85,14 @@ function AdminDashboard() {
 
           <div className="bg-neutral-light p-6 rounded-xl border border-ink-deep/5 hover:scale-[1.01] transition-transform flex flex-col justify-between h-32 relative overflow-hidden group border-l-4 border-l-accent-gold">
             <div className="flex justify-between items-start relative z-10">
-              <p className="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">Inventory Alerts</p>
-              <span className="material-symbols-outlined text-accent-gold">warning</span>
+              <p className="text-on-surface-variant font-label-bold uppercase tracking-wider text-xs">Active Customers</p>
+              <span className="material-symbols-outlined text-accent-gold">group</span>
             </div>
             <div className="relative z-10">
               <p className="font-headline-lg text-headline-lg text-ink-deep">
-                {statsLoading ? '...' : (statsData?.inventoryAlerts || 0)}
+                {statsLoading ? '...' : (statsData?.activeCustomers || 0)}
               </p>
-              <p className="text-sm text-accent-gold font-label-bold mt-1">Items below threshold</p>
+              <p className="text-sm text-accent-gold font-label-bold mt-1">Total engaged users</p>
             </div>
           </div>
         </section>
@@ -206,16 +207,8 @@ function AdminDashboard() {
                     </tr>
                   ))
                 ) : (
-                  <tr className="hover:bg-surface-cream/50 transition-colors">
-                    <td className="p-4 pl-6 font-label-bold">#ORD-9932</td>
-                    <td className="p-4">Emma Watson</td>
-                    <td className="p-4 text-on-surface-variant">Oct 24, 2024</td>
-                    <td className="p-4 font-label-bold">₦1,240.00</td>
-                    <td className="p-4 pr-6">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold bg-green-100 text-green-800">
-                        Fulfilled
-                      </span>
-                    </td>
+                  <tr>
+                    <td colSpan={5} className="p-8 text-center text-on-surface-variant">No recent orders found.</td>
                   </tr>
                 )}
               </tbody>

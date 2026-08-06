@@ -1,18 +1,51 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../../lib/api'
+import { useState, useEffect } from 'react'
 
 export function GeneralSettings() {
+  const queryClient = useQueryClient()
   const { data: settings, isLoading } = useQuery({
     queryKey: ['admin', 'settings'],
     queryFn: async () => {
       try {
-        const res = await api.get('/store-settings/admin')
+        const res = await api.get('/admin/settings')
         return res.data.data || res.data || {}
       } catch (err) {
         return {}
       }
     }
   })
+
+  const [form, setForm] = useState({
+    contactEmail: '',
+    contactPhone: '',
+    currency: 'NGN'
+  })
+
+  useEffect(() => {
+    if (settings) {
+      setForm({
+        contactEmail: settings.contactEmail || '',
+        contactPhone: settings.contactPhone || '',
+        currency: settings.currency || 'NGN'
+      })
+    }
+  }, [settings])
+
+  const updateMutation = useMutation({
+    mutationFn: async (data: any) => {
+      await api.put('/admin/settings', data)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] })
+      alert('Settings updated successfully!')
+    }
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    updateMutation.mutate(form)
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -29,32 +62,47 @@ export function GeneralSettings() {
             <span className="material-symbols-outlined text-accent-gold">storefront</span>
             Store Profile
           </h3>
-          <div className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Store Name</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue={settings?.storeName || "Flair Vigo"} />
+                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue="Flair Vigo" disabled />
               </div>
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Legal Business Name</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue={settings?.legalName || "Flair Holdings LLC"} />
+                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="text" defaultValue="Flair Holdings LLC" disabled />
               </div>
             </div>
             <div>
               <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Store Description</label>
-              <textarea className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50 resize-none" rows={3} defaultValue={settings?.description || "High-end performance apparel and minimalist accessories designed for the modern professional."} />
+              <textarea className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50 resize-none" rows={3} defaultValue="High-end performance apparel and minimalist accessories designed for the modern professional." disabled />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Contact Email</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="email" defaultValue={settings?.contactEmail || "hello@flairvigo.com"} />
+                <input 
+                  className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" 
+                  type="email" 
+                  value={form.contactEmail} 
+                  onChange={e => setForm({...form, contactEmail: e.target.value})} 
+                />
               </div>
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Support Phone</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" type="tel" defaultValue={settings?.supportPhone || "+234 800 000 0000"} />
+                <input 
+                  className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50" 
+                  type="tel" 
+                  value={form.contactPhone} 
+                  onChange={e => setForm({...form, contactPhone: e.target.value})} 
+                />
               </div>
             </div>
-          </div>
+            <div className="pt-4 flex justify-end">
+              <button type="submit" disabled={updateMutation.isPending} className="bg-ink-deep text-surface-cream px-6 py-2 rounded font-label-bold hover:bg-ink-deep/90 transition-colors">
+                {updateMutation.isPending ? 'Saving...' : 'Save Settings'}
+              </button>
+            </div>
+          </form>
         </section>
         
         {/* Section: Address */}
