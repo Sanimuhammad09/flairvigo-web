@@ -7,7 +7,7 @@ export const Route = createFileRoute('/admin')({
 
 function AdminLayout() {
   return (
-    <div className="min-h-screen flex selection:bg-accent-gold selection:text-surface-cream">
+    <div className="min-h-screen flex flex-col lg:flex-row selection:bg-accent-gold selection:text-surface-cream">
       <AdminSidebar />
       <Outlet />
     </div>

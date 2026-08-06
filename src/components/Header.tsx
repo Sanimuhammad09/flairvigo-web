@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router'
 import { useCartStore } from '../store/cart'
 import { useAuthStore } from '../store/auth'
+import { useState } from 'react'
 
 export function Header() {
   const { items, isOpen, toggleCart, setIsOpen, removeItem, updateQuantity, getCartTotal, getCartCount } = useCartStore()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
     <>
@@ -170,7 +172,7 @@ export function Header() {
             </button>
             
             {/* Menu Icon */}
-            <button className="hover:text-brand">
+            <button onClick={() => setIsMobileMenuOpen(true)} className="hover:text-brand lg:hidden">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
@@ -265,6 +267,35 @@ export function Header() {
                 </Link>
               </div>
             )}
+          </div>
+        </>
+      )}
+
+      {/* Mobile Menu Slide-out */}
+      {isMobileMenuOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm transition-opacity lg:hidden" onClick={() => setIsMobileMenuOpen(false)} />
+          <div className="fixed top-0 left-0 h-full w-[80%] max-w-sm bg-white shadow-2xl z-[70] flex flex-col transform transition-transform duration-300 ease-in-out border-r border-brand-border lg:hidden">
+            <div className="flex items-center justify-between p-6 border-b border-brand-border">
+              <h2 className="font-headline-md text-ink-deep text-xl">Menu</h2>
+              <button onClick={() => setIsMobileMenuOpen(false)} className="text-surface-variant hover:text-ink-deep p-2">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <nav className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 font-semibold text-ink-deep">
+              <Link to="/women" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Women</Link>
+              <Link to="/men" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Men</Link>
+              <Link to="/jewelry" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Jewelry</Link>
+              <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">About</Link>
+              <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Group Orders</a>
+              <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Students</a>
+            </nav>
+            <div className="p-6 border-t border-brand-border mt-auto">
+              <div className="flex items-center space-x-2 mb-4">
+                <img alt="US Flag" className="w-6 h-auto rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMlicBlnxrwTNQpyrmDfxZHHb2cBYCvuqn5zfHMrplISdLdfL27_Hm9tY3_C7DaUEiYFx-Ms3hn441LJGga29N2xzCXBEVs_Ts3H35NVYYA_u5MbRhswhllEq2lKU95r1PSeMHa6-Dt0AJViguWZNk_Rpyj6H4P7bu_YwGaCpNcwOyzTADqDB_b5C0_WxBNst1C4exOM2EwKjy6AW4Il0T9eZcOKSI1hxRRpOC-fqcWr-xutt6-54GaQ"/>
+                <span className="text-sm font-semibold text-ink-deep">EN</span>
+              </div>
+            </div>
           </div>
         </>
       )}
