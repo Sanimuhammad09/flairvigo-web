@@ -253,24 +253,20 @@ function Index() {
            </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.length > 0 ? categories.map((cat: any) => (
+            {categories.length > 0 ? categories.map((cat: any, index: number) => {
+              const fallbackImage = `/images/cat${(index % 6) + 1}.png`;
+              return (
               <Link key={cat.id} className="group" to={`/${cat.slug}` as any}>
                 <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
-                  {cat.image ? (
-                    <img 
-                      alt={cat.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      src={cat.image} 
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-surface-variant text-ink-deep group-hover:bg-ink-deep group-hover:text-surface-cream transition-colors duration-500">
-                       <span className="material-symbols-outlined text-4xl">category</span>
-                    </div>
-                  )}
+                  <img 
+                    alt={cat.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    src={cat.image || fallbackImage} 
+                  />
                 </div>
                 <h4 className="font-bold tracking-widest text-sm uppercase">{cat.name}</h4>
               </Link>
-            )) : (
+            )}) : (
               <div className="col-span-full text-center text-on-surface-variant">
                 No categories available.
               </div>
