@@ -155,13 +155,13 @@ function Index() {
         </div>
         <div className="flex flex-col justify-center items-center text-center p-12 md:p-24 bg-surface-cream">
           <h2 className="font-serif text-5xl md:text-7xl mb-6 tracking-tight text-ink-deep">
-            <span className="block text-2xl md:text-3xl font-sans font-normal mb-2 tracking-normal text-ink-deep">The</span>
-            CHARMACY
+            <span className="block text-2xl md:text-3xl font-sans font-normal mb-2 tracking-normal text-ink-deep">Premium</span>
+            MEDICAL WEAR
           </h2>
           <p className="text-lg md:text-xl text-ink-deep max-w-lg mb-8 leading-relaxed font-light">
-            V Coterie is officially joining the Flair Vigo family. Shop our exclusive collection of medical-inspired jewelry that pairs perfectly with your favorite fits.
+            Experience the next generation of medical apparel. Shop our exclusive collection of premium scrubs, lab coats, and accessories designed for comfort and style.
           </p>
-          <Link className="inline-block bg-ink-deep text-surface-cream font-bold py-4 px-12 rounded-full hover:bg-opacity-90 transition-opacity" to="/jewelry">SHOP JEWELRY</Link>
+          <Link className="inline-block bg-ink-deep text-surface-cream font-bold py-4 px-12 rounded-full hover:bg-opacity-90 transition-opacity" to="/women">SHOP SCRUBS</Link>
         </div>
       </section>
 

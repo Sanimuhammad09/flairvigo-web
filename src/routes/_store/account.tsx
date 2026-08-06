@@ -25,7 +25,7 @@ function AccountDashboard() {
     queryFn: async () => {
       try {
         const response = await api.get('/orders')
-        return response.data
+        return response.data?.data || response.data || []
       } catch (err) {
         return []
       }
