@@ -33,6 +33,8 @@ import { Route as AdminInventoryRouteImport } from './routes/admin/inventory'
 import { Route as AdminMarketingRouteImport } from './routes/admin/marketing'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as StoreCollectionsIndexRouteImport } from './routes/_store/collections/index'
+import { Route as StoreCollectionsSlugRouteImport } from './routes/_store/collections/$slug'
 import { Route as StoreProductIdRouteImport } from './routes/_store/product.$id'
 import { Route as AdminMarketingNewCouponRouteImport } from './routes/admin/marketing_.new-coupon'
 import { Route as AdminProductsNewIndexRouteImport } from './routes/admin/products/new/index'
@@ -158,6 +160,16 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const StoreCollectionsIndexRoute = StoreCollectionsIndexRouteImport.update({
+  id: '/collections/',
+  path: '/collections/',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreCollectionsSlugRoute = StoreCollectionsSlugRouteImport.update({
+  id: '/collections/$slug',
+  path: '/collections/$slug',
+  getParentRoute: () => StoreRoute,
+} as any)
 const StoreProductIdRoute = StoreProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -209,8 +221,10 @@ export interface FileRoutesByFullPath {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/': typeof AdminIndexRoute
+  '/collections/$slug': typeof StoreCollectionsSlugRoute
   '/product/$id': typeof StoreProductIdRoute
   '/admin/marketing/new-coupon': typeof AdminMarketingNewCouponRoute
+  '/collections/': typeof StoreCollectionsIndexRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
@@ -238,8 +252,10 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/': typeof StoreIndexRoute
   '/admin': typeof AdminIndexRoute
+  '/collections/$slug': typeof StoreCollectionsSlugRoute
   '/product/$id': typeof StoreProductIdRoute
   '/admin/marketing/new-coupon': typeof AdminMarketingNewCouponRoute
+  '/collections': typeof StoreCollectionsIndexRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new': typeof AdminProductsNewIndexRoute
@@ -270,8 +286,10 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/_store/': typeof StoreIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/_store/collections/$slug': typeof StoreCollectionsSlugRoute
   '/_store/product/$id': typeof StoreProductIdRoute
   '/admin/marketing_/new-coupon': typeof AdminMarketingNewCouponRoute
+  '/_store/collections/': typeof StoreCollectionsIndexRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
@@ -302,8 +320,10 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/settings'
     | '/admin/'
+    | '/collections/$slug'
     | '/product/$id'
     | '/admin/marketing/new-coupon'
+    | '/collections/'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new/'
@@ -331,8 +351,10 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/'
     | '/admin'
+    | '/collections/$slug'
     | '/product/$id'
     | '/admin/marketing/new-coupon'
+    | '/collections'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new'
@@ -362,8 +384,10 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/_store/'
     | '/admin/'
+    | '/_store/collections/$slug'
     | '/_store/product/$id'
     | '/admin/marketing_/new-coupon'
+    | '/_store/collections/'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new/'
@@ -549,6 +573,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_store/collections/': {
+      id: '/_store/collections/'
+      path: '/collections'
+      fullPath: '/collections/'
+      preLoaderRoute: typeof StoreCollectionsIndexRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/_store/collections/$slug': {
+      id: '/_store/collections/$slug'
+      path: '/collections/$slug'
+      fullPath: '/collections/$slug'
+      preLoaderRoute: typeof StoreCollectionsSlugRouteImport
+      parentRoute: typeof StoreRoute
+    }
     '/_store/product/$id': {
       id: '/_store/product/$id'
       path: '/product/$id'
@@ -598,7 +636,9 @@ interface StoreRouteChildren {
   StoreWishlistRoute: typeof StoreWishlistRoute
   StoreWomenRoute: typeof StoreWomenRoute
   StoreIndexRoute: typeof StoreIndexRoute
+  StoreCollectionsSlugRoute: typeof StoreCollectionsSlugRoute
   StoreProductIdRoute: typeof StoreProductIdRoute
+  StoreCollectionsIndexRoute: typeof StoreCollectionsIndexRoute
 }
 
 const StoreRouteChildren: StoreRouteChildren = {
@@ -612,7 +652,9 @@ const StoreRouteChildren: StoreRouteChildren = {
   StoreWishlistRoute: StoreWishlistRoute,
   StoreWomenRoute: StoreWomenRoute,
   StoreIndexRoute: StoreIndexRoute,
+  StoreCollectionsSlugRoute: StoreCollectionsSlugRoute,
   StoreProductIdRoute: StoreProductIdRoute,
+  StoreCollectionsIndexRoute: StoreCollectionsIndexRoute,
 }
 
 const StoreRouteWithChildren = StoreRoute._addFileChildren(StoreRouteChildren)

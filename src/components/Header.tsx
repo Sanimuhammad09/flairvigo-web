@@ -33,59 +33,27 @@ export function Header() {
           {/* Navigation (Center) */}
           <nav className="hidden lg:flex items-center space-x-6 absolute left-1/2 -translate-x-1/2 h-full">
             <div className="group h-full flex items-center">
-              <Link className="font-semibold text-sm hover:text-brand transition-colors h-full flex items-center px-2" to="/women">Women</Link>
+              <Link className="font-semibold text-sm hover:text-brand transition-colors h-full flex items-center px-2" to="/collections">Collections</Link>
               {/* Mega Menu Dropdown */}
               <div className="mega-menu hidden group-hover:flex absolute top-full left-1/2 -translate-x-1/2 w-screen bg-white shadow-xl border-t border-brand-border z-50 p-8 justify-center gap-12">
                 <div>
-                  <h4 className="font-bold text-sm mb-4">Shop By</h4>
+                  <h4 className="font-bold text-sm mb-4">Our Collections</h4>
                   <ul className="space-y-2 text-sm text-brand-gray">
-                    <li><Link className="hover:text-brand" to="/new-arrivals">New Arrivals</Link></li>
-                    <li><Link className="hover:text-brand" to="/best-sellers">Best Sellers</Link></li>
-                    <li><a className="hover:text-brand" href="#">Core Colors</a></li>
-                    <li><a className="hover:text-brand" href="#">Limited Edition</a></li>
+                    <li><Link className="hover:text-brand" to="/collections/sidrah-collection">Sidrah Collection</Link></li>
+                    <li><Link className="hover:text-brand" to="/collections/layna-collection">Layna Collection</Link></li>
                   </ul>
                 </div>
-                <div>
-                  <h4 className="font-bold text-sm mb-4">Categories</h4>
-                  <ul className="space-y-2 text-sm text-brand-gray">
-                    <li><a className="hover:text-brand" href="#">Scrub Tops</a></li>
-                    <li><a className="hover:text-brand" href="#">Scrub Pants</a></li>
-                    <li><a className="hover:text-brand" href="#">Underscrubs</a></li>
-                    <li><Link className="hover:text-brand" to="/outerwear">Outerwear</Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <img alt="New Collection" className="rounded-lg object-cover w-[300px] h-[200px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9njcCrx7iDvf_KH1UsJIvODLmlEvnfazkFX58LRYggap_wnVvCBTwTCsQ7Px4rtYjjH86JKpHiCl-11Qc7TTVwq98x7Xz3pD2BLFCJ1YSrOIvFstTKhoGam69YHLXQlFxWUQIZQSky5-3SGFF2OVpuQuA4v1Z9BZra-aVvNMCDSZHep3vaoVDOTmASTmnlahR3vyhTY7pAN-xCuUARu5EBGLfiJiGyqU9JPVbKRLSE3ZRYeJXkfi-Zw"/>
-                  <p className="mt-2 font-bold text-sm">Shop The New Collection</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="group h-full flex items-center">
-              <Link className="font-semibold text-sm hover:text-brand transition-colors h-full flex items-center px-2" to="/men">Men</Link>
-              {/* Mega Menu Dropdown */}
-              <div className="mega-menu hidden group-hover:flex absolute top-full left-1/2 -translate-x-1/2 w-screen bg-white shadow-xl border-t border-brand-border z-50 p-8 justify-center gap-12">
                 <div>
                   <h4 className="font-bold text-sm mb-4">Shop By</h4>
                   <ul className="space-y-2 text-sm text-brand-gray">
-                    <li><Link className="hover:text-brand" to="/new-arrivals">New Arrivals</Link></li>
-                    <li><Link className="hover:text-brand" to="/best-sellers">Best Sellers</Link></li>
-                    <li><a className="hover:text-brand" href="#">Core Colors</a></li>
-                    <li><a className="hover:text-brand" href="#">Limited Edition</a></li>
+                    <li><Link className="hover:text-brand" to="/collections">All Scrubs</Link></li>
+                    <li><a className="hover:text-brand" href="#">Best Sellers</a></li>
+                    <li><a className="hover:text-brand" href="#">New Arrivals</a></li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm mb-4">Categories</h4>
-                  <ul className="space-y-2 text-sm text-brand-gray">
-                    <li><Link className="hover:text-brand" to="/men">Scrub Tops</Link></li>
-                    <li><Link className="hover:text-brand" to="/men">Scrub Pants</Link></li>
-                    <li><Link className="hover:text-brand" to="/men">Underscrubs</Link></li>
-                    <li><Link className="hover:text-brand" to="/outerwear">Outerwear</Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <img alt="Men's Collection" className="rounded-lg object-cover w-[300px] h-[200px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQqV3D2D37nB2sKjQ1uL8X5l2ZqB0eH6o6_YwA3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5gE3F9_r7J5tP6O8bL9xT4J2W8K0G9N6H1Z2A3tF5g" />
-                  <p className="mt-2 font-bold text-sm">Shop Men's Collection</p>
+                  <img alt="Collections" className="rounded-lg object-cover w-[300px] h-[200px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9njcCrx7iDvf_KH1UsJIvODLmlEvnfazkFX58LRYggap_wnVvCBTwTCsQ7Px4rtYjjH86JKpHiCl-11Qc7TTVwq98x7Xz3pD2BLFCJ1YSrOIvFstTKhoGam69YHLXQlFxWUQIZQSky5-3SGFF2OVpuQuA4v1Z9BZra-aVvNMCDSZHep3vaoVDOTmASTmnlahR3vyhTY7pAN-xCuUARu5EBGLfiJiGyqU9JPVbKRLSE3ZRYeJXkfi-Zw"/>
+                  <p className="mt-2 font-bold text-sm">Shop The Launch Collections</p>
                 </div>
               </div>
             </div>
@@ -292,8 +260,9 @@ export function Header() {
               </button>
             </div>
             <nav className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 font-semibold text-ink-deep">
-              <Link to="/women" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Women</Link>
-              <Link to="/men" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Men</Link>
+              <Link to="/collections" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Collections</Link>
+              <Link to="/collections/sidrah-collection" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors pl-4 text-sm font-normal text-surface-variant">Sidrah Collection</Link>
+              <Link to="/collections/layna-collection" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors pl-4 text-sm font-normal text-surface-variant">Layna Collection</Link>
               <Link to="/jewelry" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Jewelry</Link>
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">About</Link>
               <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Group Orders</a>
