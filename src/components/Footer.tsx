@@ -25,23 +25,24 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-gray-300">
             <li><a className="hover:text-white" href="#">Help Center</a></li>
             <li><a className="hover:text-white" href="#">Shipping</a></li>
-            <li><a className="hover:text-white" href="#">Returns &amp; Exchanges</a></li>
-            <li><a className="hover:text-white" href="#">Group Orders</a></li>
+            <li><a className="hover:text-white" href="#">Returns & Exchanges</a></li>
+            <li><a className="hover:text-white" href="#">Bulk Orders</a></li>
             <li><a className="hover:text-white" href="#">Sign up for Texts</a></li>
             <li><a className="hover:text-white" href="#">Contact Us</a></li>
             <li className="pt-2">424-500-8209<br/><span className="text-xs text-gray-400">Call or Text<br/>5am to 8pm PST M-F</span></li>
           </ul>
         </div>
 
-        {/* Our Company */}
+        {/* Quick Links */}
         <div>
-          <h4 className="font-bold text-sm tracking-widest uppercase mb-4">Our Company</h4>
+          <h4 className="font-bold text-sm tracking-widest uppercase mb-4">Quick Links</h4>
           <ul className="space-y-3 text-sm text-gray-300">
-            <li><Link className="hover:text-white" to="/about">Our Story</Link></li>
-            <li><a className="hover:text-white" href="#">Find a Store</a></li>
-            <li><a className="hover:text-white" href="#">Recycle Your Scrubs</a></li>
-            <li><a className="hover:text-white" href="#">Healthcare Advisory Board</a></li>
-            <li><a className="hover:text-white" href="#">Careers</a></li>
+            <li><Link className="hover:text-white" to="/">Home</Link></li>
+            <li><Link className="hover:text-white" to="/women">Products</Link></li>
+            <li><Link className="hover:text-white" to="/about">About Us</Link></li>
+            <li><Link className="hover:text-white" to="/women">Shop</Link></li>
+            <li><a className="hover:text-white" href="#">Blog</a></li>
+            <li><a className="hover:text-white" href="#">Contact Us</a></li>
           </ul>
         </div>
 
