@@ -20,7 +20,7 @@ function SignIn() {
   const loginMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
       const response = await api.post('/auth/login', data)
-      return response.data // Extract the response directly as it's not nested
+      return response.data.data // Extract the nested 'data' object
     },
     onSuccess: (responseData) => {
       // responseData contains { user, accessToken, refreshToken }
