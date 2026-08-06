@@ -258,7 +258,7 @@ function Index() {
             {categories.length > 0 ? categories.map((cat: any, index: number) => {
               const fallbackImage = `/images/cat${(index % 6) + 1}.png`;
               return (
-              <Link key={cat.id} className="group" to={`/${cat.slug}` as any}>
+              <Link key={cat.id} className="group" to="/women">
                 <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
                   <img 
                     alt={cat.name} 
