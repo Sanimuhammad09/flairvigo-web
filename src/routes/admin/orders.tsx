@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../lib/api'
 import { useState } from 'react'
+import { generateInvoicePDF } from '../../utils/generateInvoice'
 
 export const Route = createFileRoute('/admin/orders')({
   component: AdminOrders,
@@ -147,9 +148,18 @@ function AdminOrders() {
           <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-headline-lg text-2xl text-ink-deep">Order #{selectedOrder.orderNumber || selectedOrder.id.substring(0,8).toUpperCase()}</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-on-surface-variant hover:text-error transition-colors">
-                <span className="material-symbols-outlined text-2xl">close</span>
-              </button>
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => generateInvoicePDF(selectedOrder)} 
+                  className="flex items-center gap-2 text-ink-deep hover:text-accent-gold transition-colors font-label-bold text-xs uppercase tracking-widest"
+                >
+                  <span className="material-symbols-outlined text-xl">download</span>
+                  Invoice
+                </button>
+                <button onClick={() => setIsModalOpen(false)} className="text-on-surface-variant hover:text-error transition-colors">
+                  <span className="material-symbols-outlined text-2xl">close</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">

@@ -1,10 +1,52 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useProductFormStore } from '../../../../../store/productFormStore'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { api } from '../../../../../lib/api'
+import { z } from 'zod'
+
+const productSearchSchema = z.object({
+  productId: z.string().optional(),
+})
 
 export const Route = createFileRoute('/admin/products/new/seo')({
+  validateSearch: productSearchSchema,
   component: AddProductSEO,
 })
 
 function AddProductSEO() {
+  const { productId } = Route.useSearch()
+  const store = useProductFormStore()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const data = {
+        name: store.name,
+        description: store.description,
+        basePrice: store.basePrice,
+        category: store.category,
+        seoTitle: store.seoTitle,
+        seoDescription: store.seoDescription,
+        seoKeywords: store.seoKeywords,
+        isDraft: store.isDraft,
+      }
+      if (store.id) {
+        await api.put(`/admin/products/${store.id}`, data)
+      } else {
+        await api.post('/admin/products', data)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
+      store.reset()
+      navigate({ to: '/admin/inventory' })
+    },
+    onError: (err: any) => {
+      alert(err.response?.data?.message || 'Failed to save product')
+    }
+  })
+
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-surface-cream text-ink-deep font-body-md h-full">
       {/* TopAppBar */}
@@ -28,8 +70,14 @@ function AddProductSEO() {
             </button>
           </div>
           <div className="h-8 w-px bg-ink-deep/10 mx-2"></div>
-          <Link to="/admin/products/new/variants" className="text-on-surface-variant hover:text-ink-deep font-label-bold text-label-bold transition-opacity hover:opacity-80">Back</Link>
-          <button className="bg-ink-deep text-surface-cream px-6 py-2 rounded font-label-bold text-label-bold hover:opacity-90 transition-opacity">Save Product</button>
+          <Link to="/admin/products/new/variants" search={{ productId }} className="text-on-surface-variant hover:text-ink-deep font-label-bold text-label-bold transition-opacity hover:opacity-80">Back</Link>
+          <button 
+            onClick={() => saveMutation.mutate()}
+            disabled={saveMutation.isPending}
+            className="bg-ink-deep text-surface-cream px-6 py-2 rounded font-label-bold text-label-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {saveMutation.isPending ? 'Saving...' : 'Save Product'}
+          </button>
         </div>
       </header>
 
@@ -39,7 +87,7 @@ function AddProductSEO() {
         <div className="mb-8 flex items-center gap-2 text-on-surface-variant/70 font-label-sm text-label-sm">
           <Link className="hover:text-ink-deep transition-colors" to="/admin/inventory">Inventory</Link>
           <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-          <Link className="hover:text-ink-deep transition-colors" to="/admin/products/new">Add New Product</Link>
+          <span className="text-ink-deep font-semibold">{store.id ? 'Edit Product' : 'Add New Product'}</span>
           <span className="material-symbols-outlined text-[16px]">chevron_right</span>
           <span className="text-ink-deep font-semibold">SEO & Logistics</span>
         </div>
@@ -54,34 +102,36 @@ function AddProductSEO() {
                 <h3 className="font-headline-md text-headline-md font-semibold text-ink-deep">Search Engine Listing</h3>
                 <p className="font-body-md text-body-md text-on-surface-variant mt-1">Add a title and description to see how this product might appear in a search engine listing.</p>
               </div>
-              <button className="text-accent-gold font-label-bold text-label-bold hover:underline">Edit SEO</button>
             </div>
             {/* SEO Preview */}
             <div className="mb-8 p-4 bg-neutral-light rounded-lg border border-ink-deep/5">
-              <h4 className="text-[#1a0dab] font-body-lg text-body-lg mb-1 truncate">Premium Medical Scrubs Top - MedLux Apparel</h4>
+              <h4 className="text-[#1a0dab] font-body-lg text-body-lg mb-1 truncate">{store.seoTitle || store.name || 'Product Title'} - FlairVigo</h4>
               <div className="text-[#006621] font-body-md text-body-md mb-2 flex items-center gap-1">
-                <span>https://medluxapparel.com</span>
-                <span className="text-on-surface-variant">› products › premium-scrubs-top</span>
+                <span>https://flairvigo.com.ng</span>
+                <span className="text-on-surface-variant">› products › {store.name ? store.name.toLowerCase().replace(/ /g, '-') : 'product'}</span>
               </div>
-              <p className="text-on-surface-variant font-body-md text-body-md line-clamp-2">Elevate your professional wardobe with our high-performance, technical luxury medical scrubs. Designed for ultimate comfort and precision.</p>
+              <p className="text-on-surface-variant font-body-md text-body-md line-clamp-2">{store.seoDescription || store.description || 'Product description'}</p>
             </div>
             <div className="space-y-6">
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Page Title</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 focus:ring-0 focus:border-accent-gold px-0 py-2 font-body-md text-body-md text-ink-deep transition-colors" type="text" defaultValue="Premium Medical Scrubs Top"/>
-                <div className="flex justify-end mt-1 text-on-surface-variant/60 font-label-sm text-label-sm">26 of 70 characters used</div>
+                <input 
+                  value={store.seoTitle}
+                  onChange={e => store.setField('seoTitle', e.target.value)}
+                  className="w-full bg-transparent border-0 border-b border-ink-deep/20 focus:ring-0 focus:border-accent-gold px-0 py-2 font-body-md text-body-md text-ink-deep transition-colors" 
+                  type="text" 
+                  placeholder="SEO Title"
+                />
               </div>
               <div>
                 <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Meta Description</label>
-                <textarea className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors" rows={3} defaultValue="Elevate your professional wardobe with our high-performance, technical luxury medical scrubs. Designed for ultimate comfort and precision."></textarea>
-                <div className="flex justify-end mt-1 text-on-surface-variant/60 font-label-sm text-label-sm">139 of 320 characters used</div>
-              </div>
-              <div>
-                <label className="block font-label-bold text-label-bold text-ink-deep mb-2">URL Handle</label>
-                <div className="flex items-center">
-                  <span className="bg-neutral-light border-y border-l border-ink-deep/10 px-3 py-2 rounded-l font-body-md text-body-md text-on-surface-variant">https://medluxapparel.com/products/</span>
-                  <input className="flex-1 bg-transparent border border-ink-deep/10 rounded-r focus:ring-1 focus:ring-accent-gold p-2 font-body-md text-body-md text-ink-deep transition-colors" type="text" defaultValue="premium-scrubs-top"/>
-                </div>
+                <textarea 
+                  value={store.seoDescription}
+                  onChange={e => store.setField('seoDescription', e.target.value)}
+                  className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors" 
+                  rows={3} 
+                  placeholder="SEO Description"
+                ></textarea>
               </div>
             </div>
           </div>

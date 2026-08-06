@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '../../store/auth'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../lib/api'
+import { generateInvoicePDF } from '../../utils/generateInvoice'
 
 export const Route = createFileRoute('/_store/account')({
   beforeLoad: () => {
@@ -85,16 +86,25 @@ function AccountDashboard() {
             ) : (
               <div className="space-y-4">
                 {orders.map((order: any) => (
-                  <div key={order.id} className="border border-brand-border rounded-lg p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div key={order.id} className="border border-brand-border rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                       <p className="font-label-bold text-ink-deep mb-1">Order #{order.id.substring(0, 8).toUpperCase()}</p>
                       <p className="text-sm text-on-surface-variant">{new Date(order.createdAt).toLocaleDateString()}</p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-label-bold text-accent-gold">₦{Number(order.totalAmount).toLocaleString()}</p>
-                      <span className="inline-block mt-1 px-2 py-1 bg-neutral-light text-xs font-label-bold uppercase rounded">
-                        {order.status}
-                      </span>
+                    <div className="text-left sm:text-right flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-4 sm:gap-1">
+                      <div>
+                        <p className="font-label-bold text-accent-gold">₦{Number(order.totalAmount).toLocaleString()}</p>
+                        <span className="inline-block mt-1 px-2 py-1 bg-neutral-light text-xs font-label-bold uppercase rounded mr-3">
+                          {order.status}
+                        </span>
+                      </div>
+                      <button 
+                        onClick={() => generateInvoicePDF(order)}
+                        className="text-ink-deep hover:text-accent-gold transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-ink-deep hover:border-accent-gold flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-sm">download</span>
+                        Invoice
+                      </button>
                     </div>
                   </div>
                 ))}

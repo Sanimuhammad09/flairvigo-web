@@ -1,10 +1,43 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useProductFormStore } from '../../../../../store/productFormStore'
+import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../../../../lib/api'
+import { z } from 'zod'
+
+const productSearchSchema = z.object({
+  productId: z.string().optional(),
+})
 
 export const Route = createFileRoute('/admin/products/new/')({
+  validateSearch: productSearchSchema,
   component: AddProductBasic,
 })
 
 function AddProductBasic() {
+  const { productId } = Route.useSearch()
+  const { name, description, setField, setProduct, reset } = useProductFormStore()
+
+  // Fetch product if editing
+  const { data: existingProduct, isLoading } = useQuery({
+    queryKey: ['product', productId],
+    queryFn: async () => {
+      if (!productId) return null
+      const res = await api.get(`/products/${productId}`)
+      return res.data?.data || res.data
+    },
+    enabled: !!productId
+  })
+
+  // Initialize store with existing product data
+  useEffect(() => {
+    if (existingProduct) {
+      setProduct(existingProduct)
+    } else if (!productId) {
+      reset() // Reset form if not editing
+    }
+  }, [existingProduct, productId, setProduct, reset])
+
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-surface-cream text-ink-deep font-body-md">
       {/* TopAppBar */}
@@ -29,7 +62,7 @@ function AddProductBasic() {
           </div>
           <div className="h-8 w-px bg-ink-deep/10 mx-2"></div>
           <Link to="/admin/inventory" className="text-on-surface-variant hover:text-ink-deep font-label-bold text-label-bold transition-opacity hover:opacity-80">Discard</Link>
-          <Link to="/admin/products/new/variants" className="bg-ink-deep text-surface-cream px-6 py-2 rounded font-label-bold text-label-bold hover:opacity-90 transition-opacity">Next: Variants</Link>
+          <Link to="/admin/products/new/variants" search={{ productId }} className="bg-ink-deep text-surface-cream px-6 py-2 rounded font-label-bold text-label-bold hover:opacity-90 transition-opacity">Next: Variants</Link>
         </div>
       </header>
 
@@ -39,32 +72,48 @@ function AddProductBasic() {
         <div className="mb-8 flex items-center gap-2 text-on-surface-variant/70 font-label-sm text-label-sm">
           <Link className="hover:text-ink-deep transition-colors" to="/admin/inventory">Inventory</Link>
           <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-          <span className="text-ink-deep font-semibold">Basic Info & Media</span>
+          <span className="text-ink-deep font-semibold">{productId ? 'Edit Product' : 'Add Product'} - Basic Info</span>
         </div>
         
         <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="font-headline-lg text-headline-lg font-semibold text-ink-deep mb-8">Basic Info & Media</h1>
+          <h1 className="font-headline-lg text-headline-lg font-semibold text-ink-deep mb-8">{productId ? 'Edit Product' : 'Basic Info & Media'}</h1>
           
-          <div className="bg-surface-container-lowest border border-ink-deep/10 rounded-xl p-8 shadow-sm">
-            <div className="space-y-6">
-              <div>
-                <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Product Title</label>
-                <input className="w-full bg-transparent border-0 border-b border-ink-deep/20 focus:ring-0 focus:border-accent-gold px-0 py-2 font-body-md text-body-md text-ink-deep transition-colors" type="text" placeholder="e.g. Premium Medical Scrubs Top"/>
-              </div>
-              <div>
-                <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Description</label>
-                <textarea className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors" rows={5} placeholder="Product description..."></textarea>
-              </div>
+          {isLoading ? (
+            <div className="py-12 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-ink-deep"></div></div>
+          ) : (
+            <div className="bg-surface-container-lowest border border-ink-deep/10 rounded-xl p-8 shadow-sm">
+              <div className="space-y-6">
+                <div>
+                  <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Product Title</label>
+                  <input 
+                    value={name} 
+                    onChange={e => setField('name', e.target.value)} 
+                    className="w-full bg-transparent border-0 border-b border-ink-deep/20 focus:ring-0 focus:border-accent-gold px-0 py-2 font-body-md text-body-md text-ink-deep transition-colors" 
+                    type="text" 
+                    placeholder="e.g. Premium Medical Scrubs Top"
+                  />
+                </div>
+                <div>
+                  <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Description</label>
+                  <textarea 
+                    value={description}
+                    onChange={e => setField('description', e.target.value)}
+                    className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors" 
+                    rows={5} 
+                    placeholder="Product description..."
+                  ></textarea>
+                </div>
               
-              <div>
-                <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Media</label>
-                <div className="border-2 border-dashed border-ink-deep/20 rounded-xl p-12 text-center hover:bg-neutral-light transition-colors cursor-pointer">
-                   <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add_photo_alternate</span>
-                   <p className="font-body-md text-ink-deep font-medium">Add files or drop files to upload</p>
+                <div>
+                  <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Media</label>
+                  <div className="border-2 border-dashed border-ink-deep/20 rounded-xl p-12 text-center hover:bg-neutral-light transition-colors cursor-pointer">
+                     <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add_photo_alternate</span>
+                     <p className="font-body-md text-ink-deep font-medium">Add files or drop files to upload</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </main>

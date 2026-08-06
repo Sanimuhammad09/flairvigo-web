@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../lib/api'
 import { useState } from 'react'
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/admin/inventory')({
 
 function AdminInventory() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const { data: products, isLoading } = useQuery({
     queryKey: ['admin', 'products'],
     queryFn: async () => {
@@ -23,9 +24,7 @@ function AdminInventory() {
 
   // State for Modals
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [editForm, setEditForm] = useState({ name: '', description: '', basePrice: 0 })
 
   // Mutations
   const deleteMutation = useMutation({
@@ -42,25 +41,8 @@ function AdminInventory() {
     }
   })
 
-  const editMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string, data: any }) => {
-      await api.put(`/admin/products/${id}`, data)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
-      setIsEditModalOpen(false)
-      setSelectedProduct(null)
-    }
-  })
-
   const handleEditClick = (product: any) => {
-    setSelectedProduct(product)
-    setEditForm({
-      name: product.name,
-      description: product.description || '',
-      basePrice: product.basePrice || 0
-    })
-    setIsEditModalOpen(true)
+    navigate({ to: '/admin/products/new', search: { productId: product.id } })
   }
 
   const handleDeleteClick = (product: any) => {
@@ -170,55 +152,7 @@ function AdminInventory() {
         </div>
       </section>
 
-      {/* Edit Modal */}
-      {isEditModalOpen && selectedProduct && (
-        <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
-          <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-lg w-full">
-            <h3 className="font-headline-lg text-2xl text-ink-deep mb-6">Edit Product</h3>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              editMutation.mutate({ id: selectedProduct.id, data: editForm })
-            }} className="space-y-4">
-              <div>
-                <label className="block font-label-bold text-sm text-ink-deep mb-2">Name</label>
-                <input 
-                  type="text" 
-                  value={editForm.name}
-                  onChange={e => setEditForm({...editForm, name: e.target.value})}
-                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
-                  required
-                />
-              </div>
-              <div>
-                <label className="block font-label-bold text-sm text-ink-deep mb-2">Description</label>
-                <textarea 
-                  value={editForm.description}
-                  onChange={e => setEditForm({...editForm, description: e.target.value})}
-                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold h-24" 
-                />
-              </div>
-              <div>
-                <label className="block font-label-bold text-sm text-ink-deep mb-2">Base Price (₦)</label>
-                <input 
-                  type="number" 
-                  value={editForm.basePrice}
-                  onChange={e => setEditForm({...editForm, basePrice: Number(e.target.value)})}
-                  className="w-full border border-ink-deep/20 rounded p-3 focus:outline-none focus:border-accent-gold" 
-                  required
-                />
-              </div>
-              <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-ink-deep/10">
-                <button type="button" onClick={() => setIsEditModalOpen(false)} className="px-6 py-2 border border-ink-deep/20 rounded font-label-bold text-ink-deep hover:bg-neutral-light transition-colors">
-                  Cancel
-                </button>
-                <button type="submit" disabled={editMutation.isPending} className="px-6 py-2 bg-ink-deep text-surface-cream rounded font-label-bold hover:bg-ink-deep/90 transition-colors">
-                  {editMutation.isPending ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      </section>
 
       {/* Delete Modal */}
       {isDeleteModalOpen && selectedProduct && (

@@ -138,9 +138,9 @@ function AdminDashboard() {
             <div className="bg-neutral-light border border-ink-deep/5 rounded-xl p-6">
               <h3 className="font-headline-md text-headline-md text-ink-deep mb-4 text-lg">Quick Actions</h3>
               <div className="space-y-3">
-                <button className="w-full flex items-center justify-center gap-2 bg-ink-deep text-surface-cream py-3 rounded-lg font-label-bold hover:bg-ink-deep/90 transition-colors">
+                <Link to="/admin/products/new" className="w-full flex items-center justify-center gap-2 bg-ink-deep text-surface-cream py-3 rounded-lg font-label-bold hover:bg-ink-deep/90 transition-colors">
                   <span className="material-symbols-outlined text-sm">add</span> Add Product
-                </button>
+                </Link>
                 <button className="w-full flex items-center justify-center gap-2 border border-ink-deep text-ink-deep py-3 rounded-lg font-label-bold hover:bg-ink-deep/5 transition-colors">
                   <span className="material-symbols-outlined text-sm">download</span> Export Data
                 </button>

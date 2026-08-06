@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../lib/api'
+import { generateInvoicePDF } from '../utils/generateInvoice'
 
 export const Route = createFileRoute('/order-success')({
   component: OrderSuccess,
@@ -20,10 +23,21 @@ function OrderSuccess() {
     })
   }, [])
 
+  const { data: order } = useQuery({
+    queryKey: ['order', params.orderId],
+    queryFn: async () => {
+      if (!params.orderId) return null
+      const res = await api.get('/orders')
+      const orders = res.data?.data || res.data || []
+      return orders.find((o: any) => o.id === params.orderId)
+    },
+    enabled: !!params.orderId
+  })
+
   return (
     <div className="min-h-screen flex flex-col font-body-md antialiased bg-surface-cream text-ink-deep">
       <header className="w-full border-b border-primary/10 bg-surface-cream px-margin-mobile md:px-margin-desktop h-20 flex justify-between items-center max-w-container-max mx-auto shrink-0 sticky top-0 z-50">
-        <Link to="/" className="font-display-lg text-headline-lg font-bold text-ink-deep cursor-pointer">
+        <Link to="/" className="font-display-lg text-headline-md font-bold text-ink-deep cursor-pointer">
           Flair Vigo
         </Link>
         <Link to="/" className="font-label-bold text-label-bold tracking-widest uppercase text-ink-deep hover:text-accent-gold transition-colors flex items-center gap-2">
@@ -36,9 +50,17 @@ function OrderSuccess() {
         <div className="mb-12">
           <span className="material-symbols-outlined text-[64px] text-accent-gold mb-4">check_circle</span>
           <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep font-bold mb-4">Order Confirmed</h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg mx-auto">
+          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg mx-auto mb-6">
             Thank you for your purchase! We've received your order {params.orderId ? `(#${params.orderId.substring(0, 8).toUpperCase()})` : ''} and will email you with tracking details as soon as it ships.
           </p>
+          
+          <button 
+            onClick={() => order ? generateInvoicePDF(order) : alert('Order details are still loading. Please try again in a moment.')} 
+            className="inline-flex items-center gap-2 px-6 py-3 border-2 border-ink-deep text-ink-deep font-label-bold tracking-wider hover:bg-neutral-light transition-colors rounded"
+          >
+            <span className="material-symbols-outlined">download</span>
+            DOWNLOAD INVOICE
+          </button>
         </div>
 
         {params.method === 'BANK_TRANSFER' && (
@@ -87,9 +109,9 @@ function OrderSuccess() {
               useAuthStore.getState().logout()
               window.location.href = '/'
             })
-          }} className="w-full sm:w-auto inline-block bg-surface-cream border-2 border-ink-deep text-ink-deep font-label-bold text-body-md py-4 px-8 tracking-wider hover:bg-neutral-light transition-colors shadow-sm rounded flex items-center justify-center gap-2">
+          }} className="w-full sm:w-auto inline-block bg-surface-cream border-2 border-transparent text-on-surface-variant hover:text-ink-deep font-label-bold text-body-md py-4 px-8 tracking-wider transition-colors rounded flex items-center justify-center gap-2">
             <span className="material-symbols-outlined">logout</span>
-            LEAVE & SIGN OUT
+            SIGN OUT
           </button>
         </div>
       </main>
@@ -100,7 +122,7 @@ function OrderSuccess() {
         </div>
         <div className="col-span-2 md:col-span-4 pt-8 border-t border-surface-cream/10">
           <p className="font-body-md text-sm opacity-70">
-            © 2024 Flair Vigo. Premium Medical Apparel. All rights reserved.
+            © 2026 Flair Vigo. Premium Medical Apparel. All rights reserved.
           </p>
         </div>
       </footer>
