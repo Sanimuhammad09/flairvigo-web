@@ -152,12 +152,8 @@ export function PaymentSettings() {
                   <span className="font-label-sm text-label-sm text-on-surface-variant">VAT 7.5%</span>
                 </li>
                 <li className="flex justify-between items-center py-2 border-b border-primary/10">
-                  <span className="font-body-md text-body-md">United States</span>
+                  <span className="font-body-md text-body-md">Nigeria</span>
                   <span className="font-label-sm text-label-sm text-on-surface-variant">State-level</span>
-                </li>
-                <li className="flex justify-between items-center py-2 border-b border-primary/10">
-                  <span className="font-body-md text-body-md">United Kingdom</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">Standard 20%</span>
                 </li>
               </ul>
             </div>

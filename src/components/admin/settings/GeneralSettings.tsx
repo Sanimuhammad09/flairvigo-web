@@ -133,10 +133,7 @@ export function GeneralSettings() {
             <div>
               <label className="block font-label-bold text-label-bold text-ink-deep/70 mb-1">Country</label>
               <select className="w-full bg-transparent border-0 border-b border-ink-deep/20 px-0 py-2 focus:ring-0 focus:border-accent-gold font-body-md text-body-md transition-colors placeholder-on-surface-variant/50">
-                <option>United States</option>
-                <option>United Kingdom</option>
-                <option>Canada</option>
-                <option>Australia</option>
+                <option>Nigeria</option>
               </select>
             </div>
           </div>

@@ -59,8 +59,8 @@ export function Footer() {
       <div className="border-t border-gray-700 pt-8 px-6 max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
         <p>© 2026 FLAIR VIGO, INC. ALL RIGHTS RESERVED</p>
         <div className="flex items-center space-x-2 mt-4 md:mt-0">
-          <img alt="US Flag" className="w-5 h-auto rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyWFb32K1LP1PDYF4uG8i2BsfkziTPVBzPpKg8q_lQXZtMV2FFdjmZLlWV9xelX5U_jDEjvdDohVbBDL7nrCyj-v2-uCtAc1RI8EJmxmvH3u6RUNqT2ga3vL5FiLyQ8cv9dTMgRLqzLwwjykuPndq6XPhdfvLJluUk8uIxF__d2LLV1FlD-6WX71puzhq95UgmO75AE6PcB0L1tTE-zuTxaMp75X52IZNzPjOiHk5ODmnXbPopLWM0_g"/>
-          <span className="font-semibold text-white tracking-widest">UNITED STATES | ENGLISH</span>
+          <img alt="Nigeria Flag" className="w-5 h-auto rounded-sm" src="https://flagcdn.com/w40/ng.png"/>
+          <span className="font-semibold text-white tracking-widest">NIGERIA | ENGLISH</span>
         </div>
       </div>
     </footer>

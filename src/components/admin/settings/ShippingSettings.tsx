@@ -27,8 +27,8 @@ export function ShippingSettings() {
               <div className="absolute top-0 left-0 w-1 h-full bg-accent-gold"></div>
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-headline-md text-[18px] font-semibold text-ink-deep">Domestic (United States)</h4>
-                  <p className="font-body-md text-body-md text-on-surface-variant">50 States, Puerto Rico, and APO/FPO addresses</p>
+                  <h4 className="font-headline-md text-[18px] font-semibold text-ink-deep">Domestic (Nigeria)</h4>
+                  <p className="font-body-md text-body-md text-on-surface-variant">All 36 states and the FCT</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" defaultChecked className="sr-only peer" />

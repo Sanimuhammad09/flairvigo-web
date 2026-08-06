@@ -111,9 +111,7 @@ function AddProductSEO() {
                   <div>
                     <label className="block font-label-sm text-label-sm text-on-surface-variant mb-1">Country/Region of origin</label>
                     <select className="w-full bg-transparent border-0 border-b border-ink-deep/20 focus:ring-0 focus:border-accent-gold px-0 py-2 font-body-md text-body-md text-ink-deep transition-colors">
-                      <option>United States</option>
-                      <option>Canada</option>
-                      <option>Italy</option>
+                      <option>Nigeria</option>
                     </select>
                   </div>
                   <div>

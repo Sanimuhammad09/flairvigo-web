@@ -233,8 +233,6 @@ function Checkout() {
                       required
                     >
                       <option>Nigeria</option>
-                      <option>United States</option>
-                      <option>United Kingdom</option>
                     </select>
                   </div>
                   <div>
