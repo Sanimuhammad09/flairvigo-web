@@ -6,76 +6,153 @@ export const Route = createFileRoute('/_store/about')({
 
 function About() {
   return (
-    <main>
+    <main className="bg-surface-cream text-ink-deep pb-12">
       {/* Hero Section */}
-      <section className="relative h-[80vh] w-full flex items-center justify-center overflow-hidden">
+      <section className="relative h-[60vh] md:h-[70vh] w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="w-full h-full bg-cover bg-center" data-alt="A wide, sweeping landscape shot of a modern, eco-friendly fabric production facility integrated into a lush, green natural environment." style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCWn8IMB-hqEjj_MdNqPAcnYKRId0jL6xwvM6-hTTqYV8PwgB4v7yPl7dp6ewh4NKsn_tPKjf1ScMdogBWNJFp8X04W279EAEUJsgsHuQBdWYNLK-FXiRHYPRLttE0gLuaiDsfURS7SaMCONln4qsgU__K7PKhQaktWjCcM8qkJNWd8fan0W7JywjQGgfw-tVOoZsc_xz4I0ZvcMG6QysxCy0_C858hg1kHfUTPTc9aeeJ3qFIEaGv9eg')" }}></div>
-          <div className="absolute inset-0 bg-ink-deep/30 mix-blend-multiply"></div>
+          <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/images/slide1.png')" }}></div>
+          <div className="absolute inset-0 bg-ink-deep/60 mix-blend-multiply"></div>
         </div>
-        <div className="relative z-10 text-center px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto">
-          <h1 className="font-display-lg text-display-lg text-surface-cream mb-unit animate-fade-in-up">Performance. Purpose. Precision.</h1>
-          <p className="font-body-lg text-body-lg text-surface-cream/90 font-light">The story behind our commitment to medical professionals and the planet they heal.</p>
-        </div>
-      </section>
-      
-      {/* Our Story Section */}
-      <section className="py-section-gap-md md:py-section-gap-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-          <div className="md:col-span-5 md:col-start-2 flex flex-col gap-6">
-            <span className="font-label-bold text-label-bold text-accent-gold uppercase tracking-widest">Our Story</span>
-            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep">Born from necessity. Crafted for excellence.</h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Flair Vigo was founded on a simple premise: medical professionals deserve apparel that performs as tirelessly as they do, without compromising on aesthetic refinement or environmental responsibility. 
-              We saw an industry stagnant with utilitarian designs and unsustainable practices, and chose to engineer a new standard.
-            </p>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Every garment is a testament to our dedication to technical luxury, blending cutting-edge material science with meticulous tailoring.
-            </p>
-          </div>
-          <div className="md:col-span-5 md:col-start-8 mt-12 md:mt-0 relative">
-            <div className="aspect-[4/5] overflow-hidden rounded-sm relative z-10">
-              <img className="w-full h-full object-cover" data-alt="A close-up, highly detailed editorial photograph of a designer’s hands carefully inspecting a piece of premium, deep burgundy medical fabric against a cream-colored minimalist worktable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV_XZ0rIoitExAF1qgLCGIG9ogDsMfq0TaMlqXadb0haSt1gqbMk_6w4Ar64G2ltC0WVmV-CwvEft9asJYfxOTUhKW2VEabqA3YtpMC8y-c2YHSPSCkPG0QHoLTWdaEFm4ItmqqZlexaCuBsHZsVNvFAp40rIfPTVXsAdkPlGHij-IFX_Skl_mdUf7nnxp0knhKm_w8ZpvyuLPKhvkzYIfIsCPpUA1_JVbgZIGieObu-8FNXbnwuSyCg" />
-            </div>
-            {/* Decorative element */}
-            <div className="absolute -bottom-8 -left-8 w-2/3 aspect-square bg-neutral-light -z-10 border border-ink-deep/10"></div>
-          </div>
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto animate-fade-in-up">
+          <span className="font-label-bold text-sm md:text-base text-accent-gold uppercase tracking-widest block mb-4">Our Story</span>
+          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-surface-cream mb-6 leading-tight">More Than Medical Apparel.</h1>
+          <p className="font-light text-lg md:text-2xl text-surface-cream/90 max-w-2xl mx-auto leading-relaxed">
+            Some professions ask you to give everything. What you wear should never ask you to compromise who you are in return.
+          </p>
         </div>
       </section>
       
-      {/* Fabric Technology / Material Science */}
-      <section className="bg-neutral-light py-section-gap-md md:py-section-gap-lg px-margin-mobile md:px-margin-desktop border-y border-ink-deep/10">
-        <div className="max-w-container-max mx-auto">
-          <div className="text-center mb-16 md:mb-24">
-            <span className="font-label-bold text-label-bold text-accent-gold uppercase tracking-widest">Material Science</span>
-            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-ink-deep mt-2">The Architecture of Comfort</h2>
+      {/* Introduction */}
+      <section className="py-20 md:py-32 px-6 max-w-7xl mx-auto">
+        <div className="max-w-4xl mx-auto text-center space-y-8 md:space-y-12">
+          <p className="font-light text-xl md:text-3xl leading-relaxed text-ink-deep/80">
+            FlairVigo was created for women who refuse to choose between professionalism and modesty. Women who believe excellence is reflected not only in the work they do, but in the way they carry themselves.
+          </p>
+          <div className="w-24 h-px bg-accent-gold mx-auto"></div>
+          <p className="font-light text-xl md:text-2xl leading-relaxed text-ink-deep/80">
+            Because we believe modesty doesn’t belong outside the hospital doors. It belongs inside operating theatres, clinics, wards, laboratories, classrooms, and every place where lives are changed.
+          </p>
+        </div>
+      </section>
+
+      {/* Designed With Purpose */}
+      <section className="py-20 md:py-32 px-6 bg-white border-y border-ink-deep/5">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
+            <h2 className="font-serif text-4xl md:text-5xl text-ink-deep">Designed With Purpose</h2>
+            <p className="text-xl text-ink-deep/70">Every FlairVigo piece begins with one question:</p>
+            <blockquote className="text-2xl md:text-4xl font-serif italic text-accent-gold border-l-4 border-accent-gold pl-6 md:pl-8 py-2">
+              "How can we make her day easier?"
+            </blockquote>
+            <p className="text-lg md:text-xl text-ink-deep/70">That question shapes every decision we make.</p>
+            <ul className="space-y-4 text-lg md:text-xl text-ink-deep/80 pt-4">
+              <li className="flex items-start gap-4">
+                <span className="text-accent-gold mt-1.5 text-sm">✦</span> 
+                From breathable premium fabrics…
+              </li>
+              <li className="flex items-start gap-4">
+                <span className="text-accent-gold mt-1.5 text-sm">✦</span> 
+                to thoughtfully placed pockets…
+              </li>
+              <li className="flex items-start gap-4">
+                <span className="text-accent-gold mt-1.5 text-sm">✦</span> 
+                to silhouettes that move comfortably through long shifts…
+              </li>
+              <li className="flex items-start gap-4">
+                <span className="text-accent-gold mt-1.5 text-sm">✦</span> 
+                to coverage that allows confidence without compromise.
+              </li>
+            </ul>
+            <div className="pt-6">
+              <p className="text-xl md:text-2xl text-ink-deep font-medium mb-3">Nothing is accidental.</p>
+              <p className="text-lg md:text-xl text-ink-deep/70 leading-relaxed">Because the smallest design decisions often make the biggest difference after twelve hours on your feet.</p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {/* Feature 1 */}
-            <div className="flex flex-col group cursor-default">
-              <div className="aspect-square overflow-hidden mb-6 rounded-sm">
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An abstract, macro shot of advanced fabric weave." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRUaHNkBbYR8I2RvIbcEhblagrEUW9dH_hjmPLuYHHIHGYLJHYQJXeVJquWvIHEGyJhKoMUNw9TyPk1oncys0sDKDPCSGN9I2gX2uH03lPMtNO3kW5_OV2RjMJ0poo80F6y0LfhN_kOtjBvEHu-3U_xVATFlRAID5FwN29eOYeAJrnm7p7g0uMdjOQiSRk4FEeIeKFRRtd-knAN5qVt5cI-UyXNRwG7oUuy6h1oUaPU6XrOkxK4umdqg" />
-              </div>
-              <h3 className="font-headline-md text-headline-md text-ink-deep mb-2">Aero-Knit™ Tech</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">Proprietary fiber engineering allowing for maximum airflow and dynamic stretch, recovering its shape shift after shift.</p>
+          <div className="relative mt-8 md:mt-0">
+            <div className="aspect-[3/4] overflow-hidden rounded-sm relative z-10 group">
+              <img className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Medical apparel detail" src="/images/slide2.png" />
             </div>
-            {/* Feature 2 */}
-            <div className="flex flex-col group cursor-default md:translate-y-12">
-              <div className="aspect-square overflow-hidden mb-6 rounded-sm">
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A visually striking composition of recycled water bottles morphing into fine, spun yarn against a pristine white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxyEjLDBzfpTDaLD2zIpWX52MthWr0M8u1Z6vLNnS0xy4V5PTFrKwDVtx7842uSrfb06BkGHOFriVWyePypN0fBUXMvQyL6vmR0LGqfnO6wyU2QFHKRxOezdSE5LV9XOCmoC8T2TLWkSY5MBenBmM7jN5QBPIFOoMrDX3uRyYjgUthZHscfW0corv5wCbGHdxPr8TWANp7t7nBZJ4HKdrBuyIygFQq_ily20YXbXQyFB34PP4mACVSFw" />
-              </div>
-              <h3 className="font-headline-md text-headline-md text-ink-deep mb-2">Repurposed Polymers</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">Transforming post-consumer plastics into premium threads, significantly reducing our reliance on virgin synthetics.</p>
+            <div className="absolute -bottom-6 -right-6 md:-bottom-8 md:-right-8 w-2/3 aspect-square bg-surface-cream border border-ink-deep/10 -z-10"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* More Than Uniforms */}
+      <section className="py-20 md:py-32 px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="order-2 md:order-1 relative mt-8 md:mt-0">
+            <div className="aspect-[4/5] overflow-hidden rounded-sm relative z-10 group">
+              <img className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Medical professional" src="/images/slide3.png" />
             </div>
-            {/* Feature 3 */}
-            <div className="flex flex-col group cursor-default">
-              <div className="aspect-square overflow-hidden mb-6 rounded-sm">
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist, editorial depiction of water droplets interacting with a high-performance fabric surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgfhpDYgsZaiPlQ-YR_RM8KRkm4UiFxP7sohUBn6HnBJyb8JeYoUwzI_7Hqwy6JuTPJB5_D__XbsgHiGgSfRRBBH_Eiw_QCyKoh3KfPn5TRgjcC_MXb7p7lKFigS5HxPzm76Bt_5GcrfGhCebiUjb47hEQMPrMPrpRaV2ZJtQwO6D5GDEc0tWzmyEiJ4fUajE9PjVRkNo_r4NPGZlAjbeSRq3SYdFnUnKnb-EVGXFMr12HWP_VKIDDmg" />
-              </div>
-              <h3 className="font-headline-md text-headline-md text-ink-deep mb-2">Eco-Shield Finish</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant">A bluesign® certified antimicrobial and fluid-resistant treatment that protects without harmful chemical runoff.</p>
+            <div className="absolute -top-6 -left-6 md:-top-8 md:-left-8 w-2/3 aspect-square bg-surface-cream border border-ink-deep/10 -z-10"></div>
+          </div>
+          <div className="order-1 md:order-2 space-y-6 md:space-y-8">
+            <h2 className="font-serif text-4xl md:text-5xl text-ink-deep mb-8">More Than Uniforms</h2>
+            <p className="text-xl text-ink-deep/70">To us, scrubs are never just uniforms.</p>
+            
+            <div className="space-y-4 pl-4 border-l-2 border-ink-deep/10">
+              <p className="text-lg md:text-xl text-ink-deep/80">They become part of someone’s first day as a medical student.</p>
+              <p className="text-lg md:text-xl text-ink-deep/80">Their first patient.</p>
+              <p className="text-lg md:text-xl text-ink-deep/80">Their overnight calls.</p>
+              <p className="text-lg md:text-xl text-ink-deep/80">Their graduation.</p>
+              <p className="text-lg md:text-xl text-ink-deep/80">Their moments of triumph.</p>
+              <p className="text-lg md:text-xl text-ink-deep/80">Their moments of exhaustion.</p>
+            </div>
+            
+            <div className="pt-6 space-y-4">
+              <p className="text-2xl md:text-3xl font-serif text-ink-deep italic">They quietly witness some of the most meaningful days of a woman’s life.</p>
+              <p className="text-xl md:text-2xl text-accent-gold font-medium tracking-wide">We never forget that.</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* What We Believe */}
+      <section className="py-20 md:py-32 px-6 bg-ink-deep text-surface-cream text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div className="max-w-5xl mx-auto space-y-16 relative z-10">
+          <h2 className="font-serif text-4xl md:text-5xl">What We Believe</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-left">
+            <div className="bg-white/5 backdrop-blur-sm p-8 md:p-10 rounded-sm border border-white/10 hover:border-accent-gold/50 transition-colors">
+              <p className="text-xl md:text-2xl font-light">Modesty is timeless.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-sm p-8 md:p-10 rounded-sm border border-white/10 hover:border-accent-gold/50 transition-colors">
+              <p className="text-xl md:text-2xl font-light">Elegance belongs in every profession.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-sm p-8 md:p-10 rounded-sm border border-white/10 hover:border-accent-gold/50 transition-colors">
+              <p className="text-xl md:text-2xl font-light">Functionality should never sacrifice beauty.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-sm p-8 md:p-10 rounded-sm border border-white/10 hover:border-accent-gold/50 transition-colors">
+              <p className="text-xl md:text-2xl font-light">Quality is an act of respect.</p>
+            </div>
+            <div className="md:col-span-2 bg-accent-gold/10 backdrop-blur-sm p-10 md:p-12 rounded-sm border border-accent-gold/20 text-center">
+              <p className="text-2xl md:text-3xl font-serif italic text-accent-gold">"The women who care for others deserve to feel cared for too."</p>
+            </div>
+          </div>
+          <p className="text-xl text-surface-cream/70 uppercase tracking-widest font-label-bold">These beliefs guide every collection we create.</p>
+        </div>
+      </section>
+
+      {/* This Is Only The Beginning */}
+      <section className="py-20 md:py-32 px-6 max-w-4xl mx-auto text-center space-y-10">
+        <span className="w-12 h-12 flex items-center justify-center rounded-full bg-accent-gold/10 text-accent-gold mx-auto mb-6">
+          <span className="material-symbols-outlined">favorite</span>
+        </span>
+        <h2 className="font-serif text-4xl md:text-5xl text-ink-deep">This Is Only The Beginning</h2>
+        <p className="text-xl md:text-2xl text-ink-deep/70 leading-relaxed font-light">
+          FlairVigo isn’t simply about clothing. It’s about building a community of women who lead with competence, serve with compassion, and remain true to their values wherever their careers take them.
+        </p>
+        <p className="text-xl md:text-2xl text-ink-deep/70 leading-relaxed font-light">
+          Whether you’re stepping into your first anatomy class, beginning residency, or years into your profession, we hope every piece reminds you of something simple:
+        </p>
+        <div className="py-12 my-12 border-y border-ink-deep/10">
+          <p className="font-serif text-3xl md:text-5xl text-ink-deep leading-relaxed md:leading-relaxed">
+            You never have to compromise your values to pursue your purpose.
+          </p>
+        </div>
+        <div className="pt-8">
+          <p className="text-2xl md:text-3xl text-ink-deep font-medium mb-4 uppercase tracking-widest text-sm md:text-base">Welcome to FlairVigo.</p>
+          <p className="font-serif text-4xl md:text-5xl text-accent-gold italic">Modesty in Every Stitch.</p>
         </div>
       </section>
     </main>
