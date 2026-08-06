@@ -20,14 +20,16 @@ function SignIn() {
   const loginMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
       const response = await api.post('/auth/login', data)
-      return response.data.data // Extract the nested 'data' object
+      return response.data // Extract the response directly as it's not nested
     },
     onSuccess: (responseData) => {
       // responseData contains { user, accessToken, refreshToken }
       login(responseData.user, responseData.accessToken)
       
       // Redirect based on role
-      const isAdmin = responseData.user?.role === 'ADMIN' || responseData.user?.role === 'STAFF' || responseData.user?.roles?.includes('admin') || responseData.user?.roles?.includes('ADMIN')
+      const userRole = responseData.user?.role?.toUpperCase()
+      const userRoles = responseData.user?.roles?.map((r: string) => r.toUpperCase()) || []
+      const isAdmin = userRole === 'ADMIN' || userRole === 'STAFF' || userRoles.includes('ADMIN') || userRoles.includes('STAFF')
       if (isAdmin) {
         navigate({ to: '/admin' })
       } else {
