@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/admin/marketing')({
@@ -7,6 +7,17 @@ export const Route = createFileRoute('/admin/marketing')({
 })
 
 function AdminMarketing() {
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/admin/marketing/coupons/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
+    }
+  });
+
   const { data: coupons, isLoading } = useQuery({
     queryKey: ['admin', 'coupons'],
     queryFn: async () => {
@@ -35,10 +46,10 @@ function AdminMarketing() {
             <span className="material-symbols-outlined text-[18px]">add</span>
             New Campaign
           </button>
-          <button className="px-6 py-3 bg-ink-deep text-surface-cream font-label-bold text-label-bold hover:bg-ink-deep/90 transition-colors flex items-center gap-2">
+          <Link to="/admin/marketing/new-coupon" className="px-6 py-3 bg-ink-deep text-surface-cream font-label-bold text-label-bold hover:bg-ink-deep/90 transition-colors flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px]">sell</span>
             Create Code
-          </button>
+          </Link>
         </div>
       </header>
       
@@ -144,8 +155,13 @@ function AdminMarketing() {
                       </span>
                     </td>
                     <td className="p-4 pr-6 text-right">
-                      <button className="text-on-surface-variant hover:text-accent-gold transition-colors">
-                        <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                      <button 
+                        onClick={() => { if(window.confirm('Delete this discount code?')) deleteMutation.mutate(coupon.id) }}
+                        disabled={deleteMutation.isPending}
+                        className="text-red-500 hover:text-red-700 transition-colors ml-auto flex items-center justify-end"
+                        title="Delete Code"
+                      >
+                        <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
                     </td>
                   </tr>

@@ -34,6 +34,7 @@ import { Route as AdminMarketingRouteImport } from './routes/admin/marketing'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as StoreProductIdRouteImport } from './routes/_store/product.$id'
+import { Route as AdminMarketingNewCouponRouteImport } from './routes/admin/marketing_.new-coupon'
 import { Route as AdminProductsNewIndexRouteImport } from './routes/admin/products/new/index'
 import { Route as AdminProductsNewSeoRouteImport } from './routes/admin/products/new/seo'
 import { Route as AdminProductsNewVariantsRouteImport } from './routes/admin/products/new/variants'
@@ -162,6 +163,11 @@ const StoreProductIdRoute = StoreProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => StoreRoute,
 } as any)
+const AdminMarketingNewCouponRoute = AdminMarketingNewCouponRouteImport.update({
+  id: '/marketing_/new-coupon',
+  path: '/marketing/new-coupon',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProductsNewIndexRoute = AdminProductsNewIndexRouteImport.update({
   id: '/products/new/',
   path: '/products/new/',
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/': typeof AdminIndexRoute
   '/product/$id': typeof StoreProductIdRoute
+  '/admin/marketing/new-coupon': typeof AdminMarketingNewCouponRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
@@ -232,6 +239,7 @@ export interface FileRoutesByTo {
   '/': typeof StoreIndexRoute
   '/admin': typeof AdminIndexRoute
   '/product/$id': typeof StoreProductIdRoute
+  '/admin/marketing/new-coupon': typeof AdminMarketingNewCouponRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new': typeof AdminProductsNewIndexRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/_store/': typeof StoreIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/_store/product/$id': typeof StoreProductIdRoute
+  '/admin/marketing_/new-coupon': typeof AdminMarketingNewCouponRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
@@ -294,6 +303,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/'
     | '/product/$id'
+    | '/admin/marketing/new-coupon'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new/'
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/product/$id'
+    | '/admin/marketing/new-coupon'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new'
@@ -352,6 +363,7 @@ export interface FileRouteTypes {
     | '/_store/'
     | '/admin/'
     | '/_store/product/$id'
+    | '/admin/marketing_/new-coupon'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new/'
@@ -544,6 +556,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoreProductIdRouteImport
       parentRoute: typeof StoreRoute
     }
+    '/admin/marketing_/new-coupon': {
+      id: '/admin/marketing_/new-coupon'
+      path: '/marketing/new-coupon'
+      fullPath: '/admin/marketing/new-coupon'
+      preLoaderRoute: typeof AdminMarketingNewCouponRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/products/new/': {
       id: '/admin/products/new/'
       path: '/products/new'
@@ -606,6 +625,7 @@ interface AdminRouteChildren {
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminMarketingNewCouponRoute: typeof AdminMarketingNewCouponRoute
   AdminProductsNewSeoRoute: typeof AdminProductsNewSeoRoute
   AdminProductsNewVariantsRoute: typeof AdminProductsNewVariantsRoute
   AdminProductsNewIndexRoute: typeof AdminProductsNewIndexRoute
@@ -619,6 +639,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminOrdersRoute: AdminOrdersRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminMarketingNewCouponRoute: AdminMarketingNewCouponRoute,
   AdminProductsNewSeoRoute: AdminProductsNewSeoRoute,
   AdminProductsNewVariantsRoute: AdminProductsNewVariantsRoute,
   AdminProductsNewIndexRoute: AdminProductsNewIndexRoute,
