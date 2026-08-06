@@ -109,16 +109,25 @@ export function Header() {
             {/* User Icon */}
             {useAuthStore().user ? (
               <div className="relative group">
-                <button className="hover:text-brand flex items-center gap-1">
+                <Link 
+                  to={(useAuthStore().user?.role === 'ADMIN' || useAuthStore().user?.role === 'STAFF') ? '/admin' : '#'} 
+                  className="hover:text-brand flex items-center gap-1 cursor-pointer"
+                >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                   </svg>
-                </button>
+                </Link>
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white shadow-xl border border-brand-border rounded-md overflow-hidden hidden group-hover:block z-50">
                   <div className="p-4 border-b border-brand-border bg-neutral-light/50">
                     <p className="text-sm font-label-bold text-ink-deep truncate">Hi, {useAuthStore().user?.firstName || 'User'}</p>
                     <p className="text-xs text-on-surface-variant truncate">{useAuthStore().user?.email}</p>
                   </div>
+                  {(useAuthStore().user?.role === 'ADMIN' || useAuthStore().user?.role === 'STAFF') && (
+                    <Link to="/admin" className="w-full text-left px-4 py-3 text-sm font-label-bold text-ink-deep hover:bg-neutral-light transition-colors flex items-center gap-2 border-b border-brand-border">
+                      <span className="material-symbols-outlined text-[16px]">dashboard</span>
+                      Dashboard
+                    </Link>
+                  )}
                   <button 
                     onClick={() => {
                       useAuthStore.getState().logout()
