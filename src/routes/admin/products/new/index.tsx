@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../../lib/api'
 import { z } from 'zod'
+import { supabase } from '../../../../lib/supabase'
+import { useState } from 'react'
 
 const productSearchSchema = z.object({
   productId: z.string().optional(),
@@ -16,7 +18,8 @@ export const Route = createFileRoute('/admin/products/new/')({
 
 function AddProductBasic() {
   const { productId } = Route.useSearch()
-  const { name, description, setField, setProduct, reset } = useProductFormStore()
+  const { name, description, images, isFeatured, isBestSeller, setField, setProduct, reset } = useProductFormStore()
+  const [isUploading, setIsUploading] = useState(false)
 
   // Fetch product if editing
   const { data: existingProduct, isLoading } = useQuery({
@@ -37,6 +40,54 @@ function AddProductBasic() {
       reset() // Reset form if not editing
     }
   }, [existingProduct, productId, setProduct, reset])
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+      alert('Please configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
+      return
+    }
+
+    try {
+      setIsUploading(true)
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random()}.${fileExt}`
+      const filePath = `products/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file)
+
+      if (uploadError) {
+        throw uploadError
+      }
+
+      const { data } = supabase.storage.from('images').getPublicUrl(filePath)
+      
+      const newImage = { url: data.publicUrl, isMain: images.length === 0 }
+      setField('images', [...images, newImage])
+    } catch (error: any) {
+      alert(`Error uploading image: ${error.message}`)
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const removeImage = (index: number) => {
+    const newImages = [...images]
+    newImages.splice(index, 1)
+    if (newImages.length > 0 && !newImages.some(img => img.isMain)) {
+      newImages[0].isMain = true
+    }
+    setField('images', newImages)
+  }
+
+  const setMainImage = (index: number) => {
+    const newImages = images.map((img, i) => ({ ...img, isMain: i === index }))
+    setField('images', newImages)
+  }
 
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-surface-cream text-ink-deep font-body-md">
@@ -106,10 +157,57 @@ function AddProductBasic() {
               
                 <div>
                   <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Media</label>
-                  <div className="border-2 border-dashed border-ink-deep/20 rounded-xl p-12 text-center hover:bg-neutral-light transition-colors cursor-pointer">
-                     <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add_photo_alternate</span>
-                     <p className="font-body-md text-ink-deep font-medium">Add files or drop files to upload</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    {images.map((img, index) => (
+                      <div key={index} className="relative group aspect-square rounded-xl overflow-hidden border border-ink-deep/10">
+                        <img src={img.url} alt="Product upload" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-2">
+                          {!img.isMain && (
+                            <button onClick={() => setMainImage(index)} className="bg-white/20 hover:bg-white/40 text-white px-3 py-1 rounded text-xs font-bold">
+                              Set Main
+                            </button>
+                          )}
+                          <button onClick={() => removeImage(index)} className="bg-red-500/80 hover:bg-red-500 text-white px-3 py-1 rounded text-xs font-bold">
+                            Remove
+                          </button>
+                        </div>
+                        {img.isMain && (
+                          <div className="absolute top-2 left-2 bg-accent-gold text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                            MAIN
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
+                  <label className="border-2 border-dashed border-ink-deep/20 rounded-xl p-12 text-center hover:bg-neutral-light transition-colors cursor-pointer block relative">
+                     <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-2">add_photo_alternate</span>
+                     <p className="font-body-md text-ink-deep font-medium">
+                       {isUploading ? 'Uploading...' : 'Add files or click to upload'}
+                     </p>
+                     <input type="file" accept="image/*" onChange={handleFileUpload} disabled={isUploading} className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed w-full h-full" />
+                  </label>
+                </div>
+                
+                <div className="space-y-4">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={isFeatured} 
+                      onChange={e => setField('isFeatured', e.target.checked)} 
+                      className="w-5 h-5 rounded border-ink-deep/20 text-ink-deep focus:ring-accent-gold cursor-pointer"
+                    />
+                    <span className="font-label-bold text-ink-deep">Mark as Featured (Shows on Homepage)</span>
+                  </label>
+                  
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={isBestSeller} 
+                      onChange={e => setField('isBestSeller', e.target.checked)} 
+                      className="w-5 h-5 rounded border-ink-deep/20 text-ink-deep focus:ring-accent-gold cursor-pointer"
+                    />
+                    <span className="font-label-bold text-ink-deep">Mark as Best Seller (Shows on Homepage)</span>
+                  </label>
                 </div>
               </div>
             </div>

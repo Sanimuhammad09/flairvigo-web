@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '../../lib/api'
 import { useCartStore } from '../../store/cart'
+import { FitFinderModal } from '../../components/FitFinderModal'
 
 export const Route = createFileRoute('/_store/product/$id')({
   component: ProductPage,
@@ -17,6 +18,7 @@ function ProductPage() {
   const [selectedSize, setSelectedSize] = useState("")
   const [waitlistEmail, setWaitlistEmail] = useState("")
   const [openAccordion, setOpenAccordion] = useState<string | null>('description')
+  const [isFitFinderOpen, setIsFitFinderOpen] = useState(false)
 
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', id],
@@ -218,7 +220,13 @@ function ProductPage() {
           <div className="mb-8">
             <div className="flex justify-between items-baseline mb-3">
               <h3 className="font-label-bold text-label-bold uppercase tracking-widest text-ink-deep">Select Size</h3>
-              <a className="font-label-sm text-accent-gold underline hover:text-ink-deep transition-colors" href="#">Size Guide</a>
+              <div className="flex items-center space-x-4">
+                <button onClick={() => setIsFitFinderOpen(true)} className="flex items-center gap-1 font-label-sm text-accent-gold hover:text-ink-deep transition-colors bg-accent-gold/10 px-2 py-1 rounded">
+                  <span className="material-symbols-outlined text-[14px]">straighten</span>
+                  Fit Finder
+                </button>
+                <a className="font-label-sm text-surface-variant underline hover:text-ink-deep transition-colors" href="#">Size Guide</a>
+              </div>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {availableSizes.map((variant: any) => (
@@ -348,6 +356,8 @@ function ProductPage() {
           </div>
         </div>
       </section>
+
+      <FitFinderModal isOpen={isFitFinderOpen} onClose={() => setIsFitFinderOpen(false)} />
     </div>
   )
 }

@@ -22,6 +22,10 @@ export function AdminSidebar() {
         <span className="material-symbols-outlined group-hover:text-accent-gold transition-colors">inventory_2</span>
         <span className="font-label-bold group-hover:text-accent-gold transition-colors">Inventory</span>
       </Link>
+      <Link to="/admin/collections" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group activeProps={{ className: 'bg-surface-cream text-accent-gold font-bold translate-x-1' }}">
+        <span className="material-symbols-outlined group-hover:text-accent-gold transition-colors">collections_bookmark</span>
+        <span className="font-label-bold group-hover:text-accent-gold transition-colors">Collections</span>
+      </Link>
       <Link to="/admin/customers" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group activeProps={{ className: 'bg-surface-cream text-accent-gold font-bold translate-x-1' }}">
         <span className="material-symbols-outlined group-hover:text-accent-gold transition-colors">group</span>
         <span className="font-label-bold group-hover:text-accent-gold transition-colors">Customers</span>
@@ -33,6 +37,10 @@ export function AdminSidebar() {
       <Link to="/admin/settings" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group activeProps={{ className: 'bg-surface-cream text-accent-gold font-bold translate-x-1' }}">
         <span className="material-symbols-outlined group-hover:text-accent-gold transition-colors">settings</span>
         <span className="font-label-bold group-hover:text-accent-gold transition-colors">Settings</span>
+      </Link>
+      <Link to="/admin/fit-finder" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-lg group activeProps={{ className: 'bg-surface-cream text-accent-gold font-bold translate-x-1' }}">
+        <span className="material-symbols-outlined group-hover:text-accent-gold transition-colors">straighten</span>
+        <span className="font-label-bold group-hover:text-accent-gold transition-colors">Fit Finder</span>
       </Link>
     </>
   )

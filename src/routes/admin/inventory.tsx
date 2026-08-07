@@ -41,6 +41,25 @@ function AdminInventory() {
     }
   })
 
+  const toggleBestSellerMutation = useMutation({
+    mutationFn: async ({ id, isBestSeller }: { id: string, isBestSeller: boolean }) => {
+      await api.put(`/admin/products/${id}`, { isBestSeller })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
+      queryClient.invalidateQueries({ queryKey: ['products', 'bestsellers'] })
+    }
+  })
+
+  const markSoldOutMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await api.put(`/products/${id}/sold-out`)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
+    }
+  })
+
   const handleEditClick = (product: any) => {
     navigate({ to: '/admin/products/new', search: { productId: product.id } })
   }
@@ -80,6 +99,7 @@ function AdminInventory() {
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Category</th>
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Stock (Total)</th>
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Price</th>
+                <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant text-center">Best Seller</th>
                 <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant text-right">Actions</th>
               </tr>
             </thead>
@@ -129,8 +149,28 @@ function AdminInventory() {
                         </span>
                       </td>
                       <td className="py-4 px-6 text-ink-deep font-semibold">₦{(product.basePrice || product.price || 0).toLocaleString()}</td>
+                      <td className="py-4 px-6 text-center">
+                        <button
+                          onClick={() => toggleBestSellerMutation.mutate({ id: product.id, isBestSeller: !product.isBestSeller })}
+                          disabled={toggleBestSellerMutation.isPending}
+                          className={`material-symbols-outlined text-2xl transition-colors ${product.isBestSeller ? 'text-accent-gold' : 'text-ink-deep/20 hover:text-ink-deep/40'}`}
+                        >
+                          star
+                        </button>
+                      </td>
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-3">
+                          <button 
+                            onClick={() => {
+                              if(confirm('Are you sure you want to mark all sizes as sold out?')) {
+                                markSoldOutMutation.mutate(product.id)
+                              }
+                            }} 
+                            disabled={markSoldOutMutation.isPending}
+                            className="text-on-surface-variant hover:text-ink-deep transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-ink-deep/20 hover:border-ink-deep"
+                          >
+                            Mark Sold Out
+                          </button>
                           <button onClick={() => handleEditClick(product)} className="text-ink-deep hover:text-accent-gold transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-ink-deep hover:border-accent-gold">
                             Edit
                           </button>

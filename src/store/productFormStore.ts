@@ -20,6 +20,9 @@ export interface ProductFormState {
   seoDescription: string
   seoKeywords: string
   isDraft: boolean
+  images: { url: string, isMain: boolean }[]
+  isFeatured: boolean
+  isBestSeller: boolean
   
   // Actions
   setField: (field: keyof ProductFormState, value: any) => void
@@ -38,6 +41,9 @@ const initialState = {
   seoDescription: '',
   seoKeywords: '',
   isDraft: false,
+  images: [],
+  isFeatured: false,
+  isBestSeller: false,
 }
 
 export const useProductFormStore = create<ProductFormState>((set) => ({
@@ -61,6 +67,9 @@ export const useProductFormStore = create<ProductFormState>((set) => ({
     seoDescription: product.seoDescription || '',
     seoKeywords: product.seoKeywords || '',
     isDraft: product.isDraft || false,
+    images: product.images?.map((img: any) => ({ url: img.url, isMain: img.isMain })) || [],
+    isFeatured: product.isFeatured || false,
+    isBestSeller: product.isBestSeller || false,
   }),
   reset: () => set(initialState)
 }))

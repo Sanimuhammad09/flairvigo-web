@@ -4,6 +4,7 @@ import { GeneralSettings } from '../../components/admin/settings/GeneralSettings
 import { ShippingSettings } from '../../components/admin/settings/ShippingSettings'
 import { PaymentSettings } from '../../components/admin/settings/PaymentSettings'
 import { TeamSettings } from '../../components/admin/settings/TeamSettings'
+import { BannerSettings } from '../../components/admin/settings/BannerSettings'
 
 export const Route = createFileRoute('/admin/settings')({
   component: AdminSettings,
@@ -20,6 +21,8 @@ function AdminSettings() {
         return <ShippingSettings />
       case 'Payments':
         return <PaymentSettings />
+      case 'Banners':
+        return <BannerSettings />
       case 'Team & Roles':
         return <TeamSettings />
       default:
@@ -38,7 +41,7 @@ function AdminSettings() {
         
         {/* Settings Tabs */}
         <div className="flex overflow-x-auto hide-scrollbar border-b border-ink-deep/10 mb-8 gap-4">
-          {['General', 'Shipping', 'Payments', 'Team & Roles'].map((tab) => (
+          {['General', 'Banners', 'Shipping', 'Payments', 'Team & Roles'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

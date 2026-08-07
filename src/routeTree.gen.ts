@@ -29,6 +29,7 @@ import { Route as StoreWomenRouteImport } from './routes/_store/women'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin/analytics'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
+import { Route as AdminFitFinderRouteImport } from './routes/admin/fit-finder'
 import { Route as AdminInventoryRouteImport } from './routes/admin/inventory'
 import { Route as AdminMarketingRouteImport } from './routes/admin/marketing'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
@@ -36,6 +37,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as StoreCollectionsIndexRouteImport } from './routes/_store/collections/index'
 import { Route as StoreCollectionsSlugRouteImport } from './routes/_store/collections/$slug'
 import { Route as StoreProductIdRouteImport } from './routes/_store/product.$id'
+import { Route as AdminCollectionsIndexRouteImport } from './routes/admin/collections/index'
 import { Route as AdminMarketingNewCouponRouteImport } from './routes/admin/marketing_.new-coupon'
 import { Route as AdminProductsNewIndexRouteImport } from './routes/admin/products/new/index'
 import { Route as AdminProductsNewSeoRouteImport } from './routes/admin/products/new/seo'
@@ -140,6 +142,11 @@ const AdminCustomersRoute = AdminCustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFitFinderRoute = AdminFitFinderRouteImport.update({
+  id: '/fit-finder',
+  path: '/fit-finder',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminInventoryRoute = AdminInventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -174,6 +181,11 @@ const StoreProductIdRoute = StoreProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
   getParentRoute: () => StoreRoute,
+} as any)
+const AdminCollectionsIndexRoute = AdminCollectionsIndexRouteImport.update({
+  id: '/collections/',
+  path: '/collections/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminMarketingNewCouponRoute = AdminMarketingNewCouponRouteImport.update({
   id: '/marketing_/new-coupon',
@@ -216,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/women': typeof StoreWomenRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
+  '/admin/fit-finder': typeof AdminFitFinderRoute
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/marketing': typeof AdminMarketingRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -225,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/product/$id': typeof StoreProductIdRoute
   '/admin/marketing/new-coupon': typeof AdminMarketingNewCouponRoute
   '/collections/': typeof StoreCollectionsIndexRoute
+  '/admin/collections/': typeof AdminCollectionsIndexRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
@@ -246,6 +260,7 @@ export interface FileRoutesByTo {
   '/women': typeof StoreWomenRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
+  '/admin/fit-finder': typeof AdminFitFinderRoute
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/marketing': typeof AdminMarketingRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -256,6 +271,7 @@ export interface FileRoutesByTo {
   '/product/$id': typeof StoreProductIdRoute
   '/admin/marketing/new-coupon': typeof AdminMarketingNewCouponRoute
   '/collections': typeof StoreCollectionsIndexRoute
+  '/admin/collections': typeof AdminCollectionsIndexRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new': typeof AdminProductsNewIndexRoute
@@ -280,6 +296,7 @@ export interface FileRoutesById {
   '/_store/women': typeof StoreWomenRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/customers': typeof AdminCustomersRoute
+  '/admin/fit-finder': typeof AdminFitFinderRoute
   '/admin/inventory': typeof AdminInventoryRoute
   '/admin/marketing': typeof AdminMarketingRoute
   '/admin/orders': typeof AdminOrdersRoute
@@ -290,6 +307,7 @@ export interface FileRoutesById {
   '/_store/product/$id': typeof StoreProductIdRoute
   '/admin/marketing_/new-coupon': typeof AdminMarketingNewCouponRoute
   '/_store/collections/': typeof StoreCollectionsIndexRoute
+  '/admin/collections/': typeof AdminCollectionsIndexRoute
   '/admin/products/new/seo': typeof AdminProductsNewSeoRoute
   '/admin/products/new/variants': typeof AdminProductsNewVariantsRoute
   '/admin/products/new/': typeof AdminProductsNewIndexRoute
@@ -315,6 +333,7 @@ export interface FileRouteTypes {
     | '/women'
     | '/admin/analytics'
     | '/admin/customers'
+    | '/admin/fit-finder'
     | '/admin/inventory'
     | '/admin/marketing'
     | '/admin/orders'
@@ -324,6 +343,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/admin/marketing/new-coupon'
     | '/collections/'
+    | '/admin/collections/'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new/'
@@ -345,6 +365,7 @@ export interface FileRouteTypes {
     | '/women'
     | '/admin/analytics'
     | '/admin/customers'
+    | '/admin/fit-finder'
     | '/admin/inventory'
     | '/admin/marketing'
     | '/admin/orders'
@@ -355,6 +376,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/admin/marketing/new-coupon'
     | '/collections'
+    | '/admin/collections'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new'
@@ -378,6 +400,7 @@ export interface FileRouteTypes {
     | '/_store/women'
     | '/admin/analytics'
     | '/admin/customers'
+    | '/admin/fit-finder'
     | '/admin/inventory'
     | '/admin/marketing'
     | '/admin/orders'
@@ -388,6 +411,7 @@ export interface FileRouteTypes {
     | '/_store/product/$id'
     | '/admin/marketing_/new-coupon'
     | '/_store/collections/'
+    | '/admin/collections/'
     | '/admin/products/new/seo'
     | '/admin/products/new/variants'
     | '/admin/products/new/'
@@ -545,6 +569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCustomersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/fit-finder': {
+      id: '/admin/fit-finder'
+      path: '/fit-finder'
+      fullPath: '/admin/fit-finder'
+      preLoaderRoute: typeof AdminFitFinderRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/inventory': {
       id: '/admin/inventory'
       path: '/inventory'
@@ -593,6 +624,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/product/$id'
       preLoaderRoute: typeof StoreProductIdRouteImport
       parentRoute: typeof StoreRoute
+    }
+    '/admin/collections/': {
+      id: '/admin/collections/'
+      path: '/collections'
+      fullPath: '/admin/collections/'
+      preLoaderRoute: typeof AdminCollectionsIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/marketing_/new-coupon': {
       id: '/admin/marketing_/new-coupon'
@@ -662,12 +700,14 @@ const StoreRouteWithChildren = StoreRoute._addFileChildren(StoreRouteChildren)
 interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminCustomersRoute: typeof AdminCustomersRoute
+  AdminFitFinderRoute: typeof AdminFitFinderRoute
   AdminInventoryRoute: typeof AdminInventoryRoute
   AdminMarketingRoute: typeof AdminMarketingRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminMarketingNewCouponRoute: typeof AdminMarketingNewCouponRoute
+  AdminCollectionsIndexRoute: typeof AdminCollectionsIndexRoute
   AdminProductsNewSeoRoute: typeof AdminProductsNewSeoRoute
   AdminProductsNewVariantsRoute: typeof AdminProductsNewVariantsRoute
   AdminProductsNewIndexRoute: typeof AdminProductsNewIndexRoute
@@ -676,12 +716,14 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminCustomersRoute: AdminCustomersRoute,
+  AdminFitFinderRoute: AdminFitFinderRoute,
   AdminInventoryRoute: AdminInventoryRoute,
   AdminMarketingRoute: AdminMarketingRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminMarketingNewCouponRoute: AdminMarketingNewCouponRoute,
+  AdminCollectionsIndexRoute: AdminCollectionsIndexRoute,
   AdminProductsNewSeoRoute: AdminProductsNewSeoRoute,
   AdminProductsNewVariantsRoute: AdminProductsNewVariantsRoute,
   AdminProductsNewIndexRoute: AdminProductsNewIndexRoute,

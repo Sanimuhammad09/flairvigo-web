@@ -1,5 +1,5 @@
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
 
 export function generateInvoicePDF(order: any) {
@@ -80,8 +80,8 @@ export function generateInvoicePDF(order: any) {
     });
   }
 
-  // Ensure jsPDF autotable typings are met (using any cast to avoid ts errors if strict)
-  (doc as any).autoTable({
+  // Use autoTable directly
+  autoTable(doc, {
     startY: 90,
     head: [tableColumn],
     body: tableRows,
@@ -97,7 +97,7 @@ export function generateInvoicePDF(order: any) {
     }
   });
 
-  const finalY = (doc as any).lastAutoTable.finalY || 90;
+  const finalY = (doc as any).lastAutoTable?.finalY || 90;
 
   // Totals Section
   const shipping = order.shippingCost || 0;
