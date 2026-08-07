@@ -163,7 +163,7 @@ function Index() {
           ))}
           {/* Slider Dots */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
-            {slides.map((_, index) => (
+            {slides.map((_: any, index: number) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}

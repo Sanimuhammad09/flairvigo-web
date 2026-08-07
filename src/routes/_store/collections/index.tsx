@@ -31,7 +31,8 @@ function CollectionsPage() {
         {collections.map((collection) => (
           <Link 
             key={collection.slug}
-            to={`/collections/${collection.slug}`}
+            to="/collections/$slug"
+            params={{ slug: collection.slug }}
             className="group block relative overflow-hidden bg-neutral-light rounded-lg shadow-sm hover:shadow-xl transition-shadow"
           >
             <div className="aspect-[4/5] md:aspect-square overflow-hidden relative">
