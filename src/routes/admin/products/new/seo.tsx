@@ -24,8 +24,11 @@ function AddProductSEO() {
       const data = {
         name: store.name,
         description: store.description,
+        fabricDetails: store.fabricDetails,
+        careInstructions: store.careInstructions,
         basePrice: store.basePrice,
         categoryId: store.category,
+        collectionId: store.collection,
         seoTitle: store.seoTitle,
         seoDescription: store.seoDescription,
         seoKeywords: store.seoKeywords,

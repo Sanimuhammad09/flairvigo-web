@@ -18,7 +18,7 @@ export const Route = createFileRoute('/admin/products/new/')({
 
 function AddProductBasic() {
   const { productId } = Route.useSearch()
-  const { name, description, images, isFeatured, isBestSeller, setField, setProduct, reset } = useProductFormStore()
+  const { name, description, fabricDetails, careInstructions, collection, images, isFeatured, isBestSeller, setField, setProduct, reset } = useProductFormStore()
   const [isUploading, setIsUploading] = useState(false)
 
   // Fetch product if editing
@@ -30,6 +30,15 @@ function AddProductBasic() {
       return res.data?.data || res.data
     },
     enabled: !!productId
+  })
+
+  // Fetch collections for dropdown
+  const { data: collectionsData } = useQuery({
+    queryKey: ['collections'],
+    queryFn: async () => {
+      const res = await api.get('/collections')
+      return res.data?.data || res.data || []
+    }
   })
 
   // Initialize store with existing product data
@@ -153,6 +162,43 @@ function AddProductBasic() {
                     rows={5} 
                     placeholder="Product description..."
                   ></textarea>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Fabric Details</label>
+                    <textarea 
+                      value={fabricDetails}
+                      onChange={e => setField('fabricDetails', e.target.value)}
+                      className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors" 
+                      rows={3} 
+                      placeholder="e.g. 72% Polyester, 21% Rayon, 7% Spandex..."
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Care Instructions</label>
+                    <textarea 
+                      value={careInstructions}
+                      onChange={e => setField('careInstructions', e.target.value)}
+                      className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors" 
+                      rows={3} 
+                      placeholder="e.g. Machine wash cold with like colors..."
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-label-bold text-label-bold text-ink-deep mb-2">Collection</label>
+                  <select 
+                    value={collection}
+                    onChange={e => setField('collection', e.target.value)}
+                    className="w-full bg-transparent border border-ink-deep/10 rounded focus:ring-1 focus:ring-accent-gold p-3 font-body-md text-body-md text-ink-deep transition-colors"
+                  >
+                    <option value="">Select a collection...</option>
+                    {collectionsData?.map((col: any) => (
+                      <option key={col.id} value={col.id}>{col.name}</option>
+                    ))}
+                  </select>
                 </div>
               
                 <div>

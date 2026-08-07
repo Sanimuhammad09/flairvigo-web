@@ -13,8 +13,11 @@ export interface ProductFormState {
   id: string | null
   name: string
   description: string
+  fabricDetails: string
+  careInstructions: string
   basePrice: number
   category: string
+  collection: string
   variants: ProductVariant[]
   seoTitle: string
   seoDescription: string
@@ -34,8 +37,11 @@ const initialState = {
   id: null,
   name: '',
   description: '',
+  fabricDetails: '',
+  careInstructions: '',
   basePrice: 0,
   category: 'scrubs',
+  collection: '',
   variants: [],
   seoTitle: '',
   seoDescription: '',
@@ -53,8 +59,11 @@ export const useProductFormStore = create<ProductFormState>((set) => ({
     id: product.id,
     name: product.name || '',
     description: product.description || '',
+    fabricDetails: product.fabricDetails || '',
+    careInstructions: product.careInstructions || '',
     basePrice: product.basePrice || product.price || 0,
     category: product.category?.id || product.category || 'scrubs',
+    collection: product.collection?.id || product.collectionId || '',
     variants: product.variants?.map((v: any) => ({
       id: v.id,
       color: v.color || '',
