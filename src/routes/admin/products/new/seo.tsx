@@ -25,7 +25,7 @@ function AddProductSEO() {
         name: store.name,
         description: store.description,
         basePrice: store.basePrice,
-        category: store.category,
+        categoryId: store.category,
         seoTitle: store.seoTitle,
         seoDescription: store.seoDescription,
         seoKeywords: store.seoKeywords,
