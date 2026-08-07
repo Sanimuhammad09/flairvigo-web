@@ -30,6 +30,10 @@ function AddProductSEO() {
         seoDescription: store.seoDescription,
         seoKeywords: store.seoKeywords,
         isDraft: store.isDraft,
+        variants: store.variants.map(v => ({ ...v, inventory: Number(v.inventory), priceAdjustment: Number(v.priceAdjustment) })),
+        images: store.images,
+        isFeatured: store.isFeatured,
+        isBestSeller: store.isBestSeller,
       }
       if (store.id) {
         await api.put(`/admin/products/${store.id}`, data)

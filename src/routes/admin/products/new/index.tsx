@@ -26,7 +26,7 @@ function AddProductBasic() {
     queryKey: ['product', productId],
     queryFn: async () => {
       if (!productId) return null
-      const res = await api.get(`/products/${productId}`)
+      const res = await api.get(`/products/admin/${productId}`)
       return res.data?.data || res.data
     },
     enabled: !!productId
