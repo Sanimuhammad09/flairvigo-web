@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
-import { useProductFormStore, ProductVariant } from '../../../../store/productFormStore'
+import { useProductFormStore, type ProductVariant } from '../../../../store/productFormStore'
 
 export const Route = createFileRoute('/admin/products/new/variants')({
   component: AddProductVariants,
