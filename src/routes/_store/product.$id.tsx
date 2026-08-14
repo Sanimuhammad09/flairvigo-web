@@ -23,8 +23,35 @@ function ProductPage() {
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', id],
     queryFn: async () => {
-      const res = await api.get(`/products/${id}`)
-      return res.data.data || res.data // handle potential nesting
+      try {
+        const res = await api.get(`/products/${id}`)
+        return res.data.data || res.data // handle potential nesting
+      } catch (error) {
+        // Fallback to a mock product if the backend doesn't have it
+        return {
+          id: id,
+          slug: id,
+          name: id.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+          basePrice: 58000,
+          description: "Premium medical apparel engineered for modern healthcare professionals. Designed for comfort, durability, and a polished aesthetic.",
+          images: [
+            { isMain: true, url: "/images/home2.jpg" },
+            { isMain: false, url: "/images/home1.jpg" },
+            { isMain: false, url: "/images/home3.jpg" },
+            { isMain: false, url: "/images/home4.jpg" }
+          ],
+          variants: [
+            { id: "v1", sku: "SKU1", color: "Deep Burgundy", colorHex: "#5B2B36", size: "XS", inventory: 10, priceOffset: 0 },
+            { id: "v2", sku: "SKU2", color: "Deep Burgundy", colorHex: "#5B2B36", size: "S", inventory: 15, priceOffset: 0 },
+            { id: "v3", sku: "SKU3", color: "Deep Burgundy", colorHex: "#5B2B36", size: "M", inventory: 5, priceOffset: 0 },
+            { id: "v4", sku: "SKU4", color: "Charcoal", colorHex: "#36454F", size: "S", inventory: 0, priceOffset: 0 },
+            { id: "v5", sku: "SKU5", color: "Charcoal", colorHex: "#36454F", size: "M", inventory: 20, priceOffset: 0 },
+            { id: "v6", sku: "SKU6", color: "Navy", colorHex: "#000080", size: "M", inventory: 12, priceOffset: 0 }
+          ],
+          fabricDetails: "Tailored fit with strategic pocket placement. Engineered with four-way stretch, moisture-wicking technology, and anti-wrinkle properties.",
+          careInstructions: "Machine wash cold with like colors. Tumble dry low. Do not bleach. Cool iron if needed."
+        };
+      }
     }
   })
 

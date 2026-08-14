@@ -71,10 +71,10 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
             </div>
-            <div className="flex items-center space-x-1 cursor-pointer">
-              <img alt="US Flag" className="w-5 h-auto rounded-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMlicBlnxrwTNQpyrmDfxZHHb2cBYCvuqn5zfHMrplISdLdfL27_Hm9tY3_C7DaUEiYFx-Ms3hn441LJGga29N2xzCXBEVs_Ts3H35NVYYA_u5MbRhswhllEq2lKU95r1PSeMHa6-Dt0AJViguWZNk_Rpyj6H4P7bu_YwGaCpNcwOyzTADqDB_b5C0_WxBNst1C4exOM2EwKjy6AW4Il0T9eZcOKSI1hxRRpOC-fqcWr-xutt6-54GaQ"/>
-              <span className="text-sm font-semibold">EN</span>
-            </div>
+            <div className="flex items-center space-x-2 mt-4 md:mt-0">
+          <img alt="Nigeria Flag" className="w-5 h-auto rounded-sm" src="https://flagcdn.com/w40/ng.png"/>
+          <span className="font-semibold text-white tracking-widest">NIGERIA | ENGLISH</span>
+        </div>
             
             {/* User Icon */}
             {useAuthStore().user ? (

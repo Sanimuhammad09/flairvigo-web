@@ -21,10 +21,10 @@ function Index() {
   const slides = storeSettings?.homepageBanners?.length > 0 
     ? storeSettings.homepageBanners 
     : [
-        { url: "/images/slide1.png", link: "/women" },
-        { url: "/images/slide2.png", link: "/women" },
-        { url: "/images/slide3.png", link: "/women" },
-        { url: "/images/slide4.png", link: "/women" }
+        { url: "/images/home4.jpg", link: "/women" },
+        { url: "/images/home3.jpg", link: "/women" },
+        { url: "/images/home4.jpg", link: "/women" },
+        { url: "/images/home5.jpg", link: "/women" }
       ];
 
   const { data: featuredProducts, isLoading: featuredLoading } = useQuery({
@@ -50,15 +50,7 @@ function Index() {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const { data: categoriesData, isLoading: categoriesLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const res = await api.get('/categories');
-      return res.data;
-    }
-  });
 
-  const categories = categoriesData?.data || categoriesData || [];
 
   return (
     <main className="flex-1 bg-surface-cream text-ink-deep">
@@ -69,7 +61,7 @@ function Index() {
           {/* Color Item: Black */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Black" className="w-full h-full object-cover" src="/images/cat1.png"/>
+              <img alt="Black" className="w-full h-full object-cover" src="/images/home1.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Black</span>
           </Link>
@@ -77,7 +69,7 @@ function Index() {
           {/* Color Item: Navy */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Navy" className="w-full h-full object-cover" src="/images/slide2.png"/>
+              <img alt="Navy" className="w-full h-full object-cover" src="/images/home3.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Navy</span>
           </Link>
@@ -85,7 +77,7 @@ function Index() {
           {/* Color Item: Moss */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Moss" className="w-full h-full object-cover" src="/images/cat4.png"/>
+              <img alt="Moss" className="w-full h-full object-cover" src="/images/home4.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Moss</span>
           </Link>
@@ -93,7 +85,7 @@ function Index() {
           {/* Color Item: Royal Blue */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Royal Blue" className="w-full h-full object-cover" src="/images/cat3.png"/>
+              <img alt="Royal Blue" className="w-full h-full object-cover" src="/images/home3.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Royal Blue</span>
           </Link>
@@ -101,7 +93,7 @@ function Index() {
           {/* Color Item: Burgundy */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Burgundy" className="w-full h-full object-cover" src="/images/cat2.png"/>
+              <img alt="Burgundy" className="w-full h-full object-cover" src="/images/home2.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Burgundy</span>
           </Link>
@@ -109,7 +101,7 @@ function Index() {
           {/* Color Item: Charcoal */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Charcoal" className="w-full h-full object-cover" src="/images/cat5.png"/>
+              <img alt="Charcoal" className="w-full h-full object-cover" src="/images/home5.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Charcoal</span>
           </Link>
@@ -117,7 +109,7 @@ function Index() {
           {/* Color Item: Dark Harbor */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Dark Harbor" className="w-full h-full object-cover" src="/images/slide1.png"/>
+              <img alt="Dark Harbor" className="w-full h-full object-cover" src="/images/home4.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Dark Harbor</span>
           </Link>
@@ -125,7 +117,7 @@ function Index() {
           {/* Color Item: Ceil Blue */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Ceil Blue" className="w-full h-full object-cover" src="/images/slide3.png"/>
+              <img alt="Ceil Blue" className="w-full h-full object-cover" src="/images/home4.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Ceil Blue</span>
           </Link>
@@ -133,7 +125,7 @@ function Index() {
           {/* Color Item: Deep Purple */}
           <Link className="flex flex-col min-w-[160px] md:min-w-[180px] group" to="/women">
             <div className="w-full aspect-square rounded-xl overflow-hidden mb-4 border border-transparent group-hover:border-brand transition-colors shadow-sm">
-              <img alt="Deep Purple" className="w-full h-full object-cover" src="/images/cat6.png"/>
+              <img alt="Deep Purple" className="w-full h-full object-cover" src="/images/home1.jpg"/>
             </div>
             <span className="text-[13px] font-bold tracking-widest uppercase text-brand-text">Deep Purple</span>
           </Link>
@@ -215,14 +207,14 @@ function Index() {
                         alt={product.name} 
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${product.images?.length > 1 ? 'group-hover:opacity-0 z-10' : 'z-10'}`} 
                         src={primaryImage}
-                        onError={(e) => { e.currentTarget.src = "/images/cat6.png" }}
+                        onError={(e) => { e.currentTarget.src = "/images/home1.jpg" }}
                       />
                       {product.images?.length > 1 && (
                         <img 
                           alt={`${product.name} alternate view`} 
                           className="absolute inset-0 w-full h-full object-cover z-0" 
                           src={hoverImage}
-                          onError={(e) => { e.currentTarget.src = "/images/cat6.png" }}
+                          onError={(e) => { e.currentTarget.src = "/images/home1.jpg" }}
                         />
                       )}
                       
@@ -269,11 +261,17 @@ function Index() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {bestSellerProducts && Array.isArray(bestSellerProducts.data || bestSellerProducts) && (bestSellerProducts.data || bestSellerProducts).length > 0 ? (
-              (bestSellerProducts.data || bestSellerProducts)
-                .filter((product: any) => !product.name.toLowerCase().includes('perfume'))
-                .slice(0, 4)
-                .map((product: any) => {
+            {(() => {
+              const staticBestSellers = [
+                { id: "bs1", slug: "vigo-core-top", name: "The Vigo Core Top", description: "Deep Burgundy", basePrice: 48000, images: [{ isMain: true, url: "/images/home2.jpg" }] },
+                { id: "bs2", slug: "precision-jogger", name: "Precision Jogger", description: "Charcoal", basePrice: 58000, images: [{ isMain: true, url: "/images/home1.jpg" }] },
+                { id: "bs3", slug: "core-tech-vest", name: "The Core Tech Vest", description: "Deep Burgundy", basePrice: 85000, images: [{ isMain: true, url: "/images/home5.jpg" }] },
+                { id: "bs4", slug: "navy-scrub-set", name: "Classic Navy Set", description: "Navy Blue", basePrice: 95000, images: [{ isMain: true, url: "/images/home3.jpg" }] }
+              ];
+              const apiProducts = bestSellerProducts && Array.isArray(bestSellerProducts.data || bestSellerProducts) ? (bestSellerProducts.data || bestSellerProducts).filter((p: any) => !p.name.toLowerCase().includes('perfume')) : [];
+              const productsToDisplay = apiProducts.length > 0 ? apiProducts : staticBestSellers;
+              
+              return productsToDisplay.slice(0, 4).map((product: any) => {
                 const primaryImage = product.images?.find((img: any) => img.isMain)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500?text=No+Image';
                 const hoverImage = product.images?.length > 1 ? product.images[1].url : primaryImage;
                 
@@ -284,14 +282,14 @@ function Index() {
                         alt={product.name} 
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${product.images?.length > 1 ? 'group-hover:opacity-0 z-10' : 'z-10'}`} 
                         src={primaryImage}
-                        onError={(e) => { e.currentTarget.src = "/images/cat6.png" }}
+                        onError={(e) => { e.currentTarget.src = "/images/home1.jpg" }}
                       />
                       {product.images?.length > 1 && (
                         <img 
                           alt={`${product.name} alternate view`} 
                           className="absolute inset-0 w-full h-full object-cover z-0" 
                           src={hoverImage}
-                          onError={(e) => { e.currentTarget.src = "/images/cat6.png" }}
+                          onError={(e) => { e.currentTarget.src = "/images/home1.jpg" }}
                         />
                       )}
                       
@@ -313,49 +311,38 @@ function Index() {
                     </div>
                   </Link>
                 );
-              })
-            ) : (
-              <div className="col-span-full py-12 text-center text-on-surface-variant">
-                No best sellers at this time. Check back later!
-              </div>
-            )}
+              });
+            })()}
           </div>
         )}
       </section>
 
       {/* BEGIN: By Category Grid */}
       <section className="px-6 py-12 max-w-[1600px] mx-auto mb-12">
-        <h3 className="text-3xl font-bold mb-8 text-ink-deep">Flair Vigo By Category</h3>
+        <h3 className="text-3xl font-bold mb-8 text-ink-deep">Shop By Category</h3>
         
-        {categoriesLoading ? (
-           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 animate-pulse">
-             {[1, 2, 3, 4, 5, 6].map(i => (
-               <div key={i} className="aspect-[3/4] bg-surface-variant rounded-lg"></div>
-             ))}
-           </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.length > 0 ? categories.map((cat: any, index: number) => {
-              const fallbackImage = `/images/cat${(index % 6) + 1}.png`;
-              return (
-              <Link key={cat.id} className="group" to="/women">
-                <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
-                  <img 
-                    alt={cat.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                    src={cat.image || fallbackImage} 
-                    onError={(e) => { e.currentTarget.src = fallbackImage }}
-                  />
-                </div>
-                <h4 className="font-bold tracking-widest text-sm uppercase">{cat.name}</h4>
-              </Link>
-            )}) : (
-              <div className="col-span-full text-center text-on-surface-variant">
-                No categories available.
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[
+            { name: "Scrub Tops", link: "/women", img: "/images/home1.jpg" },
+            { name: "Scrub Dresses", link: "/women", img: "/images/home2.jpg" },
+            { name: "Scrub Pants", link: "/women", img: "/images/home3.jpg" },
+            { name: "Gift Sets", link: "/women", img: "/images/home4.jpg" },
+            { name: "Lab Coats (Coming Soon)", link: "#", img: "/images/home5.jpg" },
+            { name: "Accessories", link: "/women", img: "/images/home1.jpg" }
+          ].map((cat, index) => (
+            <Link key={index} className="group" to={cat.link as any}>
+              <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
+                <img 
+                  alt={cat.name} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  src={cat.img} 
+                  onError={(e) => { e.currentTarget.src = `/images/home${(index % 5) + 1}.jpg` }}
+                />
               </div>
-            )}
-          </div>
-        )}
+              <h4 className="font-bold tracking-widest text-sm uppercase">{cat.name}</h4>
+            </Link>
+          ))}
+        </div>
       </section>
     </main>
   )
