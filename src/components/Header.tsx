@@ -57,10 +57,10 @@ export function Header() {
                 </div>
               </div>
             </div>
-            <Link className="font-semibold text-sm hover:text-brand transition-colors" to="/jewelry">Jewelry</Link>
-            <a className="font-semibold text-sm hover:text-brand transition-colors" href="#">Group Orders</a>
+            <Link className="font-semibold text-sm hover:text-brand transition-colors" to="/bulk-orders">Bulk Orders</Link>
             <a className="font-semibold text-sm hover:text-brand transition-colors" href="#">Students</a>
             <Link className="font-semibold text-sm hover:text-brand transition-colors" to="/about">About</Link>
+            <Link className="font-semibold text-sm hover:text-brand transition-colors" to="/contact">Contact Us</Link>
           </nav>
           
           {/* Actions (Right) */}
@@ -263,10 +263,10 @@ export function Header() {
               <Link to="/collections" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Collections</Link>
               <Link to="/collections/$slug" params={{ slug: 'sidrah-collection' }} onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors pl-4 text-sm font-normal text-surface-variant">Sidrah Collection</Link>
               <Link to="/collections/$slug" params={{ slug: 'layna-collection' }} onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors pl-4 text-sm font-normal text-surface-variant">Layna Collection</Link>
-              <Link to="/jewelry" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Jewelry</Link>
               <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">About</Link>
-              <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Group Orders</a>
+              <Link to="/bulk-orders" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Bulk Orders</Link>
               <a href="#" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Students</a>
+              <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-ink-deep/10 hover:text-brand transition-colors">Contact Us</Link>
             </nav>
             <div className="p-6 border-t border-brand-border mt-auto">
               <div className="flex items-center space-x-2 mb-4">

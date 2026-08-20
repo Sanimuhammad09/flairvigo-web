@@ -26,10 +26,10 @@ export function Footer() {
             <li><a className="hover:text-white" href="#">Help Center</a></li>
             <li><a className="hover:text-white" href="#">Shipping</a></li>
             <li><a className="hover:text-white" href="#">Returns & Exchanges</a></li>
-            <li><a className="hover:text-white" href="#">Bulk Orders</a></li>
+            <li><Link className="hover:text-white" to="/bulk-orders">Bulk Orders</Link></li>
             <li><a className="hover:text-white" href="#">Sign up for Texts</a></li>
             <li><a className="hover:text-white" href="#">Contact Us</a></li>
-            <li className="pt-2">424-500-8209<br/><span className="text-xs text-gray-400">Call or Text<br/>5am to 8pm PST M-F</span></li>
+            <li className="pt-2">+2349114105173<br/><span className="text-xs text-gray-400">Call or Text<br/>5am to 8pm M-F</span></li>
           </ul>
         </div>
 

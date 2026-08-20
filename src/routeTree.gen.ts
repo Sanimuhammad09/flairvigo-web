@@ -20,7 +20,8 @@ import { Route as StoreIndexRouteImport } from './routes/_store/index'
 import { Route as StoreAboutRouteImport } from './routes/_store/about'
 import { Route as StoreAccountRouteImport } from './routes/_store/account'
 import { Route as StoreBestSellersRouteImport } from './routes/_store/best-sellers'
-import { Route as StoreJewelryRouteImport } from './routes/_store/jewelry'
+import { Route as StoreBulkOrdersRouteImport } from './routes/_store/bulk-orders'
+import { Route as StoreContactRouteImport } from './routes/_store/contact'
 import { Route as StoreMenRouteImport } from './routes/_store/men'
 import { Route as StoreNewArrivalsRouteImport } from './routes/_store/new-arrivals'
 import { Route as StoreOuterwearRouteImport } from './routes/_store/outerwear'
@@ -97,9 +98,14 @@ const StoreBestSellersRoute = StoreBestSellersRouteImport.update({
   path: '/best-sellers',
   getParentRoute: () => StoreRoute,
 } as any)
-const StoreJewelryRoute = StoreJewelryRouteImport.update({
-  id: '/jewelry',
-  path: '/jewelry',
+const StoreBulkOrdersRoute = StoreBulkOrdersRouteImport.update({
+  id: '/bulk-orders',
+  path: '/bulk-orders',
+  getParentRoute: () => StoreRoute,
+} as any)
+const StoreContactRoute = StoreContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => StoreRoute,
 } as any)
 const StoreMenRoute = StoreMenRouteImport.update({
@@ -220,7 +226,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof StoreAboutRoute
   '/account': typeof StoreAccountRoute
   '/best-sellers': typeof StoreBestSellersRoute
-  '/jewelry': typeof StoreJewelryRoute
+  '/bulk-orders': typeof StoreBulkOrdersRoute
+  '/contact': typeof StoreContactRoute
   '/men': typeof StoreMenRoute
   '/new-arrivals': typeof StoreNewArrivalsRoute
   '/outerwear': typeof StoreOuterwearRoute
@@ -252,7 +259,8 @@ export interface FileRoutesByTo {
   '/about': typeof StoreAboutRoute
   '/account': typeof StoreAccountRoute
   '/best-sellers': typeof StoreBestSellersRoute
-  '/jewelry': typeof StoreJewelryRoute
+  '/bulk-orders': typeof StoreBulkOrdersRoute
+  '/contact': typeof StoreContactRoute
   '/men': typeof StoreMenRoute
   '/new-arrivals': typeof StoreNewArrivalsRoute
   '/outerwear': typeof StoreOuterwearRoute
@@ -288,7 +296,8 @@ export interface FileRoutesById {
   '/_store/about': typeof StoreAboutRoute
   '/_store/account': typeof StoreAccountRoute
   '/_store/best-sellers': typeof StoreBestSellersRoute
-  '/_store/jewelry': typeof StoreJewelryRoute
+  '/_store/bulk-orders': typeof StoreBulkOrdersRoute
+  '/_store/contact': typeof StoreContactRoute
   '/_store/men': typeof StoreMenRoute
   '/_store/new-arrivals': typeof StoreNewArrivalsRoute
   '/_store/outerwear': typeof StoreOuterwearRoute
@@ -325,7 +334,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/best-sellers'
-    | '/jewelry'
+    | '/bulk-orders'
+    | '/contact'
     | '/men'
     | '/new-arrivals'
     | '/outerwear'
@@ -357,7 +367,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/account'
     | '/best-sellers'
-    | '/jewelry'
+    | '/bulk-orders'
+    | '/contact'
     | '/men'
     | '/new-arrivals'
     | '/outerwear'
@@ -392,7 +403,8 @@ export interface FileRouteTypes {
     | '/_store/about'
     | '/_store/account'
     | '/_store/best-sellers'
-    | '/_store/jewelry'
+    | '/_store/bulk-orders'
+    | '/_store/contact'
     | '/_store/men'
     | '/_store/new-arrivals'
     | '/_store/outerwear'
@@ -506,11 +518,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoreBestSellersRouteImport
       parentRoute: typeof StoreRoute
     }
-    '/_store/jewelry': {
-      id: '/_store/jewelry'
-      path: '/jewelry'
-      fullPath: '/jewelry'
-      preLoaderRoute: typeof StoreJewelryRouteImport
+    '/_store/bulk-orders': {
+      id: '/_store/bulk-orders'
+      path: '/bulk-orders'
+      fullPath: '/bulk-orders'
+      preLoaderRoute: typeof StoreBulkOrdersRouteImport
+      parentRoute: typeof StoreRoute
+    }
+    '/_store/contact': {
+      id: '/_store/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof StoreContactRouteImport
       parentRoute: typeof StoreRoute
     }
     '/_store/men': {
@@ -667,7 +686,8 @@ interface StoreRouteChildren {
   StoreAboutRoute: typeof StoreAboutRoute
   StoreAccountRoute: typeof StoreAccountRoute
   StoreBestSellersRoute: typeof StoreBestSellersRoute
-  StoreJewelryRoute: typeof StoreJewelryRoute
+  StoreBulkOrdersRoute: typeof StoreBulkOrdersRoute
+  StoreContactRoute: typeof StoreContactRoute
   StoreMenRoute: typeof StoreMenRoute
   StoreNewArrivalsRoute: typeof StoreNewArrivalsRoute
   StoreOuterwearRoute: typeof StoreOuterwearRoute
@@ -683,7 +703,8 @@ const StoreRouteChildren: StoreRouteChildren = {
   StoreAboutRoute: StoreAboutRoute,
   StoreAccountRoute: StoreAccountRoute,
   StoreBestSellersRoute: StoreBestSellersRoute,
-  StoreJewelryRoute: StoreJewelryRoute,
+  StoreBulkOrdersRoute: StoreBulkOrdersRoute,
+  StoreContactRoute: StoreContactRoute,
   StoreMenRoute: StoreMenRoute,
   StoreNewArrivalsRoute: StoreNewArrivalsRoute,
   StoreOuterwearRoute: StoreOuterwearRoute,
