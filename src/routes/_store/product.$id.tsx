@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '../../lib/api'
 import { useCartStore } from '../../store/cart'
 import { FitFinderModal } from '../../components/FitFinderModal'
+import { useRecentStore } from '../../store/recent'
 
 export const Route = createFileRoute('/_store/product/$id')({
   component: ProductPage,
@@ -12,6 +13,7 @@ export const Route = createFileRoute('/_store/product/$id')({
 function ProductPage() {
   const { id } = Route.useParams()
   const addItem = useCartStore((state) => state.addItem)
+  const { items: recentItems, addItem: addRecentItem } = useRecentStore()
   
   const [activeImage, setActiveImage] = useState("")
   const [selectedColor, setSelectedColor] = useState("")
@@ -65,6 +67,15 @@ function ProductPage() {
         const uniqueColors = Array.from(new Set(product.variants.map((v: any) => v.color)))
         setSelectedColor(uniqueColors[0] as string)
       }
+      
+      // Add to recently viewed
+      addRecentItem({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        price: product.basePrice,
+        image: product.images?.[0]?.url || '/images/home1.jpg'
+      })
     }
   }, [product, activeImage, selectedColor])
 
@@ -369,7 +380,7 @@ function ProductPage() {
       <section className="bg-neutral-light py-section-gap-md my-section-gap-md relative overflow-hidden">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 relative h-[500px] shadow-lg">
-            <img className="w-full h-full object-cover" alt="Editorial" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsRRIXb-Yizx3ll_Wgtys2WsD-W-Df2IkMej6kkgHLOmLfddthuMDCCJNYhvq2hFewdrTLIOTYh0XSlbBuUtqAl7-d4SF7HSxOOp5SC9Nskp5jcj8CLtSBgUattBYPP5hC3LPniyHuwyMlHd6sMVibrzhfvlEJ_zyG5WhSq8DSmKgCwuBFQB2CxjeMlKz9GSCouaABBpqZ0ZYAHqb1jO97V3Af6ZlsIoiB3NEZIi4Rlk3arME-vE46Aw" />
+            <img className="w-full h-full object-cover" alt="Editorial" src="/images/editorial_main.png" />
           </div>
           <div className="order-1 md:order-2">
             <h2 className="font-editorial text-5xl md:text-6xl text-ink-deep mb-6 italic leading-tight">Why You'll<br/>Love It</h2>
@@ -383,6 +394,29 @@ function ProductPage() {
           </div>
         </div>
       </section>
+
+      {/* Recently Viewed Section */}
+      {recentItems.length > 1 && (
+        <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pb-section-gap-md">
+          <h3 className="text-3xl font-bold mb-8 text-ink-deep">Recently Viewed</h3>
+          <div className="flex overflow-x-auto gap-6 pb-4 hide-scrollbar">
+            {recentItems.filter(item => item.id !== product.id).map(item => (
+              <Link key={item.id} to={`/product/${item.slug}`} className="group flex flex-col min-w-[200px] md:min-w-[250px]">
+                <div className="rounded-lg overflow-hidden mb-4 bg-brand-lightGray aspect-[3/4] relative">
+                  <img 
+                    alt={item.name} 
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    src={item.image}
+                    onError={(e) => { e.currentTarget.src = "/images/home1.jpg" }}
+                  />
+                </div>
+                <h4 className="font-bold tracking-widest text-sm uppercase text-ink-deep mb-1 group-hover:text-accent-gold transition-colors">{item.name}</h4>
+                <p className="text-ink-deep font-semibold mt-auto">₦{item.price.toLocaleString()}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <FitFinderModal isOpen={isFitFinderOpen} onClose={() => setIsFitFinderOpen(false)} />
     </div>
