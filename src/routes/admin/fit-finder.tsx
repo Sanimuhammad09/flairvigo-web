@@ -20,7 +20,7 @@ function AdminFitFinder() {
   const { isLoading } = useQuery({
     queryKey: ['admin', 'settings'],
     queryFn: async () => {
-      const res = await api.get('/admin/settings')
+      const res = await api.get('/store-settings/admin')
       const settings = res.data?.data || res.data
       if (settings?.fitFinderChart) {
         setSizeChart(settings.fitFinderChart)
@@ -31,7 +31,7 @@ function AdminFitFinder() {
 
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
-      await api.put('/admin/settings', { fitFinderChart: data })
+      await api.put('/store-settings/admin', { fitFinderChart: data })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] })

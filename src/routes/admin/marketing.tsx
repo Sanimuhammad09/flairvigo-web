@@ -11,7 +11,7 @@ function AdminMarketing() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/admin/marketing/coupons/${id}`);
+      await api.delete(`/coupons/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
@@ -22,7 +22,7 @@ function AdminMarketing() {
     queryKey: ['admin', 'coupons'],
     queryFn: async () => {
       try {
-        const res = await api.get('/admin/marketing/coupons')
+        const res = await api.get('/coupons')
         return res.data.data || res.data || []
       } catch (err) {
         return []

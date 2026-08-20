@@ -1,10 +1,20 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { api } from '../../lib/api'
 
 export const Route = createFileRoute('/_store/new-arrivals')({
   component: NewArrivals,
 })
 
 function NewArrivals() {
+  const { data: newProducts, isLoading } = useQuery({
+    queryKey: ['products', 'new-arrivals-page'],
+    queryFn: async () => {
+      const res = await api.get('/products?sortBy=newest&limit=20');
+      return res.data;
+    }
+  });
+
   return (
     <main className="flex-1 bg-brand-bg">
       {/* Hero Section */}
@@ -117,60 +127,51 @@ function NewArrivals() {
         </div>
       </section>
 
-      {/* Best Sellers */}
       <section className="px-6 py-16 max-w-[1600px] mx-auto mb-8">
         <h2 className="text-3xl font-bold mb-10 text-brand text-center md:text-left">Best Sellers</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          
-          <Link to="/product/$id" params={{ id: '1' }} className="group cursor-pointer block flex flex-col">
-            <div className="relative aspect-[3/4] bg-brand-lightGray overflow-hidden mb-4 rounded-xl">
-              <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="Burgundy Scrub Top" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0USvj4Wziq65uVnqqDe6J4TgUEejVGnGCDUNdHwfm35UKdZ962vL8w7U0uijBLKyRshw4wq3wj7OzzSW3OH0GWXioL9aniRqheGzyKJ5RsOsl2NRULrG0kEojGQuNjApCC9zIb6bStIws2LDAK2Ko88AvjmrQfHUyk6nSNezt28W9x1138diZB79V6wuQUIbbsy63bNZpaaeNXSpnYR6T2UEOLBAQW2-fo2XdnUVwOVxG1zt9xoa68g" />
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="w-full bg-white text-brand font-bold text-sm uppercase tracking-widest py-3 rounded-full hover:bg-gray-100 shadow-lg">Quick Add</button>
-              </div>
-            </div>
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-bold text-lg text-brand mb-1">The Vigo Core Top</h3>
-                <p className="text-sm text-brand-gray">Deep Burgundy</p>
-              </div>
-              <span className="font-semibold text-brand">₦48</span>
-            </div>
-          </Link>
-          
-          <Link to="/product/$id" params={{ id: '1' }} className="group cursor-pointer block flex flex-col">
-            <div className="relative aspect-[3/4] bg-brand-lightGray overflow-hidden mb-4 rounded-xl">
-              <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="Charcoal Joggers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_Yxqa1eohBtzMP39A-_DXr3_gcH37rPbM3uZS1TIArm2XQWZ9JI5Xq9UKH2RMRFUrY24xQ-B-sdwEJcE33drauQmr0KKjB0_vwOfi3yJFa9bu0dSjzemHgPEbrvzfG3iwUH6dGmoEWKXI6fnjz_dcehJRhPhB8bVV0HsrpbWXH45Jxsfq5uG0AMuA5uQ2Ilx-_Z5lVa6109vgZV5B6quC-TkdfZeyD_o3M84NjVzpg4Q9wdl4jTm5vA" />
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="w-full bg-white text-brand font-bold text-sm uppercase tracking-widest py-3 rounded-full hover:bg-gray-100 shadow-lg">Quick Add</button>
-              </div>
-            </div>
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-bold text-lg text-brand mb-1">Precision Jogger</h3>
-                <p className="text-sm text-brand-gray">Charcoal</p>
-              </div>
-              <span className="font-semibold text-brand">₦58</span>
-            </div>
-          </Link>
-          
-          <Link to="/product/$id" params={{ id: '1' }} className="group cursor-pointer block flex flex-col">
-            <div className="relative aspect-[3/4] bg-brand-lightGray overflow-hidden mb-4 rounded-xl">
-              <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="Burgundy Vest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhDLULQvEqksOD2VDgeHFMCAQcPiNinWBMdRtqaZLmanP-E9vuaFAQs2m5tTxE4-MzWdh13kGHsMxegsKG3p3DVrkezAzVlbflI-tPtm1DTBHsAml8ILCRXrsC0irxTJQ2SstksJH4a64bVYl1kjmaeODGCf-fo6gbd4gGlBg9jMRkh4uEh5jLyrTJv3a2C5Xi-rzM_uBV_AIlHxcLZXfvNav8hOMgK1xcSYYazUKOqz1pVGCe9dJlzw" />
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button className="w-full bg-white text-brand font-bold text-sm uppercase tracking-widest py-3 rounded-full hover:bg-gray-100 shadow-lg">Quick Add</button>
-              </div>
-            </div>
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-bold text-lg text-brand mb-1">The Core Tech Vest</h3>
-                <p className="text-sm text-brand-gray">Deep Burgundy</p>
-              </div>
-              <span className="font-semibold text-brand">₦85</span>
-            </div>
-          </Link>
-
-        </div>
+        
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 animate-pulse">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="aspect-[3/4] bg-brand-lightGray rounded-xl"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {(() => {
+              const staticProducts = [
+                { id: "na1", slug: "vigo-core-top", name: "The Vigo Core Top", description: "Deep Burgundy", basePrice: 48000, images: [{ isMain: true, url: "https://lh3.googleusercontent.com/aida-public/AB6AXuA0USvj4Wziq65uVnqqDe6J4TgUEejVGnGCDUNdHwfm35UKdZ962vL8w7U0uijBLKyRshw4wq3wj7OzzSW3OH0GWXioL9aniRqheGzyKJ5RsOsl2NRULrG0kEojGQuNjApCC9zIb6bStIws2LDAK2Ko88AvjmrQfHUyk6nSNezt28W9x1138diZB79V6wuQUIbbsy63bNZpaaeNXSpnYR6T2UEOLBAQW2-fo2XdnUVwOVxG1zt9xoa68g" }] },
+                { id: "na2", slug: "precision-jogger", name: "Precision Jogger", description: "Charcoal", basePrice: 58000, images: [{ isMain: true, url: "https://lh3.googleusercontent.com/aida-public/AB6AXuB_Yxqa1eohBtzMP39A-_DXr3_gcH37rPbM3uZS1TIArm2XQWZ9JI5Xq9UKH2RMRFUrY24xQ-B-sdwEJcE33drauQmr0KKjB0_vwOfi3yJFa9bu0dSjzemHgPEbrvzfG3iwUH6dGmoEWKXI6fnjz_dcehJRhPhB8bVV0HsrpbWXH45Jxsfq5uG0AMuA5uQ2Ilx-_Z5lVa6109vgZV5B6quC-TkdfZeyD_o3M84NjVzpg4Q9wdl4jTm5vA" }] },
+                { id: "na3", slug: "core-tech-vest", name: "The Core Tech Vest", description: "Deep Burgundy", basePrice: 85000, images: [{ isMain: true, url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAhDLULQvEqksOD2VDgeHFMCAQcPiNinWBMdRtqaZLmanP-E9vuaFAQs2m5tTxE4-MzWdh13kGHsMxegsKG3p3DVrkezAzVlbflI-tPtm1DTBHsAml8ILCRXrsC0irxTJQ2SstksJH4a64bVYl1kjmaeODGCf-fo6gbd4gGlBg9jMRkh4uEh5jLyrTJv3a2C5Xi-rzM_uBV_AIlHxcLZXfvNav8hOMgK1xcSYYazUKOqz1pVGCe9dJlzw" }] }
+              ];
+              
+              const apiProducts = newProducts && Array.isArray(newProducts.data || newProducts) ? (newProducts.data || newProducts) : [];
+              const productsToDisplay = apiProducts.length > 0 ? apiProducts : staticProducts;
+              
+              return productsToDisplay.map((product: any) => {
+                const primaryImage = product.images?.find((img: any) => img.isMain)?.url || product.images?.[0]?.url || 'https://via.placeholder.com/400x500?text=No+Image';
+                
+                return (
+                  <Link key={product.id} to={`/product/${product.slug}` as any} className="group cursor-pointer block flex flex-col">
+                    <div className="relative aspect-[3/4] bg-brand-lightGray overflow-hidden mb-4 rounded-xl">
+                      <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt={product.name} src={primaryImage} />
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[90%] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button className="w-full bg-white text-brand font-bold text-sm uppercase tracking-widest py-3 rounded-full hover:bg-gray-100 shadow-lg">Quick Add</button>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-bold text-lg text-brand mb-1">{product.name}</h3>
+                        <p className="text-sm text-brand-gray">{product.description || 'Premium Scrub'}</p>
+                      </div>
+                      <span className="font-semibold text-brand">₦{product.basePrice.toLocaleString()}</span>
+                    </div>
+                  </Link>
+                );
+              });
+            })()}
+          </div>
+        )}
       </section>
 
     </main>

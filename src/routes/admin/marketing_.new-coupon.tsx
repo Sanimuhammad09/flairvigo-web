@@ -26,7 +26,7 @@ function NewCouponPage() {
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await api.post('/admin/marketing/coupons', data)
+      const res = await api.post('/coupons', data)
       return res.data
     },
     onSuccess: () => {

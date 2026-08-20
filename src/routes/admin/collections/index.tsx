@@ -23,7 +23,7 @@ function AdminCollections() {
   const { data: collections, isLoading } = useQuery({
     queryKey: ['admin', 'collections'],
     queryFn: async () => {
-      const res = await api.get('/collections')
+      const res = await api.get('/categories')
       return res.data?.data || res.data
     }
   })
@@ -31,9 +31,9 @@ function AdminCollections() {
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
       if (editingId) {
-        await api.put(`/collections/${editingId}`, data)
+        await api.put(`/categories/${editingId}`, data)
       } else {
-        await api.post('/collections', data)
+        await api.post('/categories', data)
       }
     },
     onSuccess: () => {
@@ -49,7 +49,7 @@ function AdminCollections() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/collections/${id}`)
+      await api.delete(`/categories/${id}`)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'collections'] })
