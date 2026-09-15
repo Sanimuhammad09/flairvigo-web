@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/admin/analytics')({
   component: AdminAnalytics,
@@ -10,8 +10,17 @@ function AdminAnalytics() {
   const { data: analytics, isLoading } = useQuery({
     queryKey: ['admin', 'analytics'],
     queryFn: async () => {
-      const res = await api.get('/admin/analytics/overview')
-      return res.data.data || res.data
+      const { data: ordersData } = await supabase.from('orders').select('total_amount, created_at')
+      const { count: ordersCount } = await supabase.from('orders').select('*', { count: 'exact', head: true })
+      const { count: customersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'USER')
+      
+      const totalRevenue = ordersData?.reduce((acc, order) => acc + Number(order.total_amount), 0) || 0
+      return {
+        totalRevenue,
+        totalOrders: ordersCount || 0,
+        activeCustomers: customersCount || 0,
+        topProducts: [] // Mocked for now, needs aggregate query
+      }
     },
     refetchInterval: 30000 // Refetch every 30 seconds
   })

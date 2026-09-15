@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { api } from '../lib/api'
 import { useAuthStore } from '../store/auth'
+
+import { supabase } from '../lib/supabase'
 
 export const Route = createFileRoute('/sign-in')({
   component: SignIn,
@@ -19,21 +20,39 @@ function SignIn() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
-      const response = await api.post('/auth/login', data)
-      return response.data.data // Extract the nested 'data' object
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      return authData
     },
-    onSuccess: (responseData) => {
-      // responseData contains { user, accessToken, refreshToken }
-      login(responseData.user, responseData.accessToken)
-      
-      // Redirect based on role
-      const userRole = responseData.user?.role?.toUpperCase()
-      const userRoles = responseData.user?.roles?.map((r: string) => r.toUpperCase()) || []
-      const isAdmin = userRole === 'ADMIN' || userRole === 'STAFF' || userRoles.includes('ADMIN') || userRoles.includes('STAFF')
-      if (isAdmin) {
-        navigate({ to: '/admin' })
-      } else {
-        navigate({ to: '/' })
+    onSuccess: (authData) => {
+      if (authData.user && authData.session) {
+        const userRole = authData.user.user_metadata?.role?.toUpperCase()
+        const userRoles = authData.user.user_metadata?.roles?.map((r: string) => r.toUpperCase()) || []
+        const isAdmin = userRole === 'ADMIN' || userRole === 'STAFF' || userRoles.includes('ADMIN') || userRoles.includes('STAFF')
+        
+        const userToStore = {
+          id: authData.user.id,
+          email: authData.user.email || '',
+          firstName: authData.user.user_metadata?.firstName || 'Admin',
+          lastName: authData.user.user_metadata?.lastName || '',
+          role: userRole || 'USER',
+          roles: userRoles
+        }
+
+        login(userToStore, authData.session.access_token)
+        
+        if (isAdmin) {
+          navigate({ to: '/admin' })
+        } else {
+          navigate({ to: '/' })
+        }
       }
     },
   })

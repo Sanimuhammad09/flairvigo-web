@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { api } from '../../../lib/api'
 import { supabase } from '../../../lib/supabase'
 
 export function BannerSettings() {
@@ -11,9 +10,11 @@ export function BannerSettings() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const res = await api.get('/admin/settings')
-        if (res.data?.homepageBanners) {
-          setBanners(res.data.homepageBanners)
+        const { data, error } = await supabase.from('store_settings').select('*').eq('id', 'default').single()
+        if (error && error.code !== 'PGRST116') throw error
+        
+        if (data?.banner_settings) {
+          setBanners(data.banner_settings)
         } else {
           // Defaults if none exist
           setBanners([
@@ -71,12 +72,11 @@ export function BannerSettings() {
   const handleSave = async () => {
     try {
       setIsSaving(true)
-      await api.put('/admin/settings', {
-        homepageBanners: banners
-      })
+      const { error } = await supabase.from('store_settings').upsert({ id: 'default', banner_settings: banners })
+      if (error) throw error
       alert('Banners saved successfully!')
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Error saving banners')
+      alert(error.message || 'Error saving banners')
     } finally {
       setIsSaving(false)
     }

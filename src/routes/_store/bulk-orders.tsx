@@ -1,3 +1,4 @@
+import { supabase } from '../../lib/supabase'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_store/bulk-orders')({

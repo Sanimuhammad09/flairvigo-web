@@ -1,6 +1,6 @@
+import { supabase } from '../../lib/supabase';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
 import { useState } from 'react'
 
 export const Route = createFileRoute('/admin/inventory')({
@@ -14,8 +14,8 @@ function AdminInventory() {
     queryKey: ['admin', 'products'],
     queryFn: async () => {
       try {
-        const res = await api.get('/admin/products')
-        return res.data.data || res.data || []
+        const { data } = await supabase.from('products').select('*, category:categories(*), variants:product_variants(*)').order('created_at', { ascending: false })
+        return data || []
       } catch (err) {
         return []
       }
@@ -29,7 +29,7 @@ function AdminInventory() {
   // Mutations
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/admin/products/${id}`)
+      await supabase.from('products').delete().eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
@@ -43,7 +43,7 @@ function AdminInventory() {
 
   const toggleBestSellerMutation = useMutation({
     mutationFn: async ({ id, isBestSeller }: { id: string, isBestSeller: boolean }) => {
-      await api.put(`/admin/products/${id}`, { isBestSeller })
+      await supabase.from('products').update({ is_best_seller: isBestSeller }).eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
@@ -53,7 +53,7 @@ function AdminInventory() {
 
   const markSoldOutMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.put(`/products/${id}/sold-out`)
+      await supabase.from('products').update({ status: 'SOLD_OUT' }).eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] })
@@ -110,7 +110,7 @@ function AdminInventory() {
                 </tr>
               ) : products?.length > 0 ? (
                 products.map((product: any) => {
-                  const totalStock = product.variants?.reduce((sum: number, v: any) => sum + (v.stockQuantity || v.inventory || 0), 0) || 0;
+                  const totalStock = product.variants?.reduce((sum: number, v: any) => sum + (v.stock_quantity || v.inventory || 0), 0) || 0;
                   const isLowStock = totalStock > 0 && totalStock <= 5;
                   const isOutOfStock = totalStock === 0;
 
@@ -148,12 +148,12 @@ function AdminInventory() {
                           {totalStock} {totalStock === 1 ? 'Unit' : 'Units'}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-ink-deep font-semibold">₦{(product.basePrice || product.price || 0).toLocaleString()}</td>
+                      <td className="py-4 px-6 text-ink-deep font-semibold">₦{(product.base_price || product.price || 0).toLocaleString()}</td>
                       <td className="py-4 px-6 text-center">
                         <button
-                          onClick={() => toggleBestSellerMutation.mutate({ id: product.id, isBestSeller: !product.isBestSeller })}
+                          onClick={() => toggleBestSellerMutation.mutate({ id: product.id, isBestSeller: !product.is_best_seller })}
                           disabled={toggleBestSellerMutation.isPending}
-                          className={`material-symbols-outlined text-2xl transition-colors ${product.isBestSeller ? 'text-accent-gold' : 'text-ink-deep/20 hover:text-ink-deep/40'}`}
+                          className={`material-symbols-outlined text-2xl transition-colors ${product.is_best_seller ? 'text-accent-gold' : 'text-ink-deep/20 hover:text-ink-deep/40'}`}
                         >
                           star
                         </button>

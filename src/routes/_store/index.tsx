@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/_store/')({
   component: Index,
@@ -13,13 +13,13 @@ function Index() {
   const { data: storeSettings } = useQuery({
     queryKey: ['store', 'settings'],
     queryFn: async () => {
-      const res = await api.get('/admin/settings');
-      return res.data;
+      // const res = await api.get('/admin/settings');
+      return { homepageBanners: [] };
     }
   });
 
   const slides = storeSettings?.homepageBanners?.length > 0 
-    ? storeSettings.homepageBanners 
+    ? storeSettings?.banner_settings 
     : [
         { url: "/images/hero_burgundy.png", link: "/women" },
         { url: "/images/hero_navy.png", link: "/women" },
@@ -30,16 +30,16 @@ function Index() {
   const { data: featuredProducts, isLoading: featuredLoading } = useQuery({
     queryKey: ['products', 'featured'],
     queryFn: async () => {
-      const res = await api.get('/products/featured?limit=4');
-      return res.data;
+      const { data } = await supabase.from('products').select('*, category:categories(*)').order('created_at', { ascending: false }).limit(4);
+      return data || [];
     }
   });
 
   const { data: bestSellerProducts, isLoading: bestSellerLoading } = useQuery({
     queryKey: ['products', 'bestsellers'],
     queryFn: async () => {
-      const res = await api.get('/products/bestsellers?limit=4');
-      return res.data;
+      const { data } = await supabase.from('products').select('*, category:categories(*)').eq('is_best_seller', true).limit(4);
+      return data || [];
     }
   });
 
@@ -192,8 +192,8 @@ function Index() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {featuredProducts && Array.isArray(featuredProducts.data || featuredProducts) && (featuredProducts.data || featuredProducts).length > 0 ? (
-              (featuredProducts.data || featuredProducts)
+            {featuredProducts && Array.isArray(featuredProducts) && featuredProducts.length > 0 ? (
+              featuredProducts
                 .filter((product: any) => !product.name.toLowerCase().includes('perfume'))
                 .slice(0, 4)
                 .map((product: any) => {
@@ -232,7 +232,7 @@ function Index() {
                           {product.description}
                         </p>
                       )}
-                      <p className="text-ink-deep font-semibold mt-auto">₦{product.basePrice.toLocaleString()}</p>
+                      <p className="text-ink-deep font-semibold mt-auto">₦{(product.price || product.basePrice || 0).toLocaleString()}</p>
                     </div>
                   </Link>
                 );
@@ -268,7 +268,7 @@ function Index() {
                 { id: "bs3", slug: "core-tech-vest", name: "The Core Tech Vest", description: "Moss", basePrice: 85000, images: [{ isMain: true, url: "/images/hero_moss.png" }] },
                 { id: "bs4", slug: "navy-scrub-set", name: "Classic Navy Set", description: "Navy Blue", basePrice: 95000, images: [{ isMain: true, url: "/images/hero_navy.png" }] }
               ];
-              const apiProducts = bestSellerProducts && Array.isArray(bestSellerProducts.data || bestSellerProducts) ? (bestSellerProducts.data || bestSellerProducts).filter((p: any) => !p.name.toLowerCase().includes('perfume')) : [];
+              const apiProducts = bestSellerProducts && Array.isArray(bestSellerProducts) ? bestSellerProducts.filter((p: any) => !p.name.toLowerCase().includes('perfume')) : [];
               const productsToDisplay = apiProducts.length > 0 ? apiProducts : staticBestSellers;
               
               return productsToDisplay.slice(0, 4).map((product: any) => {

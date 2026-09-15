@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../lib/api'
+import { supabase } from '../lib/supabase'
 import { generateInvoicePDF } from '../utils/generateInvoice'
 
 export const Route = createFileRoute('/order-success')({
@@ -27,9 +27,8 @@ function OrderSuccess() {
     queryKey: ['order', params.orderId],
     queryFn: async () => {
       if (!params.orderId) return null
-      const res = await api.get('/orders')
-      const orders = res.data?.data || res.data || []
-      return orders.find((o: any) => o.id === params.orderId)
+      const { data } = await supabase.from('orders').select('*').eq('id', params.orderId).single()
+      return data
     },
     enabled: !!params.orderId
   })

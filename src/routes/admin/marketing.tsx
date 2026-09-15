@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/admin/marketing')({
   component: AdminMarketing,
@@ -11,7 +11,7 @@ function AdminMarketing() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/coupons/${id}`);
+      await supabase.from('coupons').delete().eq('id', id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] });
@@ -22,16 +22,16 @@ function AdminMarketing() {
     queryKey: ['admin', 'coupons'],
     queryFn: async () => {
       try {
-        const res = await api.get('/coupons')
-        return res.data.data || res.data || []
+        const { data } = await supabase.from('coupons').select('*').order('created_at', { ascending: false })
+        return data || []
       } catch (err) {
         return []
       }
     }
   })
 
-  const activeCoupons = coupons?.filter((c: any) => c.isActive)?.length || 0;
-  const totalUses = coupons?.reduce((sum: number, c: any) => sum + (c.usageCount || 0), 0) || 0;
+  const activeCoupons = coupons?.filter((c: any) => c.is_active)?.length || 0;
+  const totalUses = coupons?.reduce((sum: number, c: any) => sum + (c.current_uses || 0), 0) || 0;
 
   return (
     <main className="flex-1 flex flex-col h-screen overflow-y-auto bg-surface-cream">
@@ -139,19 +139,19 @@ function AdminMarketing() {
                       </span>
                     </td>
                     <td className="p-4 font-label-bold">
-                      {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₦${coupon.value.toLocaleString()} OFF`}
+                      {coupon.discount_percentage ? `${coupon.discount_percentage}% OFF` : `₦0 OFF`}
                     </td>
                     <td className="p-4">
-                      <span className="text-on-surface-variant">{coupon.usageCount || 0} / {coupon.maxUses || '∞'}</span>
+                      <span className="text-on-surface-variant">{coupon.current_uses || 0} / {coupon.max_uses || '∞'}</span>
                     </td>
                     <td className="p-4 text-on-surface-variant">
-                      {coupon.validUntil ? new Date(coupon.validUntil).toLocaleDateString() : 'Never'}
+                      {coupon.valid_until ? new Date(coupon.valid_until).toLocaleDateString() : 'Never'}
                     </td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold ${
-                        coupon.isActive ? 'bg-green-100 text-green-800' : 'bg-surface-container-highest text-on-surface-variant'
+                        coupon.is_active ? 'bg-green-100 text-green-800' : 'bg-surface-container-highest text-on-surface-variant'
                       }`}>
-                        {coupon.isActive ? 'Active' : 'Inactive'}
+                        {coupon.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="p-4 pr-6 text-right">

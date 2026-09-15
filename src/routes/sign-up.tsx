@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { api } from '../lib/api'
+
+import { supabase } from '../lib/supabase'
 
 export const Route = createFileRoute('/sign-up')({
   component: SignUp,
@@ -17,8 +18,19 @@ function SignUp() {
   })
 
   const registerMutation = useMutation({
-    mutationFn: (data: typeof formData) => {
-      return api.post('/auth/register', data)
+    mutationFn: async (data: typeof formData) => {
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+          }
+        }
+      })
+      if (error) throw new Error(error.message)
+      return authData
     },
     onSuccess: () => {
       navigate({ to: '/sign-in' })

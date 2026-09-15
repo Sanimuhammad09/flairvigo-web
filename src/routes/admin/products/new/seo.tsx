@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useProductFormStore } from '../../../../store/productFormStore'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../../../lib/api'
+import { supabase } from '../../../../lib/supabase'
 import { z } from 'zod'
 
 const productSearchSchema = z.object({
@@ -21,27 +21,35 @@ function AddProductSEO() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      // Gather colors and sizes from variants
+      const colors = [...new Set(store.variants.map(v => v.color).filter(Boolean))]
+      const sizes = [...new Set(store.variants.map(v => v.size).filter(Boolean))]
+      
       const data = {
         name: store.name,
         description: store.description,
-        fabricDetails: store.fabricDetails,
-        careInstructions: store.careInstructions,
-        basePrice: store.basePrice,
-        categoryId: store.category,
-        collectionId: store.collection,
-        seoTitle: store.seoTitle,
-        seoDescription: store.seoDescription,
-        seoKeywords: store.seoKeywords,
-        isDraft: store.isDraft,
-        variants: store.variants.map(v => ({ ...v, inventory: Number(v.inventory), priceAdjustment: Number(v.priceAdjustment) })),
+        fabric_details: store.fabricDetails,
+        care_instructions: store.careInstructions,
+        price: store.basePrice,
+        category_id: store.category || null,
+        collection_id: store.collection || null,
+        seo_title: store.seoTitle,
+        seo_description: store.seoDescription,
+        seo_keywords: store.seoKeywords ? store.seoKeywords.split(',').map(s => s.trim()) : null,
+        is_draft: store.isDraft,
         images: store.images,
-        isFeatured: store.isFeatured,
-        isBestSeller: store.isBestSeller,
+        is_featured: store.isFeatured,
+        is_best_seller: store.isBestSeller,
+        colors,
+        sizes
       }
+
       if (store.id) {
-        await api.put(`/admin/products/${store.id}`, data)
+        const { error } = await supabase.from('products').update(data).eq('id', store.id)
+        if (error) throw error
       } else {
-        await api.post('/admin/products', data)
+        const { error } = await supabase.from('products').insert(data)
+        if (error) throw error
       }
     },
     onSuccess: () => {
@@ -50,7 +58,7 @@ function AddProductSEO() {
       navigate({ to: '/admin/inventory' })
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || 'Failed to save product')
+      alert(err.message || 'Failed to save product')
     }
   })
 

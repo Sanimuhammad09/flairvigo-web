@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, Link } from '@tanstack/react-router'
 import { useAuthStore } from '../../store/auth'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 
 export const Route = createFileRoute('/_store/wishlist')({
@@ -22,14 +22,14 @@ function Wishlist() {
   const { data: wishlistResponse, isLoading } = useQuery({
     queryKey: ['wishlist'],
     queryFn: async () => {
-      const res = await api.get('/wishlist')
-      return res.data
+      // Wishlist uses local storage, no API needed
+      return []
     }
   })
   
   const removeItem = useMutation({
     mutationFn: async (variantId: string) => {
-      await api.delete(`/wishlist/${variantId}`)
+      // Wishlist is local storage based, no API needed
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wishlist'] })
@@ -100,7 +100,7 @@ function Wishlist() {
                 <Link to={`/product/${product.slug || product.id}` as any}>
                   <h3 className="font-headline-md text-body-lg font-semibold text-ink-deep line-clamp-1">{product.name}</h3>
                 </Link>
-                <span className="font-headline-md text-body-lg font-semibold text-ink-deep ml-4">₦{product.basePrice?.toLocaleString()}</span>
+                <span className="font-headline-md text-body-lg font-semibold text-ink-deep ml-4">₦{(product.price || product.basePrice || 0)?.toLocaleString()}</span>
               </div>
               <p className="font-body-md text-body-md text-ink-deep/60">{product.description || 'Premium Scrub'}</p>
             </div>

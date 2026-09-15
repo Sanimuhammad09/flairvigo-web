@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../lib/api'
+import { supabase } from '../lib/supabase'
 
 interface FitFinderModalProps {
   isOpen: boolean;
@@ -16,8 +16,9 @@ export function FitFinderModal({ isOpen, onClose }: FitFinderModalProps) {
   const { data: settings } = useQuery({
     queryKey: ['settings', 'global'],
     queryFn: async () => {
-      const res = await api.get('/admin/settings') // Using admin endpoint for now, or you could expose a public one
-      return res.data?.data || res.data
+      const { data, error } = await supabase.from('store_settings').select('*').eq('id', 'default').single()
+      if (error && error.code !== 'PGRST116') throw error
+      return { fitFinderChart: data?.fit_finder_chart }
     }
   })
 

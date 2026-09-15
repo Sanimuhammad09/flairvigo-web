@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../../lib/api'
 import { supabase } from '../../../lib/supabase'
 
 export const Route = createFileRoute('/admin/collections/')({
@@ -23,17 +22,17 @@ function AdminCollections() {
   const { data: collections, isLoading } = useQuery({
     queryKey: ['admin', 'collections'],
     queryFn: async () => {
-      const res = await api.get('/categories')
-      return res.data?.data || res.data
+      const { data } = await supabase.from('categories').select('*').order('created_at', { ascending: false })
+      return data || []
     }
   })
 
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
       if (editingId) {
-        await api.put(`/categories/${editingId}`, data)
+        await supabase.from('categories').update(data).eq('id', editingId)
       } else {
-        await api.post('/categories', data)
+        await supabase.from('categories').insert(data)
       }
     },
     onSuccess: () => {
@@ -49,7 +48,7 @@ function AdminCollections() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/categories/${id}`)
+      await supabase.from('categories').delete().eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'collections'] })
@@ -69,7 +68,7 @@ function AdminCollections() {
     setName(collection.name)
     setSlug(collection.slug)
     setDescription(collection.description || '')
-    setImage(collection.image || '')
+    setImage(collection.image_url || '')
     setIsModalOpen(true)
   }
 
@@ -81,7 +80,7 @@ function AdminCollections() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    saveMutation.mutate({ name, slug, description, image })
+    saveMutation.mutate({ name, slug, description, image_url: image })
   }
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,9 +146,9 @@ function AdminCollections() {
                 <tr key={collection.id} className="hover:bg-neutral-light/30 transition-colors group">
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-4">
-                      {collection.image ? (
+                      {collection.image_url ? (
                         <div className="w-12 h-12 rounded overflow-hidden bg-brand-lightGray shrink-0">
-                           <img src={collection.image} alt={collection.name} className="w-full h-full object-cover" />
+                           <img src={collection.image_url} alt={collection.name} className="w-full h-full object-cover" />
                         </div>
                       ) : (
                         <div className="w-12 h-12 rounded bg-neutral-light border border-ink-deep/10 shrink-0 flex items-center justify-center text-ink-deep/30">

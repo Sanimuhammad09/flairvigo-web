@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/admin/marketing_/new-coupon')({
   component: NewCouponPage,
@@ -26,15 +26,22 @@ function NewCouponPage() {
 
   const createMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await api.post('/coupons', data)
-      return res.data
+      const { data: result, error } = await supabase.from('coupons').insert({
+        code: data.code,
+        discount_percentage: data.value,
+        max_uses: data.usageLimit,
+        valid_from: data.startDate,
+        valid_until: data.endDate
+      }).select().single();
+      if (error) throw error;
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'coupons'] })
       navigate({ to: '/admin/marketing' })
     },
     onError: (err: any) => {
-      setError(err.response?.data?.message || 'Failed to create coupon')
+      setError(err.message || 'Failed to create coupon')
     }
   })
 

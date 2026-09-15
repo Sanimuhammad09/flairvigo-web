@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../../lib/api'
+import { supabase } from '../../../lib/supabase'
 
 export const Route = createFileRoute('/_store/collections/$slug')({
   component: CollectionDetailsPage,
@@ -28,10 +28,8 @@ function CollectionDetailsPage() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['products', 'collection', slug],
     queryFn: async () => {
-      const response = await api.get('/products', {
-        params: { collection: slug }
-      });
-      return response.data?.data?.data || response.data?.data || [];
+      const { data } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      return data || [];
     }
   });
 
@@ -112,7 +110,7 @@ function CollectionDetailsPage() {
                     <h3 className="font-label-bold text-lg text-ink-deep mb-1 group-hover:text-accent-gold transition-colors">{product.name}</h3>
                     <p className="text-sm text-on-surface-variant line-clamp-1">{product.description}</p>
                   </div>
-                  <span className="font-bold text-ink-deep mt-1 whitespace-nowrap ml-4">₦{product.basePrice.toLocaleString()}</span>
+                  <span className="font-bold text-ink-deep mt-1 whitespace-nowrap ml-4">₦{(product.price || product.basePrice || 0).toLocaleString()}</span>
                 </div>
               </Link>
             ))}

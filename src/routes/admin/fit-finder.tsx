@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/admin/fit-finder')({
   component: AdminFitFinder,
@@ -20,18 +20,19 @@ function AdminFitFinder() {
   const { isLoading } = useQuery({
     queryKey: ['admin', 'settings'],
     queryFn: async () => {
-      const res = await api.get('/store-settings/admin')
-      const settings = res.data?.data || res.data
-      if (settings?.fitFinderChart) {
-        setSizeChart(settings.fitFinderChart)
+      const { data, error } = await supabase.from('store_settings').select('*').eq('id', 'default').single()
+      if (error && error.code !== 'PGRST116') throw error
+      if (data?.fit_finder_chart) {
+        setSizeChart(data.fit_finder_chart)
       }
-      return settings
+      return data
     }
   })
 
   const saveMutation = useMutation({
     mutationFn: async (data: any) => {
-      await api.put('/store-settings/admin', { fitFinderChart: data })
+      const { error } = await supabase.from('store_settings').upsert({ id: 'default', fit_finder_chart: data })
+      if (error) throw error
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] })

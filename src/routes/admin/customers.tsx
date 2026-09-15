@@ -1,6 +1,6 @@
+import { supabase } from '../../lib/supabase';
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
 import { useState } from 'react'
 
 export const Route = createFileRoute('/admin/customers')({
@@ -13,8 +13,8 @@ function AdminCustomers() {
     queryKey: ['admin', 'users'],
     queryFn: async () => {
       try {
-        const res = await api.get('/users')
-        return res.data.data || res.data || []
+        const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false })
+        return data || []
       } catch (err) {
         return []
       }
@@ -30,7 +30,7 @@ function AdminCustomers() {
   // Mutations
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/users/${id}`)
+      await supabase.from('profiles').delete().eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
@@ -44,7 +44,11 @@ function AdminCustomers() {
 
   const editMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string, data: any }) => {
-      await api.put(`/users/${id}`, data)
+      await supabase.from('profiles').update({
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email
+      }).eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'users'] })
@@ -56,8 +60,8 @@ function AdminCustomers() {
   const handleEditClick = (user: any) => {
     setSelectedUser(user)
     setEditForm({
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
+      firstName: user.first_name || '',
+      lastName: user.last_name || '',
       email: user.email || '',
       isActive: user.isActive ?? true
     })
@@ -124,10 +128,10 @@ function AdminCustomers() {
                 <tr key={user.id} className="hover:bg-neutral-light transition-colors group">
                   <td className="py-4 px-2 flex items-center gap-4">
                     <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">
-                      {(user.firstName?.[0] || 'U') + (user.lastName?.[0] || '')}
+                      {(user.first_name?.[0] || 'U') + (user.last_name?.[0] || '')}
                     </div>
                     <div>
-                      <p className="font-label-bold text-label-bold">{user.firstName || 'Unknown'} {user.lastName || ''}</p>
+                      <p className="font-label-bold text-label-bold">{user.first_name || 'Unknown'} {user.last_name || ''}</p>
                       <p className="text-on-surface-variant text-sm">{user.email}</p>
                     </div>
                   </td>
@@ -135,11 +139,11 @@ function AdminCustomers() {
                     <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-label-bold rounded-full">{user.role || 'USER'}</span>
                   </td>
                   <td className="py-4 px-2">
-                    <span className={`inline-flex items-center px-2 py-1 text-xs font-label-bold rounded-full ${user.isActive ? 'bg-green-100 text-green-800' : 'bg-surface-container-highest text-on-surface-variant'}`}>
-                      {user.isActive ? 'Active' : 'Inactive'}
+                    <span className={`inline-flex items-center px-2 py-1 text-xs font-label-bold rounded-full ${user.isActive ?? true ? 'bg-green-100 text-green-800' : 'bg-surface-container-highest text-on-surface-variant'}`}>
+                      {user.isActive ?? true ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="py-4 px-2 text-on-surface-variant">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td className="py-4 px-2 text-on-surface-variant">{new Date(user.created_at).toLocaleDateString()}</td>
                   <td className="py-4 px-2 text-right">
                     <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                       <button onClick={() => handleEditClick(user)} className="text-ink-deep hover:text-accent-gold transition-colors font-label-bold uppercase text-xs tracking-widest border-b border-ink-deep hover:border-accent-gold">
@@ -245,7 +249,7 @@ function AdminCustomers() {
             <span className="material-symbols-outlined text-6xl text-error mb-4">warning</span>
             <h3 className="font-headline-lg text-2xl text-ink-deep mb-2">Delete Customer?</h3>
             <p className="font-body-md text-on-surface-variant mb-8">
-              Are you sure you want to delete <strong>{selectedUser.firstName} {selectedUser.lastName}</strong>? This action will permanently remove their account.
+              Are you sure you want to delete <strong>{selectedUser.first_name} {selectedUser.last_name}</strong>? This action will permanently remove their account.
               <br/><br/>
               <span className="text-xs italic text-error">Note: You cannot delete a customer if they have existing orders.</span>
             </p>

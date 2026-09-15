@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/_store/new-arrivals')({
   component: NewArrivals,
@@ -10,8 +10,8 @@ function NewArrivals() {
   const { data: newProducts, isLoading } = useQuery({
     queryKey: ['products', 'new-arrivals-page'],
     queryFn: async () => {
-      const res = await api.get('/products?sortBy=newest&limit=20');
-      return res.data;
+      const { data } = await supabase.from('products').select('*').order('created_at', { ascending: false }).limit(20);
+      return data || [];
     }
   });
 
@@ -145,7 +145,7 @@ function NewArrivals() {
                 { id: "na3", slug: "core-tech-vest", name: "The Core Tech Vest", description: "Deep Burgundy", basePrice: 85000, images: [{ isMain: true, url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAhDLULQvEqksOD2VDgeHFMCAQcPiNinWBMdRtqaZLmanP-E9vuaFAQs2m5tTxE4-MzWdh13kGHsMxegsKG3p3DVrkezAzVlbflI-tPtm1DTBHsAml8ILCRXrsC0irxTJQ2SstksJH4a64bVYl1kjmaeODGCf-fo6gbd4gGlBg9jMRkh4uEh5jLyrTJv3a2C5Xi-rzM_uBV_AIlHxcLZXfvNav8hOMgK1xcSYYazUKOqz1pVGCe9dJlzw" }] }
               ];
               
-              const apiProducts = newProducts && Array.isArray(newProducts.data || newProducts) ? (newProducts.data || newProducts) : [];
+              const apiProducts = newProducts && Array.isArray(newProducts) ? newProducts : [];
               const productsToDisplay = apiProducts.length > 0 ? apiProducts : staticProducts;
               
               return productsToDisplay.map((product: any) => {
@@ -164,7 +164,7 @@ function NewArrivals() {
                         <h3 className="font-bold text-lg text-brand mb-1">{product.name}</h3>
                         <p className="text-sm text-brand-gray">{product.description || 'Premium Scrub'}</p>
                       </div>
-                      <span className="font-semibold text-brand">₦{product.basePrice.toLocaleString()}</span>
+                      <span className="font-semibold text-brand">₦{(product.price || product.basePrice || 0).toLocaleString()}</span>
                     </div>
                   </Link>
                 );

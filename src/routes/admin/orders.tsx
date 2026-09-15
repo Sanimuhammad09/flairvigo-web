@@ -1,6 +1,6 @@
+import { supabase } from '../../lib/supabase';
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../lib/api'
 import { useState } from 'react'
 import { generateInvoicePDF } from '../../utils/generateInvoice'
 
@@ -14,8 +14,8 @@ function AdminOrders() {
     queryKey: ['admin', 'orders'],
     queryFn: async () => {
       try {
-        const res = await api.get('/admin/orders')
-        return res.data.data || res.data || []
+        const { data } = await supabase.from('orders').select('*, user:profiles(*), items:order_items(*, product:products(*))').order('created_at', { ascending: false })
+        return data || []
       } catch (err) {
         return []
       }
@@ -29,7 +29,7 @@ function AdminOrders() {
 
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string, status: string }) => {
-      await api.put(`/admin/orders/${id}/status`, { status })
+      await supabase.from('orders').update({ status }).eq('id', id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] })
@@ -92,21 +92,21 @@ function AdminOrders() {
               orders.map((order: any) => (
                 <tr key={order.id} className="hover:bg-neutral-light/50 transition-colors group">
                   <td className="py-4 px-6 font-label-bold text-label-bold text-ink-deep">
-                    #{order.orderNumber || order.id.substring(0,8).toUpperCase()}
+                    #{order.order_number || order.id.substring(0,8).toUpperCase()}
                   </td>
-                  <td className="py-4 px-6 text-on-surface-variant">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="py-4 px-6 text-on-surface-variant">{new Date(order.created_at).toLocaleDateString()}</td>
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-ink-deep flex items-center justify-center font-label-bold text-label-bold text-surface-cream">
-                        {(order.user?.firstName?.[0] || 'G') + (order.user?.lastName?.[0] || '')}
+                        {(order.user?.first_name?.[0] || 'G') + (order.user?.last_name?.[0] || '')}
                       </div>
-                      <span>{order.user?.firstName || 'Guest'} {order.user?.lastName || ''}</span>
+                      <span>{order.user?.first_name || 'Guest'} {order.user?.last_name || ''}</span>
                     </div>
                   </td>
-                  <td className="py-4 px-6 font-label-bold text-label-bold text-ink-deep">₦{order.totalAmount?.toLocaleString() || order.total || 0}</td>
+                  <td className="py-4 px-6 font-label-bold text-label-bold text-ink-deep">₦{order.total_amount?.toLocaleString() || order.total || 0}</td>
                   <td className="py-4 px-6">
                     <span className="inline-flex items-center px-2 py-1 bg-surface-variant text-ink-deep text-xs font-label-bold rounded-full">
-                      {order.paymentMethod?.replace('_', ' ') || 'Unknown'}
+                      {order.payment_info?.method?.replace('_', ' ') || 'Unknown'}
                     </span>
                   </td>
                   <td className="py-4 px-6">
@@ -147,7 +147,7 @@ function AdminOrders() {
         <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
           <div className="bg-surface-cream rounded-xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-headline-lg text-2xl text-ink-deep">Order #{selectedOrder.orderNumber || selectedOrder.id.substring(0,8).toUpperCase()}</h3>
+              <h3 className="font-headline-lg text-2xl text-ink-deep">Order #{selectedOrder.order_number || selectedOrder.id.substring(0,8).toUpperCase()}</h3>
               <div className="flex items-center gap-4">
                 <button 
                   onClick={() => generateInvoicePDF(selectedOrder)} 
@@ -167,15 +167,15 @@ function AdminOrders() {
               <div>
                 <h4 className="font-label-bold text-on-surface-variant uppercase tracking-widest text-xs mb-3">Customer Details</h4>
                 <div className="bg-neutral-light p-4 rounded border border-ink-deep/5">
-                  <p className="font-label-bold text-ink-deep">{selectedOrder.user?.firstName || 'Guest'} {selectedOrder.user?.lastName || ''}</p>
+                  <p className="font-label-bold text-ink-deep">{selectedOrder.user?.first_name || 'Guest'} {selectedOrder.user?.last_name || ''}</p>
                   <p className="text-sm text-on-surface-variant mb-2">{selectedOrder.user?.email || 'No email provided'}</p>
                   <div className="mt-3 pt-3 border-t border-ink-deep/5">
                     <p className="font-label-bold text-xs text-on-surface-variant uppercase">Shipping Address</p>
                     <p className="text-sm text-ink-deep mt-1">
-                      {selectedOrder.shippingAddress?.firstName} {selectedOrder.shippingAddress?.lastName}<br />
-                      {selectedOrder.shippingAddress?.address1} {selectedOrder.shippingAddress?.address2}<br />
-                      {selectedOrder.shippingAddress?.city}, {selectedOrder.shippingAddress?.state}<br />
-                      {selectedOrder.shippingAddress?.country}
+                      {selectedOrder.shipping_address?.firstName} {selectedOrder.shipping_address?.lastName}<br />
+                      {selectedOrder.shipping_address?.address1} {selectedOrder.shipping_address?.address2}<br />
+                      {selectedOrder.shipping_address?.city}, {selectedOrder.shipping_address?.state}<br />
+                      {selectedOrder.shipping_address?.country}
                     </p>
                   </div>
                 </div>
@@ -187,22 +187,14 @@ function AdminOrders() {
                 <div className="bg-neutral-light p-4 rounded border border-ink-deep/5">
                   <div className="flex justify-between mb-2">
                     <span className="text-sm text-on-surface-variant">Subtotal</span>
-                    <span className="font-label-bold">₦{selectedOrder.subtotal?.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-on-surface-variant">Tax</span>
-                    <span className="font-label-bold">₦{selectedOrder.taxAmount?.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm text-on-surface-variant">Shipping</span>
-                    <span className="font-label-bold">₦{selectedOrder.shippingCost?.toLocaleString()}</span>
+                    <span className="font-label-bold">₦{selectedOrder.total_amount?.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between mt-3 pt-3 border-t border-ink-deep/5">
                     <span className="text-sm font-label-bold text-ink-deep uppercase">Total</span>
-                    <span className="font-headline-md text-accent-gold text-xl">₦{selectedOrder.totalAmount?.toLocaleString()}</span>
+                    <span className="font-headline-md text-accent-gold text-xl">₦{selectedOrder.total_amount?.toLocaleString()}</span>
                   </div>
                   <div className="mt-4 inline-flex items-center px-3 py-1 bg-surface-variant text-ink-deep text-xs font-label-bold rounded-full">
-                    Method: {selectedOrder.paymentMethod?.replace('_', ' ') || 'Unknown'}
+                    Method: {selectedOrder.payment_info?.method?.replace('_', ' ') || 'Unknown'}
                   </div>
                 </div>
               </div>
@@ -215,15 +207,15 @@ function AdminOrders() {
                 {selectedOrder.items?.map((item: any) => (
                   <div key={item.id} className="flex gap-4 items-center p-4 border-b border-ink-deep/10 last:border-0 bg-white">
                     <div className="w-12 h-16 bg-neutral-light rounded overflow-hidden shrink-0">
-                      {item.variant?.product?.images?.[0]?.url ? (
-                        <img src={item.variant.product.images[0].url} alt="" className="w-full h-full object-cover" />
+                      {item.product?.images?.[0] ? (
+                        <img src={item.product.images[0]} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-on-surface-variant material-symbols-outlined text-xl">image</div>
                       )}
                     </div>
                     <div className="flex-grow">
-                      <p className="font-label-bold text-ink-deep text-sm">{item.variant?.product?.name || 'Unknown Product'}</p>
-                      <p className="text-xs text-on-surface-variant">{item.variant?.color} / {item.variant?.size}</p>
+                      <p className="font-label-bold text-ink-deep text-sm">{item.product?.name || 'Unknown Product'}</p>
+                      <p className="text-xs text-on-surface-variant">{item.color} / {item.size}</p>
                       <p className="text-xs font-label-bold mt-1">Qty: {item.quantity}</p>
                     </div>
                   </div>
@@ -238,7 +230,7 @@ function AdminOrders() {
             <form onSubmit={handleStatusUpdate} className="bg-surface-variant/30 p-6 rounded-lg border border-ink-deep/10">
               <h4 className="font-label-bold text-ink-deep mb-4">Update Order Status</h4>
               
-              {selectedOrder.paymentMethod === 'BANK_TRANSFER' && selectedOrder.status === 'PENDING_PAYMENT' && (
+              {selectedOrder.payment_info?.method === 'BANK_TRANSFER' && selectedOrder.status === 'PENDING' && (
                 <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded text-sm flex items-start gap-2">
                   <span className="material-symbols-outlined text-yellow-600">info</span>
                   <p>This order used Bank Transfer. Once you have verified the funds in your bank account, update the status to <strong>CONFIRMED</strong> below to begin processing.</p>

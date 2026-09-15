@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { useAuthStore } from '../../store/auth'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 import { generateInvoicePDF } from '../../utils/generateInvoice'
 
 export const Route = createFileRoute('/_store/account')({
@@ -25,8 +25,8 @@ function AccountDashboard() {
     queryKey: ['my-orders'],
     queryFn: async () => {
       try {
-        const response = await api.get('/orders')
-        return response.data?.data || response.data || []
+        const { data } = await supabase.from('orders').select('*, items:order_items(*, product:products(*))').order('created_at', { ascending: false })
+        return data || []?.data || response.data || []
       } catch (err) {
         return []
       }

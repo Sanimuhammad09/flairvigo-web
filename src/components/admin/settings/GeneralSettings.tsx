@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { api } from '../../../lib/api'
+import { supabase } from '../../../lib/supabase'
 import { useState, useEffect } from 'react'
 
 export function GeneralSettings() {
@@ -8,8 +8,9 @@ export function GeneralSettings() {
     queryKey: ['admin', 'settings'],
     queryFn: async () => {
       try {
-        const res = await api.get('/admin/settings')
-        return res.data.data || res.data || {}
+        const { data, error } = await supabase.from('store_settings').select('*').eq('id', 'default').single()
+        if (error && error.code !== 'PGRST116') throw error
+        return data?.general_settings || {}
       } catch (err) {
         return {}
       }
@@ -34,7 +35,8 @@ export function GeneralSettings() {
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      await api.put('/admin/settings', data)
+      const { error } = await supabase.from('store_settings').upsert({ id: 'default', general_settings: data })
+      if (error) throw error
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] })

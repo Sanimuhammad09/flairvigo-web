@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useCartStore } from '../store/cart'
 import { useAuthStore } from '../store/auth'
 import { useMutation } from '@tanstack/react-query'
-import { api } from '../lib/api'
+import { supabase } from '../lib/supabase'
 
 export const Route = createFileRoute('/checkout')({
   component: Checkout,
@@ -43,11 +43,16 @@ function Checkout() {
   // Registration Mutation
   const registerMutation = useMutation({
     mutationFn: async (data: typeof regForm) => {
-      const res = await api.post('/auth/register', data)
-      return res.data.data
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: { data: { firstName: data.firstName, lastName: data.lastName } }
+      })
+      if (error) throw error
+      return { user: { ...authData.user, firstName: data.firstName, lastName: data.lastName, email: data.email }, accessToken: authData.session?.access_token }
     },
     onSuccess: (data) => {
-      login(data.user, data.accessToken)
+      login(data.user as any, data.accessToken || "")
       setIsRegistering(false)
       setShippingAddress(prev => ({
         ...prev,
@@ -56,7 +61,7 @@ function Checkout() {
       }))
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || 'Registration failed')
+      alert(err.message || 'Registration failed')
     }
   })
 
@@ -83,33 +88,56 @@ function Checkout() {
         billingAddress: {} // Optional for now
       }
       
-      const res = await api.post('/checkout/initialize', payload)
-      return res.data.data || res.data
+      const orderNumber = 'FV-' + Date.now().toString(36).toUpperCase()
+      const { data: orderData, error } = await supabase.from('orders').insert({
+        order_number: orderNumber,
+        user_id: user.id,
+        status: 'PENDING',
+        total_amount: total,
+        shipping_address: {
+          firstName: shippingAddress.firstName,
+          lastName: shippingAddress.lastName,
+          address1: shippingAddress.address,
+          address2: shippingAddress.apartment,
+          city: shippingAddress.city,
+          state: shippingAddress.state,
+          postalCode: shippingAddress.zip,
+          country: shippingAddress.country,
+          phone: shippingAddress.phone
+        },
+        payment_info: { method: paymentMethod }
+      }).select().single()
+      if (error) throw error
+      
+      // Insert order items
+      const orderItems = items.map(i => ({
+        order_id: orderData.id,
+        product_id: i.productId,
+        quantity: i.quantity,
+        price: i.price,
+        size: i.size,
+        color: i.color
+      }))
+      await supabase.from('order_items').insert(orderItems)
+      
+      return { orderId: orderData.id, orderNumber, paymentMethod }
     },
     onSuccess: (data) => {
       // Clear Cart since order is created
       clearCart()
       
-      if (paymentMethod === 'PAYSTACK') {
-        // Redirect to Paystack
-        window.location.href = data.authorizationUrl
-      } else {
-        // Bank Transfer routing
-        navigate({ 
-          to: '/order-success',
-          search: {
-            orderId: data.orderId,
-            amount: data.amount,
-            method: 'BANK_TRANSFER',
-            bankName: data.bankDetails?.bankName,
-            accountName: data.bankDetails?.accountName,
-            accountNumber: data.bankDetails?.accountNumber
-          }
-        })
-      }
+      // Navigate to order success page
+      navigate({ 
+        to: '/order-success',
+        search: {
+          orderId: data.orderId,
+          amount: total,
+          method: data.paymentMethod
+        }
+      })
     },
     onError: (err: any) => {
-      alert(err.response?.data?.message || 'Checkout failed')
+      alert(err.message || 'Checkout failed')
     }
   })
 

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export const Route = createFileRoute('/admin/')({
   component: AdminDashboard,
@@ -11,8 +11,16 @@ function AdminDashboard() {
     queryKey: ['admin', 'stats'],
     queryFn: async () => {
       try {
-        const res = await api.get('/admin/analytics/overview')
-        return res.data.data || res.data
+        const { data: ordersData } = await supabase.from('orders').select('total_amount')
+        const { count: ordersCount } = await supabase.from('orders').select('*', { count: 'exact', head: true })
+        const { count: customersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'USER')
+        
+        const totalRevenue = ordersData?.reduce((acc, order) => acc + Number(order.total_amount), 0) || 0
+        return {
+          totalRevenue,
+          totalOrders: ordersCount || 0,
+          activeCustomers: customersCount || 0
+        }
       } catch (err) {
         return null
       }
@@ -24,8 +32,15 @@ function AdminDashboard() {
     queryKey: ['admin', 'orders'],
     queryFn: async () => {
       try {
-        const res = await api.get('/admin/orders')
-        return res.data.data || res.data
+        const { data } = await supabase
+          .from('orders')
+          .select(`
+            *,
+            user:profiles(*)
+          `)
+          .order('created_at', { ascending: false })
+          .limit(5)
+        return data || []
       } catch (err) {
         return [] 
       }
@@ -191,10 +206,10 @@ function AdminDashboard() {
                 ) : recentOrders?.length > 0 ? (
                   recentOrders.slice(0, 5).map((order: any) => (
                     <tr key={order.id} className="hover:bg-surface-cream/50 transition-colors">
-                      <td className="p-4 pl-6 font-label-bold">#{order.orderNumber || order.id.substring(0,8).toUpperCase()}</td>
-                      <td className="p-4">{order.user?.firstName || 'Guest'} {order.user?.lastName || ''}</td>
-                      <td className="p-4 text-on-surface-variant">{new Date(order.createdAt).toLocaleDateString()}</td>
-                      <td className="p-4 font-label-bold">₦{order.totalAmount || order.total || 0}</td>
+                      <td className="p-4 pl-6 font-label-bold">#{order.order_number || order.id.substring(0,8).toUpperCase()}</td>
+                      <td className="p-4">{order.user?.first_name || 'Guest'} {order.user?.last_name || ''}</td>
+                      <td className="p-4 text-on-surface-variant">{new Date(order.created_at).toLocaleDateString()}</td>
+                      <td className="p-4 font-label-bold">₦{order.total_amount || 0}</td>
                       <td className="p-4 pr-6">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-label-bold ${
                           order.status === 'DELIVERED' || order.status === 'FULFILLED' ? 'bg-green-100 text-green-800' :

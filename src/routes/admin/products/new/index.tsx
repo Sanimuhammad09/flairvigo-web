@@ -2,7 +2,6 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useProductFormStore } from '../../../../store/productFormStore'
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../../../lib/api'
 import { z } from 'zod'
 import { supabase } from '../../../../lib/supabase'
 import { useState } from 'react'
@@ -26,8 +25,8 @@ function AddProductBasic() {
     queryKey: ['product', productId],
     queryFn: async () => {
       if (!productId) return null
-      const res = await api.get(`/products/admin/${productId}`)
-      return res.data?.data || res.data
+      const { data } = await supabase.from('products').select('*').eq('id', productId).single()
+      return data
     },
     enabled: !!productId
   })
@@ -36,8 +35,8 @@ function AddProductBasic() {
   const { data: collectionsData } = useQuery({
     queryKey: ['collections'],
     queryFn: async () => {
-      const res = await api.get('/collections')
-      return res.data?.data || res.data || []
+      const { data } = await supabase.from('categories').select('*').order('created_at', { ascending: false })
+      return data || []
     }
   })
 
