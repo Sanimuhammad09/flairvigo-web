@@ -4,6 +4,7 @@ import { useCartStore } from '../store/cart'
 import { useAuthStore } from '../store/auth'
 import { useMutation } from '@tanstack/react-query'
 import { supabase } from '../lib/supabase'
+import { usePaystackPayment } from 'react-paystack'
 
 export const Route = createFileRoute('/checkout')({
   component: Checkout,
@@ -12,14 +13,11 @@ export const Route = createFileRoute('/checkout')({
 function Checkout() {
   const navigate = useNavigate()
   const { items, getCartTotal, clearCart } = useCartStore()
-  const { user, login } = useAuthStore()
+  const { user } = useAuthStore()
 
-  // State for Registration (if guest)
-  const [isRegistering, setIsRegistering] = useState(!user)
-  const [regForm, setRegForm] = useState({ firstName: '', lastName: '', email: '', password: '' })
-
-  // State for Shipping
+  // State for Shipping/Contact
   const [shippingAddress, setShippingAddress] = useState({
+    email: user?.email || '',
     country: 'Nigeria',
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
@@ -40,59 +38,26 @@ function Checkout() {
   const shipping = 1500 // Fixed 1500 NGN
   const total = subtotal + tax + shipping
 
-  // Registration Mutation
-  const registerMutation = useMutation({
-    mutationFn: async (data: typeof regForm) => {
-      const { data: authData, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: { data: { firstName: data.firstName, lastName: data.lastName } }
-      })
-      if (error) throw error
-      return { user: { ...authData.user, firstName: data.firstName, lastName: data.lastName, email: data.email }, accessToken: authData.session?.access_token }
-    },
-    onSuccess: (data) => {
-      login(data.user as any, data.accessToken || "")
-      setIsRegistering(false)
-      setShippingAddress(prev => ({
-        ...prev,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName
-      }))
-    },
-    onError: (err: any) => {
-      alert(err.message || 'Registration failed')
-    }
-  })
+  // Generate an order number
+  const orderNumber = 'FV-' + Date.now().toString(36).toUpperCase()
 
-  // Checkout Mutation
-  const checkoutMutation = useMutation({
-    mutationFn: async () => {
-      if (!user) throw new Error("Must be logged in to checkout")
-      
-      const _payload = {
-        items: items.map(i => ({ variantId: i.variantId, quantity: i.quantity })),
-        paymentMethod,
-        email: user.email,
-        shippingAddress: {
-          firstName: shippingAddress.firstName,
-          lastName: shippingAddress.lastName,
-          address1: shippingAddress.address,
-          address2: shippingAddress.apartment,
-          city: shippingAddress.city,
-          state: shippingAddress.state,
-          postalCode: shippingAddress.zip,
-          country: shippingAddress.country,
-          phone: shippingAddress.phone
-        },
-        billingAddress: {} // Optional for now
-      }
-      
-      const orderNumber = 'FV-' + Date.now().toString(36).toUpperCase()
+  // Paystack config
+  const paystackConfig = {
+    reference: orderNumber,
+    email: shippingAddress.email,
+    amount: total * 100, // Paystack uses kobo
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_placeholder_key',
+  }
+
+  const initializePayment = usePaystackPayment(paystackConfig)
+
+  // Order Creation Mutation
+  const createOrderMutation = useMutation({
+    mutationFn: async (status: 'PENDING' | 'PAID') => {
       const { data: orderData, error } = await supabase.from('orders').insert({
         order_number: orderNumber,
-        user_id: user.id,
-        status: 'PENDING',
+        user_id: user?.id || null, // Allow guest checkout
+        status,
         total_amount: total,
         shipping_address: {
           firstName: shippingAddress.firstName,
@@ -103,7 +68,8 @@ function Checkout() {
           state: shippingAddress.state,
           postalCode: shippingAddress.zip,
           country: shippingAddress.country,
-          phone: shippingAddress.phone
+          phone: shippingAddress.phone,
+          email: shippingAddress.email
         },
         payment_info: { method: paymentMethod }
       }).select().single()
@@ -123,10 +89,7 @@ function Checkout() {
       return { orderId: orderData.id, orderNumber, paymentMethod }
     },
     onSuccess: (data) => {
-      // Clear Cart since order is created
       clearCart()
-      
-      // Navigate to order success page
       navigate({ 
         to: '/order-success',
         search: {
@@ -137,7 +100,7 @@ function Checkout() {
       })
     },
     onError: (err: any) => {
-      alert(err.message || 'Checkout failed')
+      alert(err.message || 'Error creating order')
     }
   })
 
@@ -150,11 +113,19 @@ function Checkout() {
 
   const handleCheckoutSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (isRegistering) {
-      alert("Please complete your account registration first.")
-      return
+
+    if (paymentMethod === 'PAYSTACK') {
+      initializePayment({
+        onSuccess: () => {
+          createOrderMutation.mutate('PAID')
+        },
+        onClose: () => {
+          alert("Payment cancelled. You can try again when you are ready.")
+        }
+      })
+    } else {
+      createOrderMutation.mutate('PENDING')
     }
-    checkoutMutation.mutate()
   }
 
   return (
@@ -176,10 +147,10 @@ function Checkout() {
           <div className="flex-1 w-full lg:max-w-[55%] xl:max-w-[60%] flex flex-col gap-12">
             <form id="checkout-form" onSubmit={handleCheckoutSubmit} className="space-y-12">
               
-              {/* Account Registration Section */}
+              {/* Contact Information */}
               <section>
                 <div className="flex justify-between items-end mb-6">
-                  <h2 className="font-headline-md text-headline-md text-ink-deep">Contact & Account</h2>
+                  <h2 className="font-headline-md text-headline-md text-ink-deep">Contact Information</h2>
                   {!user && (
                     <Link to="/sign-in" className="font-label-bold text-label-bold text-accent-gold hover:text-ink-deep transition-colors underline underline-offset-4">
                       Already have an account? Log in
@@ -187,70 +158,24 @@ function Checkout() {
                   )}
                 </div>
 
-                {user ? (
-                  <div className="bg-neutral-light p-4 rounded border border-ink-deep/10 flex justify-between items-center">
-                    <div>
-                      <p className="font-label-bold text-ink-deep">{user.firstName} {user.lastName}</p>
-                      <p className="text-on-surface-variant text-sm">{user.email}</p>
-                    </div>
-                    <span className="material-symbols-outlined text-green-600">check_circle</span>
-                  </div>
-                ) : (
-                  <div className="space-y-4 bg-white p-6 rounded-lg border border-ink-deep/10 shadow-sm">
-                    <p className="text-sm text-on-surface-variant mb-4">Create an account to track your order and check out faster next time.</p>
-                    <div className="grid grid-cols-2 gap-4">
-                      <input 
-                        className="w-full bg-transparent border-b border-outline-variant py-3 px-1 font-body-md text-body-md text-ink-deep rounded-none transition-colors focus:border-accent-gold outline-none" 
-                        placeholder="First name" 
-                        type="text" 
-                        required
-                        value={regForm.firstName}
-                        onChange={e => setRegForm({...regForm, firstName: e.target.value})}
-                      />
-                      <input 
-                        className="w-full bg-transparent border-b border-outline-variant py-3 px-1 font-body-md text-body-md text-ink-deep rounded-none transition-colors focus:border-accent-gold outline-none" 
-                        placeholder="Last name" 
-                        type="text" 
-                        required
-                        value={regForm.lastName}
-                        onChange={e => setRegForm({...regForm, lastName: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <input 
-                        className="w-full bg-transparent border-b border-outline-variant py-3 px-1 font-body-md text-body-md text-ink-deep rounded-none transition-colors focus:border-accent-gold outline-none" 
-                        placeholder="Email address" 
-                        type="email" 
-                        required
-                        value={regForm.email}
-                        onChange={e => setRegForm({...regForm, email: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <input 
-                        className="w-full bg-transparent border-b border-outline-variant py-3 px-1 font-body-md text-body-md text-ink-deep rounded-none transition-colors focus:border-accent-gold outline-none" 
-                        placeholder="Create password" 
-                        type="password" 
-                        required
-                        value={regForm.password}
-                        onChange={e => setRegForm({...regForm, password: e.target.value})}
-                        minLength={6}
-                      />
-                    </div>
-                    <button 
-                      type="button" 
-                      onClick={() => registerMutation.mutate(regForm)}
-                      disabled={registerMutation.isPending}
-                      className="mt-4 bg-ink-deep text-surface-cream px-6 py-3 font-label-bold tracking-widest uppercase text-sm hover:bg-ink-deep/90 disabled:opacity-50"
-                    >
-                      {registerMutation.isPending ? 'Creating Account...' : 'Continue to Shipping'}
-                    </button>
-                  </div>
-                )}
+                <div className="grid grid-cols-1 gap-4">
+                  <input 
+                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 font-body-md text-body-md text-ink-deep rounded-none transition-colors focus:border-accent-gold outline-none" 
+                    placeholder="Email address" 
+                    type="email" 
+                    required
+                    value={shippingAddress.email}
+                    onChange={e => setShippingAddress({...shippingAddress, email: e.target.value})}
+                    disabled={!!user}
+                  />
+                  {!user && (
+                    <p className="text-sm text-on-surface-variant">We'll use this email to send you order updates.</p>
+                  )}
+                </div>
               </section>
 
               {/* Shipping Address Section */}
-              <section className={isRegistering ? 'opacity-50 pointer-events-none transition-opacity' : 'transition-opacity'}>
+              <section>
                 <h2 className="font-headline-md text-headline-md text-ink-deep mb-6">Shipping address</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
@@ -346,7 +271,7 @@ function Checkout() {
               </section>
 
               {/* Payment Method Section */}
-              <section className={isRegistering ? 'opacity-50 pointer-events-none transition-opacity' : 'transition-opacity'}>
+              <section>
                 <h2 className="font-headline-md text-headline-md text-ink-deep mb-6">Payment</h2>
                 <p className="font-body-md text-body-md text-outline mb-6">All transactions are secure and encrypted.</p>
                 
@@ -395,10 +320,10 @@ function Checkout() {
                 <button 
                   type="submit" 
                   form="checkout-form"
-                  disabled={checkoutMutation.isPending || isRegistering}
+                  disabled={createOrderMutation.isPending}
                   className="w-full bg-ink-deep text-surface-cream font-label-bold text-body-md py-4 px-8 tracking-wider hover:bg-ink-deep/90 transition-colors block text-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                 >
-                  {checkoutMutation.isPending ? 'PROCESSING...' : 'PAY NOW'}
+                  {createOrderMutation.isPending ? 'PROCESSING...' : 'PAY NOW'}
                 </button>
                 <p className="text-center font-label-sm text-label-sm text-outline mt-4">
                   By clicking Pay Now, you agree to our Terms of Service.
@@ -432,7 +357,7 @@ function Checkout() {
 
               <div className="flex gap-3 mb-8 pt-6 border-t border-primary/10">
                 <input className="flex-grow bg-white border border-outline-variant py-3 px-4 font-body-md text-body-md text-ink-deep rounded transition-colors outline-none focus:border-accent-gold" placeholder="Discount code" type="text"/>
-                <button className="bg-surface-dim text-ink-deep font-label-bold text-sm px-6 py-3 rounded hover:bg-outline-variant transition-colors tracking-widest uppercase">Apply</button>
+                <button type="button" className="bg-surface-dim text-ink-deep font-label-bold text-sm px-6 py-3 rounded hover:bg-outline-variant transition-colors tracking-widest uppercase">Apply</button>
               </div>
 
               <div className="space-y-3 pt-6 border-t border-primary/10">
@@ -469,7 +394,7 @@ function Checkout() {
         </div>
         <div className="col-span-2 md:col-span-4 mt-8 pt-8 border-t border-surface-cream/10">
           <p className="font-body-md text-sm opacity-70">
-            © 2024 Flair Vigo. Premium Medical Apparel. All rights reserved.
+            © 2026 Flair Vigo. Premium Medical Apparel. All rights reserved.
           </p>
         </div>
       </footer>
