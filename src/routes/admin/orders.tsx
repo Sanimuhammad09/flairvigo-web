@@ -89,7 +89,7 @@ function AdminOrders() {
                 <td colSpan={7} className="py-8 text-center text-on-surface-variant">Loading orders...</td>
               </tr>
             ) : orders?.length > 0 ? (
-              orders.map((order: any) => (
+              (orders || []).map((order: any) => (
                 <tr key={order.id} className="hover:bg-neutral-light/50 transition-colors group">
                   <td className="py-4 px-6 font-label-bold text-label-bold text-ink-deep">
                     #{order.order_number || order.id.substring(0,8).toUpperCase()}

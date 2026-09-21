@@ -130,7 +130,7 @@ function AdminMarketing() {
                   <td colSpan={6} className="p-8 text-center text-on-surface-variant">Loading codes...</td>
                 </tr>
               ) : coupons?.length > 0 ? (
-                coupons.map((coupon: any) => (
+                (coupons || []).map((coupon: any) => (
                   <tr key={coupon.id} className="hover:bg-surface-cream/50 transition-colors group">
                     <td className="p-4 pl-6">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-ink-deep/5 border border-ink-deep/10 font-label-bold text-label-bold tracking-widest">

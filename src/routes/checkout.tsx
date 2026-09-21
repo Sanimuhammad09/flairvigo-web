@@ -70,7 +70,7 @@ function Checkout() {
     mutationFn: async () => {
       if (!user) throw new Error("Must be logged in to checkout")
       
-      const payload = {
+      const _payload = {
         items: items.map(i => ({ variantId: i.variantId, quantity: i.quantity })),
         paymentMethod,
         email: user.email,

@@ -26,7 +26,7 @@ function AccountDashboard() {
     queryFn: async () => {
       try {
         const { data } = await supabase.from('orders').select('*, items:order_items(*, product:products(*))').order('created_at', { ascending: false })
-        return data || []?.data || response.data || []
+        return data || []
       } catch (err) {
         return []
       }

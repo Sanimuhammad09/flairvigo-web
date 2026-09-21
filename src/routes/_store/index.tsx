@@ -13,13 +13,13 @@ function Index() {
   const { data: storeSettings } = useQuery({
     queryKey: ['store', 'settings'],
     queryFn: async () => {
-      // const res = await api.get('/admin/settings');
-      return { homepageBanners: [] };
+      const { data } = await supabase.from('store_settings').select('*').eq('id', 'default').single();
+      return data || {};
     }
   });
 
-  const slides = storeSettings?.homepageBanners?.length > 0 
-    ? storeSettings?.banner_settings 
+  const slides = storeSettings?.banner_settings && storeSettings?.banner_settings?.length > 0
+    ? storeSettings.banner_settings 
     : [
         { url: "/images/hero_burgundy.png", link: "/women" },
         { url: "/images/hero_navy.png", link: "/women" },
@@ -337,7 +337,8 @@ function Index() {
           ) : (
             <div className="flex space-x-6 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6 snap-x snap-mandatory">
               {(() => {
-                const apiProducts = bestSellerProducts && Array.isArray(bestSellerProducts.data || bestSellerProducts) ? (bestSellerProducts.data || bestSellerProducts).filter((p: any) => !p.name.toLowerCase().includes('perfume')) : [];
+                const bestSellerArray = Array.isArray(bestSellerProducts) ? bestSellerProducts : [];
+                const apiProducts = bestSellerArray.filter((p: any) => !p.name?.toLowerCase().includes('perfume'));
                 // Reverse bestsellers to make "trending" look different, or use static fallback
                 const trendingProducts = apiProducts.length > 0 ? [...apiProducts].reverse() : [
                   { id: "t1", slug: "vigo-core-top", name: "The Vigo Core Top", basePrice: 48000, images: [{ url: "/images/cat_scrub_tops.png" }] },

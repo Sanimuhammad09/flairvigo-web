@@ -124,7 +124,7 @@ function AdminCustomers() {
                 <td colSpan={5} className="py-8 text-center text-on-surface-variant">Loading customers...</td>
               </tr>
             ) : users?.length > 0 ? (
-              users.map((user: any) => (
+              (users || []).map((user: any) => (
                 <tr key={user.id} className="hover:bg-neutral-light transition-colors group">
                   <td className="py-4 px-2 flex items-center gap-4">
                     <div className="w-10 h-10 bg-ink-deep rounded-full flex items-center justify-center text-surface-cream font-label-bold text-label-bold">

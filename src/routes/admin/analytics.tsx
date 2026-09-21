@@ -14,12 +14,36 @@ function AdminAnalytics() {
       const { count: ordersCount } = await supabase.from('orders').select('*', { count: 'exact', head: true })
       const { count: customersCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'USER')
       
+      const { data: orderItems } = await supabase.from('order_items').select('*, product:products(*)');
+      let topProducts = [];
+      if (orderItems && orderItems.length > 0) {
+        const productQuantities: Record<string, any> = {};
+        orderItems.forEach(item => {
+          const key = item.variant_id || item.product_id || item.id;
+          if (!productQuantities[key]) {
+            productQuantities[key] = {
+              variant: {
+                product: item.product,
+                color: item.color || item.variant?.color || 'N/A',
+                size: item.size || item.variant?.size || 'N/A'
+              },
+              totalQuantitySold: 0
+            };
+          }
+          productQuantities[key].totalQuantitySold += item.quantity || 1;
+        });
+        
+        topProducts = Object.values(productQuantities)
+          .sort((a: any, b: any) => b.totalQuantitySold - a.totalQuantitySold)
+          .slice(0, 5);
+      }
+
       const totalRevenue = ordersData?.reduce((acc, order) => acc + Number(order.total_amount), 0) || 0
       return {
         totalRevenue,
         totalOrders: ordersCount || 0,
         activeCustomers: customersCount || 0,
-        topProducts: [] // Mocked for now, needs aggregate query
+        topProducts
       }
     },
     refetchInterval: 30000 // Refetch every 30 seconds

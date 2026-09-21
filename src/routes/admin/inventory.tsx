@@ -109,7 +109,7 @@ function AdminInventory() {
                   <td colSpan={5} className="py-8 text-center text-on-surface-variant">Loading inventory...</td>
                 </tr>
               ) : products?.length > 0 ? (
-                products.map((product: any) => {
+                (products || []).map((product: any) => {
                   const totalStock = product.variants?.reduce((sum: number, v: any) => sum + (v.stock_quantity || v.inventory || 0), 0) || 0;
                   const isLowStock = totalStock > 0 && totalStock <= 5;
                   const isOutOfStock = totalStock === 0;
