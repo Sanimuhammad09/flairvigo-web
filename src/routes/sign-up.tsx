@@ -10,6 +10,7 @@ export const Route = createFileRoute('/sign-up')({
 
 function SignUp() {
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -88,9 +89,9 @@ function SignUp() {
               <div className="space-y-2">
                 <label className="font-label-bold text-label-bold text-ink-deep" htmlFor="password">Password</label>
                 <div className="relative">
-                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 pr-8 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="password" name="password" placeholder="••••••••" type="password" required value={formData.password} onChange={handleChange} />
-                  <button className="absolute right-0 top-1/2 -translate-y-1/2 text-ink-deep/50 hover:text-accent-gold transition-colors" type="button">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>visibility</span>
+                  <input className="w-full bg-transparent border-b border-ink-deep/20 py-2 px-0 pr-8 focus:outline-none focus:border-accent-gold focus:ring-0 transition-colors rounded-none placeholder:text-ink-deep/50 font-body-md text-body-md" id="password" name="password" placeholder="••••••••" type={showPassword ? "text" : "password"} required value={formData.password} onChange={handleChange} />
+                  <button className="absolute right-0 top-1/2 -translate-y-1/2 text-ink-deep/50 hover:text-accent-gold transition-colors" type="button" onClick={() => setShowPassword(!showPassword)}>
+                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>{showPassword ? 'visibility_off' : 'visibility'}</span>
                   </button>
                 </div>
               </div>

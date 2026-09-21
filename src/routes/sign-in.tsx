@@ -13,6 +13,7 @@ function SignIn() {
   const navigate = useNavigate()
   const { login } = useAuthStore()
   
+  const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -113,12 +114,12 @@ function SignIn() {
                 </label>
               </div>
               <div className="relative group">
-                <input className="peer w-full bg-transparent border-0 border-b border-ink-deep/20 pt-6 pb-2 px-0 text-ink-deep font-body-md focus:ring-0 focus:border-accent-gold transition-colors duration-300 placeholder-transparent" id="password" name="password" placeholder="Password" required type="password" value={formData.password} onChange={handleChange} />
+                <input className="peer w-full bg-transparent border-0 border-b border-ink-deep/20 pt-6 pb-2 px-0 text-ink-deep font-body-md focus:ring-0 focus:border-accent-gold transition-colors duration-300 placeholder-transparent" id="password" name="password" placeholder="Password" required type={showPassword ? "text" : "password"} value={formData.password} onChange={handleChange} />
                 <label className="absolute left-0 top-6 text-on-surface-variant font-body-md transition-all duration-300 peer-focus:-top-2 peer-focus:text-label-sm peer-focus:font-label-sm peer-focus:text-accent-gold peer-valid:-top-2 peer-valid:text-label-sm peer-valid:font-label-sm" htmlFor="password">
                   Password
                 </label>
-                <button aria-label="Toggle password visibility" className="absolute right-0 top-6 text-ink-deep/40 hover:text-ink-deep transition-colors" type="button">
-                  <span className="material-symbols-outlined text-[20px]">visibility_off</span>
+                <button aria-label="Toggle password visibility" className="absolute right-0 top-6 text-ink-deep/40 hover:text-ink-deep transition-colors" type="button" onClick={() => setShowPassword(!showPassword)}>
+                  <span className="material-symbols-outlined text-[20px]">{showPassword ? 'visibility' : 'visibility_off'}</span>
                 </button>
               </div>
             </div>
