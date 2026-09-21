@@ -58,15 +58,32 @@ function AddProductBasic() {
       return
     }
 
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      alert('Please upload a valid image file (JPEG, PNG, WebP, or GIF)')
+      return
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB')
+      return
+    }
+
     try {
       setIsUploading(true)
       const fileExt = file.name.split('.').pop()
-      const fileName = `${Math.random()}.${fileExt}`
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
       const filePath = `products/${fileName}`
 
       const { error: uploadError } = await supabase.storage
         .from('images')
-        .upload(filePath, file)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: file.type,
+        })
 
       if (uploadError) {
         throw uploadError
@@ -77,9 +94,12 @@ function AddProductBasic() {
       const newImage = { url: data.publicUrl, isMain: images.length === 0 }
       setField('images', [...images, newImage])
     } catch (error: any) {
+      console.error('Upload error:', error)
       alert(`Error uploading image: ${error.message}`)
     } finally {
       setIsUploading(false)
+      // Reset file input so same file can be re-selected
+      event.target.value = ''
     }
   }
 

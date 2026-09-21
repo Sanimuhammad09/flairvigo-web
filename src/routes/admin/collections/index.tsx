@@ -92,24 +92,43 @@ function AdminCollections() {
       return
     }
 
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    if (!allowedTypes.includes(file.type)) {
+      alert('Please upload a valid image file (JPEG, PNG, WebP, or GIF)')
+      return
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB')
+      return
+    }
+
     try {
       setIsUploading(true)
       const fileExt = file.name.split('.').pop()
-      const fileName = `collection-${Math.random()}.${fileExt}`
+      const fileName = `collection-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
       const filePath = `collections/${fileName}`
 
       const { error: uploadError } = await supabase.storage
         .from('images')
-        .upload(filePath, file)
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: file.type,
+        })
 
       if (uploadError) throw uploadError
 
       const { data } = supabase.storage.from('images').getPublicUrl(filePath)
       setImage(data.publicUrl)
     } catch (error: any) {
+      console.error('Upload error:', error)
       alert(`Error uploading image: ${error.message}`)
     } finally {
       setIsUploading(false)
+      event.target.value = ''
     }
   }
 
