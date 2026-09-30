@@ -307,7 +307,7 @@ function Index() {
                           {product.description}
                         </p>
                       )}
-                      <p className="text-ink-deep font-semibold mt-auto">₦{product.basePrice.toLocaleString()}</p>
+                      <p className="text-ink-deep font-semibold mt-auto">₦{(product.base_price || product.basePrice || product.price || 0).toLocaleString()}</p>
                     </div>
                   </Link>
                 );
@@ -366,7 +366,7 @@ function Index() {
                       
                       <div className="flex-1 flex flex-col">
                         <h4 className="font-bold tracking-widest text-sm uppercase text-ink-deep mb-1 group-hover:text-accent-gold transition-colors">{product.name}</h4>
-                        <p className="text-ink-deep font-semibold mt-auto">₦{product.basePrice.toLocaleString()}</p>
+                        <p className="text-ink-deep font-semibold mt-auto">₦{(product.base_price || product.basePrice || product.price || 0).toLocaleString()}</p>
                       </div>
                     </Link>
                   );
